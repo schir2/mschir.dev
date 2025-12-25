@@ -16,7 +16,14 @@ export default defineNuxtConfig({
             htmlAttrs: {
                 lang: 'en',
                 class: 'dark-mode',
-            }
+            },
+            link: [
+                {
+                    rel: 'icon',
+                    type: 'image/gif',
+                    href: '/favicon.gif'
+                }
+            ]
         }
     },
 
