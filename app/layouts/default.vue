@@ -1,5 +1,6 @@
 <template>
   <div>
+    <AppNavbar />
     <AppHeader />
     <slot />
     <AppFooter />

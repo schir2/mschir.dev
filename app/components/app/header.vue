@@ -1,5 +1,7 @@
 <script lang="ts" setup>
 </script>
 <template>
-  <header>Header</header>
+  <header class="prose">
+    <h1>Header</h1>
+  </header>
 </template>

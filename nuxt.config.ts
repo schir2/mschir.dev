@@ -1,8 +1,14 @@
-// https://nuxt.com/docs/api/configuration/nuxt-config
+import {customTheme} from './primevue-theme'
+
 export default defineNuxtConfig({
     compatibilityDate: '2025-07-15',
     devtools: {enabled: true},
-    modules: ['@nuxt/icon', '@nuxtjs/supabase', '@nuxtjs/tailwindcss'],
+    modules: [
+        '@nuxt/icon',
+        '@nuxtjs/supabase',
+        '@nuxtjs/tailwindcss',
+        '@primevue/nuxt-module'
+    ],
 
     app: {
         head: {
@@ -20,6 +26,23 @@ export default defineNuxtConfig({
             defaultTitle: 'Marek Schir Developer Portfolio Site',
             siteUrl: process.env.SITE_URL || 'http://localhost:3000',
             port: parseInt(process.env.PORT || '3000'),
+        }
+    },
+
+    primevue: {
+        components: {
+            prefix: 'p',
+        },
+        options: {
+            ripple: true,
+            theme: {
+                preset: customTheme,
+                options: {
+                    prefix: 'p',
+                    darkModeSelector: '.dark-mode',
+                    cssLayer: false
+                }
+            }
         }
     },
 
