@@ -13,11 +13,11 @@ useHead(() => ({
 }))
 </script>
 <template>
-  <div>
+  <main class="space-y-4 bg-background text-foreground dark min-h-screen">
     <app-navbar />
     <dynamic-dialog/>
     <app-header />
     <slot />
     <app-footer />
-  </div>
+  </main>
 </template>
