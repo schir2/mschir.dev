@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 </script>
 <template>
-  <header class="prose">
+  <header>
     <h1>Header</h1>
   </header>
 </template>
