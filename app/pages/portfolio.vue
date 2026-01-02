@@ -1,4 +1,7 @@
 <script lang="ts" setup>
+definePageMeta({
+  title: 'Portfolio'
+})
 
 </script>
 <template>

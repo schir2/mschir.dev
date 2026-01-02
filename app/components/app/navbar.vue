@@ -3,6 +3,14 @@ const user = useSupabaseUser()
 const router = useRouter()
 const supabase = useSupabaseClient()
 
+const items = ref([
+  {label: 'Home', route: '/'},
+  {label: 'Portfolio', route: '/portfolio'},
+  {label: 'About', route: '/about'},
+  {label: 'Blog', route: '/blog'},
+  {label: 'Contact', route: '/contact'}
+])
+
 function onLogout() {
   supabase.auth.signOut().then(() => router.push('/'))
 }
@@ -11,19 +19,25 @@ function onLogout() {
 </script>
 <template>
 
-  <p-toolbar>
+  <p-menubar :model="items">
     <template #start>
       <router-link to="/">
-        <img src="/img/logos/logo.gif" alt="Logo" class="h-8"/>
+        <div class="flex gap-2 items-center">
+          <img src="/img/logos/logo.gif" alt="Logo" class="h-8"/>
+        </div>
       </router-link>
-      <p>Marek Schir, Software Engineer</p>
     </template>
-    <template #center>
-      <p-button label="Home" severity="secondary" @click="router.push('/')" text/>
-      <p-button label="Portfolio" severity="secondary" @click="router.push('/portfolio')" text/>
-      <p-button label="About" severity="secondary" @click="router.push('/about')" text/>
-      <p-button label="Blog" severity="secondary" @click="router.push('/blog')" text/>
-      <p-button label="Get in Touch" severity="secondary" @click="router.push('/contact')" text/>
+    <template #item="{item, props, hasSubmenu}">
+      <router-link v-if="item.route" v-slot="{ href, navigate }" :to="item.route" custom>
+        <a v-ripple :href="href" v-bind="props.action" @click="navigate">
+          <span>{{ item.label }}</span>
+        </a>
+      </router-link>
+      <a v-else v-ripple :href="item.url" :target="item.target" v-bind="props.action">
+        <span :class="item.icon"/>
+        <span>{{ item.label }}</span>
+        <span v-if="hasSubmenu" class="pi pi-fw pi-angle-down"/>
+      </a>
     </template>
     <template #end>
       <client-only>
@@ -33,5 +47,5 @@ function onLogout() {
         </div>
       </client-only>
     </template>
-  </p-toolbar>
+  </p-menubar>
 </template>

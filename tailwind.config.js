@@ -14,7 +14,12 @@ function withOpacity(variableName) {
 export default {
   content: [],
   theme: {
-    extend: {},
+    extend: {
+
+        minHeight: {
+            'nav-offset': 'calc(100vh - 5rem)',
+        }
+    },
   },
   plugins: [
       PrimeUI,

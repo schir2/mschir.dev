@@ -11,13 +11,13 @@ const pageTitle = computed(() =>
 useHead(() => ({
   title: pageTitle.value
 }))
+
 </script>
 <template>
-  <main class="space-y-4 bg-background text-foreground dark min-h-screen">
-    <app-navbar />
+  <main class="min-h-nav-offset">
+    <app-navbar/>
     <dynamic-dialog/>
-    <app-header />
-    <slot />
-    <app-footer />
+    <slot/>
   </main>
+  <app-footer/>
 </template>
