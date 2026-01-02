@@ -22,8 +22,8 @@ function onLogout() {
       <p-button label="Home" severity="secondary" @click="router.push('/homw')" text/>
       <p-button label="Portfolio" severity="secondary" @click="router.push('/portfolio')" text/>
       <p-button label="About" severity="secondary" @click="router.push('/about')" text/>
-      <p-button label="Contact" severity="secondary" @click="router.push('/contact')" text/>
       <p-button label="Blog" severity="secondary" @click="router.push('/blog')" text/>
+      <p-button label="Get in Touch" severity="secondary" @click="router.push('/contact')" text/>
     </template>
     <template #end>
       <client-only>
