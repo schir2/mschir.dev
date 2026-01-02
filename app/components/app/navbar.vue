@@ -19,7 +19,7 @@ function onLogout() {
       <p>Marek Schir, Software Engineer</p>
     </template>
     <template #center>
-      <p-button label="Home" severity="secondary" @click="router.push('/homw')" text/>
+      <p-button label="Home" severity="secondary" @click="router.push('/')" text/>
       <p-button label="Portfolio" severity="secondary" @click="router.push('/portfolio')" text/>
       <p-button label="About" severity="secondary" @click="router.push('/about')" text/>
       <p-button label="Blog" severity="secondary" @click="router.push('/blog')" text/>
