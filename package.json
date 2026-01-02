@@ -7,7 +7,13 @@
     "dev": "nuxt dev",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
-    "postinstall": "nuxt prepare"
+    "postinstall": "nuxt prepare",
+
+    "supabase:login": "npx supabase login",
+    "supabase:link": "npx supabase link --project-ref tnebqftjkkswytrgwivb",
+    "supbase:start": "npx supbase start",
+    "db:reset": "npx supabase db reset --linked",
+    "supabase:types": "npx supabase gen types typescript --project-id tnebqftjkkswytrgwivb > types/database.types.ts"
   },
   "dependencies": {
     "@nuxt/icon": "^2.1.1",
@@ -18,7 +24,8 @@
     "primevue": "^4.5.4",
     "tailwindcss-primeui": "^0.6.1",
     "vue": "^3.5.26",
-    "vue-router": "^4.6.4"
+    "vue-router": "^4.6.4",
+    "zod": "^4.3.4"
   },
   "devDependencies": {
     "@primevue/nuxt-module": "^4.5.4",
