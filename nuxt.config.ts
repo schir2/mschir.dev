@@ -4,10 +4,11 @@ export default defineNuxtConfig({
     compatibilityDate: '2025-07-15',
     devtools: {enabled: true},
     modules: [
-        '@nuxt/icon',
-        '@nuxtjs/supabase',
-        '@nuxtjs/tailwindcss',
-        '@primevue/nuxt-module'
+      '@nuxt/icon',
+      '@nuxtjs/supabase',
+      '@nuxtjs/tailwindcss',
+      '@primevue/nuxt-module',
+      '@pinia/nuxt',
     ],
 
     app: {

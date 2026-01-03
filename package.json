@@ -8,7 +8,6 @@
     "generate": "nuxt generate",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare",
-
     "supabase:login": "npx supabase login",
     "supabase:link": "npx supabase link --project-ref tnebqftjkkswytrgwivb",
     "supbase:start": "npx supbase start",
@@ -19,8 +18,10 @@
     "@nuxt/icon": "^2.1.1",
     "@nuxtjs/supabase": "^2.0.3",
     "@nuxtjs/tailwindcss": "^6.14.0",
+    "@pinia/nuxt": "^0.11.3",
     "@primeuix/themes": "^2.0.2",
     "nuxt": "^4.2.2",
+    "pinia": "^3.0.4",
     "primevue": "^4.5.4",
     "tailwindcss-primeui": "^0.6.1",
     "vue": "^3.5.26",
