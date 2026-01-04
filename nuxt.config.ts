@@ -28,6 +28,10 @@ export default defineNuxtConfig({
         }
     },
 
+    css: [
+        'primeicons/primeicons.css',
+    ],
+
     runtimeConfig: {
         public: {
             appName: 'Marek Schir  Portfolio',

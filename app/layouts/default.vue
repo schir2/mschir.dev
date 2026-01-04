@@ -15,6 +15,7 @@ useHead(() => ({
 </script>
 <template>
   <main class="min-h-nav-offset">
+    <p-toast position="top-center"/>
     <app-navbar/>
     <dynamic-dialog/>
     <slot/>

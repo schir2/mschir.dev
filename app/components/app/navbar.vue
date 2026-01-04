@@ -1,9 +1,11 @@
 <script setup lang="ts">
+import type {MenuItem} from "primevue/menuitem";
+
 const user = useSupabaseUser()
 const router = useRouter()
 const supabase = useSupabaseClient()
 
-const items = ref([
+const items = ref<MenuItem[]>([
   {label: 'Home', route: '/'},
   {label: 'Portfolio', route: '/portfolio'},
   {label: 'About', route: '/about'},
@@ -18,7 +20,6 @@ function onLogout() {
 
 </script>
 <template>
-
   <p-menubar :model="items">
     <template #start>
       <router-link to="/">
@@ -42,7 +43,8 @@ function onLogout() {
     <template #end>
       <client-only>
         <div class="flex items-center gap-2">
-          <p-button icon="pi pi-question" severity="secondary" variant="outlined" rounded @click="router.push('/docs')">
+          <p-button v-if="user" label="Logout" @click="onLogout"></p-button>
+          <p-button v-else label="Login" severity="secondary" @click="router.push('/login')">
           </p-button>
         </div>
       </client-only>
