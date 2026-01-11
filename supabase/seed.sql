@@ -95,13 +95,11 @@ on conflict (name) do nothing;
 
 insert into public.skills (name, icon, proficiency, category_id)
 values
--- Expert
+
 ('Django', 'simple-icons:django', 'expert', (select id from public.skill_categories where name = 'Frameworks and Libraries')),
 ('HTML', 'simple-icons:html5', 'expert', (select id from public.skill_categories where name = 'Front-End Technologies')),
 ('Python', 'simple-icons:python', 'expert', (select id from public.skill_categories where name = 'Programming Languages')),
 ('Windows', 'simple-icons:windows', 'expert', (select id from public.skill_categories where name = 'Other')),
-
--- Advanced
 ('Bootstrap', 'simple-icons:bootstrap', 'advanced', (select id from public.skill_categories where name = 'Front-End Technologies')),
 ('CSS', 'simple-icons:css3', 'advanced', (select id from public.skill_categories where name = 'Front-End Technologies')),
 ('Figma', 'simple-icons:figma', 'advanced', (select id from public.skill_categories where name = 'Front-End Technologies')),
@@ -110,8 +108,6 @@ values
 ('MySQL', 'simple-icons:mysql', 'advanced', (select id from public.skill_categories where name = 'Databases')),
 ('SQLite', 'simple-icons:sqlite', 'advanced', (select id from public.skill_categories where name = 'Databases')),
 ('VUE', 'simple-icons:vuedotjs', 'advanced', (select id from public.skill_categories where name = 'Frameworks and Libraries')),
-
--- Intermediate
 ('AWS', 'simple-icons:amazonaws', 'intermediate', (select id from public.skill_categories where name = 'Other')),
 ('C#', 'simple-icons:csharp', 'intermediate', (select id from public.skill_categories where name = 'Programming Languages')),
 ('Digital Ocean', 'simple-icons:digitalocean', 'intermediate', (select id from public.skill_categories where name = 'Other')),
@@ -123,9 +119,66 @@ values
 ('REST', 'mdi:api', 'intermediate', (select id from public.skill_categories where name = 'Other')),
 ('Tailwind', 'simple-icons:tailwindcss', 'intermediate', (select id from public.skill_categories where name = 'Front-End Technologies')),
 ('Vuetify', 'simple-icons:vuetify', 'intermediate', (select id from public.skill_categories where name = 'Front-End Technologies')),
-
--- Beginner
 ('Flask', 'simple-icons:flask', 'beginner', (select id from public.skill_categories where name = 'Frameworks and Libraries')),
 ('GraphQL', 'simple-icons:graphql', 'beginner', (select id from public.skill_categories where name = 'Databases')),
 ('JS', 'simple-icons:javascript', 'beginner', (select id from public.skill_categories where name = 'Programming Languages'))
 on conflict (name) do nothing;
+
+
+--
+-- -- Companies
+insert into public.companies (name, "url")
+values
+    ('MMPC', 'https://www.mandmpestcontrol.com');
+
+insert into public.projects (name, description, company_id, year, image_url)
+values
+    (
+        'Customer Quoting Application',
+        'Internal application for generating and managing customer quotes.',
+        (select id from public.companies where name = 'MMPC'),
+        2024,
+        null
+    ),
+    (
+        'Lead Analyzer Reporting Platform',
+        'Reporting and analytics platform for inbound leads.',
+        (select id from public.companies where name = 'MMPC'),
+        2023,
+        null
+    ),
+    (
+        'Vehicle GPS Alerting System for Field Service Workers',
+        'GPS-based alerting system for tracking and monitoring field technicians.',
+        (select id from public.companies where name = 'MMPC'),
+        2022,
+        null
+    ),
+    (
+        'Field Service Management API',
+        'API services supporting field service operations.',
+        (select id from public.companies where name = 'MMPC'),
+        2021,
+        null
+    ),
+    (
+        'Visual Lead Inspection Job Tracking System',
+        'Job tracking system with visual inspection workflows.',
+        (select id from public.companies where name = 'MMPC'),
+        2021,
+        null
+    ),
+    (
+        'Field Service Management System Extension',
+        'Extensions and customizations for the field service management platform.',
+        (select id from public.companies where name = 'MMPC'),
+        2017,
+        null
+    ),
+    (
+        'Automated User Lookup and Reporting System',
+        'Automated reporting and user lookup tools.',
+        (select id from public.companies where name = 'MMPC'),
+        2009,
+        null
+    )
