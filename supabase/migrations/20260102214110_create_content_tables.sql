@@ -94,7 +94,6 @@ create table public.project_skills
 );
 
 alter table public.contact_messages enable row level security;
-alter table public.projects enable row level security;
 alter table public.project_skills enable row level security;
 alter table public.companies enable row level security;
 alter table public.skills enable row level security;

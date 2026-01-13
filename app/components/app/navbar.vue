@@ -10,7 +10,8 @@ const items = ref<MenuItem[]>([
   {label: 'Portfolio', route: '/portfolio'},
   {label: 'About', route: '/about'},
   {label: 'Blog', route: '/blog'},
-  {label: 'Contact', route: '/contact'}
+  {label: 'Contact', route: '/contact'},
+  {label: 'Projects', route: '/projects'}
 ])
 
 function onLogout() {
