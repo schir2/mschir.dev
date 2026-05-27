@@ -9,7 +9,7 @@ const {
   refresh: projectsRefresh
 } = await useAsyncData('projects', async () => {
       await new Promise(resolve => setTimeout(resolve, 500))
-      const {data, error} = await supabase.from('projects').select('*')
+      const {data, error} = await supabase.from('projects').select('*').order('year', {ascending: false})
       if (error) {
         throw error
       }

@@ -12,6 +12,7 @@ const {project} = defineProps<Props>()
 <template>
   <p-card>
     <template #title>{{ project.name }}</template>
+    <template #subtitle>{{ project.year}}</template>
     <template #content>{{ project.description }}</template>
   </p-card>
 </template>
