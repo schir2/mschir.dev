@@ -142,7 +142,7 @@ async function onFormSubmit(event: FormSubmitEvent) {
           </p-message>
         </div>
 
-        <NuxtTurnstile v-model="turnstileToken"/>
+        <TurnstilePlaceholder v-model="turnstileToken"/>
 
         <p-button
             type="submit"

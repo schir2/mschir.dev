@@ -5,21 +5,23 @@ export default defineEventHandler(async (event) => {
     const config = useRuntimeConfig()
 
     // Verify Turnstile token before touching the DB
-    const params = new URLSearchParams()
-    params.append('secret', config.turnstileSecretKey)
-    params.append('response', turnstileToken)
+    if (config.turnstileSecretKey) {
+        const params = new URLSearchParams()
+        params.append('secret', config.turnstileSecretKey)
+        params.append('response', turnstileToken)
 
-    const verification = await $fetch<{ success: boolean }>(
-        'https://challenges.cloudflare.com/turnstile/v0/siteverify',
-        {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-            body: params.toString(),
+        const verification = await $fetch<{ success: boolean }>(
+            'https://challenges.cloudflare.com/turnstile/v0/siteverify',
+            {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: params.toString(),
+            }
+        )
+
+        if (!verification.success) {
+            throw createError({ statusCode: 400, statusMessage: 'CAPTCHA verification failed' })
         }
-    )
-
-    if (!verification.success) {
-        throw createError({ statusCode: 400, statusMessage: 'CAPTCHA verification failed' })
     }
 
     const supabase = serverSupabaseServiceRole(event)
