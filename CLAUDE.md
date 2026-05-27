@@ -2,9 +2,18 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## Development Environment
+
+- **OS**: Windows 10 Pro
+- **Shell**: PowerShell 7 (`pwsh`) — all commands use PowerShell syntax
+- **Path separators**: Use backslashes (`\`) in paths. In Python string literals passed to `shell -c`, backslashes must be doubled (e.g., `"C:\\Users\\schir\\..."`).
+- **Environment variables**: Read with `$env:VAR_NAME`, set with `$env:VAR_NAME = "value"` — not bash `export` syntax.
+- **Chaining commands**: Use `&&` to chain (PowerShell 7 supports this). Use `;` when you don't care if the prior step fails.
+- **No Unix-only tools**: `grep` → `Select-String`, `find` → `Get-ChildItem -Recurse`, `touch` → `New-Item`, `which` → `(Get-Command name).Source`.
+
 ## Commands
 
-```bash
+```powershell
 npm run dev          # Start dev server at http://localhost:3000
 npm run build        # Build for production
 npm run preview      # Preview production build
@@ -69,3 +78,24 @@ This is a **Nuxt 4** personal portfolio site (mschir.dev) backed by **Supabase**
 - Mirror the source path under the matching test folder — e.g. `app/components/field/InplaceText.vue` → `test/nuxt/components/field/InplaceText.test.ts`
 - Composable tests: `test/nuxt/composables/useXyz.test.ts`
 - Util tests: `test/unit/utils/xyzUtils.test.ts`
+
+
+## Agent skills
+
+### Issue tracker
+
+Issues live in GitHub Issues on `schir2/mschir.dev`. See `docs/agents/issue-tracker.md`.
+
+### Triage labels
+
+Default canonical label vocabulary (`needs-triage`, `needs-info`, `ready-for-agent`, `ready-for-human`, `wontfix`). See `docs/agents/triage-labels.md`.
+
+### Domain docs
+
+Single-context repo — one `CONTEXT.md` + `docs/adr/` at the root. See `docs/agents/domain.md`.
+
+## Code Style
+
+### Variable naming
+
+Always use full, descriptive variable names. Never use single-letter variables or opaque abbreviations. Code must be readable at a glance.
