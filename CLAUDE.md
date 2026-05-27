@@ -52,3 +52,20 @@ This is a **Nuxt 4** personal portfolio site (mschir.dev) backed by **Supabase**
 2. Run `npm run db:reset` to apply it to the linked remote
 3. Run `npm run supabase:types` to regenerate `shared/types/database.types.ts`
 4. Update or add domain type aliases in `shared/types/` if new tables were added
+
+### Testing
+
+**Test folder placement — every agent must follow these rules:**
+
+| What you're testing | Folder | Framework |
+|---|---|---|
+| Pure functions, utils, helpers | `test/unit/` | Vitest (no Nuxt runtime) |
+| Components, composables, store-dependent code | `test/nuxt/` | `@nuxt/test-utils` + Vitest |
+| Shared mocks and test setup | `test/helpers/` | — |
+
+
+**Naming conventions:**
+- All test files: `*.test.ts`
+- Mirror the source path under the matching test folder — e.g. `app/components/field/InplaceText.vue` → `test/nuxt/components/field/InplaceText.test.ts`
+- Composable tests: `test/nuxt/composables/useXyz.test.ts`
+- Util tests: `test/unit/utils/xyzUtils.test.ts`
