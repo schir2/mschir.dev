@@ -9,6 +9,7 @@ export default defineNuxtConfig({
       '@nuxtjs/tailwindcss',
       '@primevue/nuxt-module',
       '@pinia/nuxt',
+      '@nuxtjs/turnstile',
     ],
 
     app: {
@@ -33,11 +34,14 @@ export default defineNuxtConfig({
     ],
 
     runtimeConfig: {
+        turnstileSecretKey: '',   // NUXT_TURNSTILE_SECRET_KEY
+        resendApiKey: '',         // NUXT_RESEND_API_KEY
         public: {
             appName: 'Marek Schir  Portfolio',
             defaultTitle: 'Marek Schir Developer Portfolio Site',
             siteUrl: process.env.SITE_URL || 'http://localhost:3000',
             port: parseInt(process.env.PORT || '3000'),
+            turnstileSiteKey: '', // NUXT_PUBLIC_TURNSTILE_SITE_KEY
         }
     },
 

@@ -9,7 +9,7 @@ const items = ref<MenuItem[]>([
   {label: 'Home', route: '/'},
   {label: 'Portfolio', route: '/portfolio'},
   {label: 'About', route: '/about'},
-  {label: 'Blog', route: '/blog'},
+  {label: 'Articles', route: '/articles'},
   {label: 'Contact', route: '/contact'},
   {label: 'Projects', route: '/projects'}
 ])

@@ -16,9 +16,9 @@ useHead(() => ({
 <template>
   <main class="min-h-nav-offset">
     <p-toast position="top-center"/>
-    <app-navbar/>
+    <layout-navbar/>
     <dynamic-dialog/>
     <slot/>
   </main>
-  <app-footer/>
+  <layout-footer/>
 </template>
