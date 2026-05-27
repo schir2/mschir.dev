@@ -14,12 +14,13 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ## Commands
 
 ```powershell
-npm run dev          # Start dev server at http://localhost:3000
-npm run build        # Build for production
-npm run preview      # Preview production build
+pnpm install          # Install dependencies
+pnpm run dev          # Start dev server at http://localhost:3000
+pnpm run build        # Build for production
+pnpm run preview      # Preview production build
 
-npm run supabase:types  # Regenerate types/database.types.ts from remote Supabase schema
-npm run db:reset        # Reset linked remote Supabase DB and re-run migrations + seeds
+pnpm run supabase:types  # Regenerate types/database.types.ts from remote Supabase schema
+pnpm run db:reset        # Reset linked remote Supabase DB and re-run migrations + seeds
 ```
 
 There is no test suite configured.
@@ -58,8 +59,8 @@ This is a **Nuxt 4** personal portfolio site (mschir.dev) backed by **Supabase**
 ### After schema changes
 
 1. Add a migration file in `supabase/migrations/` with a timestamp prefix
-2. Run `npm run db:reset` to apply it to the linked remote
-3. Run `npm run supabase:types` to regenerate `shared/types/database.types.ts`
+2. Run `pnpm run db:reset` to apply it to the linked remote
+3. Run `pnpm run supabase:types` to regenerate `shared/types/database.types.ts`
 4. Update or add domain type aliases in `shared/types/` if new tables were added
 
 ### Testing
