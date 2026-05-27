@@ -1,7 +1,7 @@
 import {customTheme} from './primevue-theme'
 
 export default defineNuxtConfig({
-    compatibilityDate: '2025-07-15',
+    compatibilityDate: '2026-01-10',
     devtools: {enabled: true},
     modules: [
       '@nuxt/icon',
