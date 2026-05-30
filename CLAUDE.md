@@ -23,8 +23,6 @@ pnpm run supabase:types  # Regenerate types/database.types.ts from remote Supaba
 pnpm run db:reset        # Reset linked remote Supabase DB and re-run migrations + seeds
 ```
 
-There is no test suite configured.
-
 ## Architecture
 
 This is a **Nuxt 4** personal portfolio site (mschir.dev) backed by **Supabase** (PostgreSQL + auth).
@@ -51,10 +49,7 @@ This is a **Nuxt 4** personal portfolio site (mschir.dev) backed by **Supabase**
 
 ### Database schema (high level)
 
-- **Blog domain**: `articles`, `article_topics`, `article_tags`, `article_tags_links`, `article_series`, `article_interactions`, `comments`, `featured_articles`
-- **Portfolio domain**: `projects`, `companies`, `project_skills` (M2M), `skills`, `skill_categories`
-- **Contact**: `contact_messages`
-- RLS is enabled on all tables; `projects` has a public read policy; most other tables restrict based on `auth.uid()`
+See `CONTEXT.md` for the domain model.
 
 ### After schema changes
 
@@ -65,21 +60,7 @@ This is a **Nuxt 4** personal portfolio site (mschir.dev) backed by **Supabase**
 
 ### Testing
 
-**Test folder placement — every agent must follow these rules:**
-
-| What you're testing | Folder | Framework |
-|---|---|---|
-| Pure functions, utils, helpers | `test/unit/` | Vitest (no Nuxt runtime) |
-| Components, composables, store-dependent code | `test/nuxt/` | `@nuxt/test-utils` + Vitest |
-| Shared mocks and test setup | `test/helpers/` | — |
-
-
-**Naming conventions:**
-- All test files: `*.test.ts`
-- Mirror the source path under the matching test folder — e.g. `app/components/field/InplaceText.vue` → `test/nuxt/components/field/InplaceText.test.ts`
-- Composable tests: `test/nuxt/composables/useXyz.test.ts`
-- Util tests: `test/unit/utils/xyzUtils.test.ts`
-
+See `test/CLAUDE.md` for full testing rules — folder placement, naming conventions, and component requirements.
 
 ## Agent skills
 
