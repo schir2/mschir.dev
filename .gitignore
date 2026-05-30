@@ -23,3 +23,6 @@ logs
 .env.*
 !.env.example
 /credentials/
+
+# Claude
+.claude/settings.local.json
