@@ -125,6 +125,7 @@ export default defineNuxtConfig({
     },
 
     supabase: {
+        types: '~~/shared/types/database.types.ts',
         redirectOptions: {
             login: '/login',
             exclude: ['/**'],

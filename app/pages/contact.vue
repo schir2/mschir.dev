@@ -3,7 +3,7 @@ import {z} from 'zod'
 import {zodResolver} from '@primevue/forms/resolvers/zod'
 import type {FormSubmitEvent} from '@primevue/forms/form'
 
-import {ContactReason} from "../../shared/types/ContactReason";
+import type {ContactReason} from "#shared/types/ContactReason";
 
 definePageMeta({title: 'Contact'})
 
@@ -61,7 +61,7 @@ async function onFormSubmit(event: FormSubmitEvent) {
 
     <!-- Confirmation state -->
     <div v-if="submitted" class="flex flex-col items-center justify-center py-24 gap-6 text-center">
-      <i class="pi pi-check-circle text-green-400 text-6xl"/>
+      <icon name="material-symbols:check-circle" class="text-green-400 text-6xl"/>
       <h2 class="text-3xl font-bold">Message sent</h2>
       <p class="text-surface-400 max-w-md">
         Thanks for reaching out. I'll get back to you as soon as I can.
@@ -82,15 +82,15 @@ async function onFormSubmit(event: FormSubmitEvent) {
         </div>
         <ul class="flex flex-col gap-3">
           <li class="flex items-center gap-3 text-surface-300">
-            <i class="pi pi-briefcase text-primary"/>
+            <icon name="material-symbols:work" class="text-primary"/>
             Full-time engineering roles
           </li>
           <li class="flex items-center gap-3 text-surface-300">
-            <i class="pi pi-code text-primary"/>
+            <icon name="material-symbols:code" class="text-primary"/>
             Contract &amp; freelance projects
           </li>
           <li class="flex items-center gap-3 text-surface-300">
-            <i class="pi pi-book text-primary"/>
+            <icon name="material-symbols:menu-book" class="text-primary"/>
             Questions about my articles
           </li>
         </ul>
@@ -137,21 +137,19 @@ async function onFormSubmit(event: FormSubmitEvent) {
 
         <div class="flex flex-col gap-1">
           <label class="text-sm font-medium">Message</label>
-          <p-text-area name="message" placeholder="Tell me what's on your mind..." rows="6" fluid/>
+          <p-textarea name="message" placeholder="Tell me what's on your mind..." rows="6" fluid/>
           <p-message v-if="$form.message?.invalid" severity="error" size="small" variant="simple">
             {{ $form.message.error?.message }}
           </p-message>
         </div>
 
-        <TurnstilePlaceholder v-model="turnstileToken"/>
+        <turnstile-placeholder v-model="turnstileToken"/>
 
-        <p-button
-            type="submit"
-            label="Send Message"
-            icon="pi pi-send"
-            :loading="pending"
-            fluid
-        />
+        <p-button type="submit" label="Send Message" :loading="pending" fluid>
+          <template #icon>
+            <icon name="material-symbols:send"/>
+          </template>
+        </p-button>
       </p-form>
     </div>
   </section>

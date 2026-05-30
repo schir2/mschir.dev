@@ -78,6 +78,14 @@ Single-context repo — one `CONTEXT.md` + `docs/adr/` at the root. See `docs/ag
 
 ## Code Style
 
+### Component naming in templates
+
+Always use kebab-case for component names in templates, not PascalCase. This applies to all components:
+
+- PrimeVue (already kebab-case by design): `<p-button>`, `<p-form>`, `<p-input-text>`
+- Custom components: `<turnstile-placeholder>`, not `<TurnstilePlaceholder>`
+- `@nuxt/icon`: `<icon name="...">`, not `<Icon name="...">`
+
 ### Variable naming
 
 Always use full, descriptive variable names. Never use single-letter variables or opaque abbreviations. Code must be readable at a glance.
