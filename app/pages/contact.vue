@@ -13,21 +13,21 @@ const toast = useToast()
 const {data: reasons} = await useAsyncData<ContactReason[]>(
     'contact-reasons',
     async () => {
-        const {data} = await supabase
-            .from('contact_reasons')
-            .select('id, label, order')
-            .order('order')
-        return data ?? []
+      const {data} = await supabase
+          .from('contact_reasons')
+          .select('id, label, order')
+          .order('order')
+      return data ?? []
     },
     {lazy: true}
 )
 
 const ContactSchema = z.object({
-    name: z.string().min(2, 'Name must be at least 2 characters').max(100),
-    email: z.string().email('Please enter a valid email address'),
-    reason_id: z.string().min(1, 'Please select a reason for reaching out'),
-    message: z.string().min(10, 'Message must be at least 10 characters').max(2000),
-})
+  name: z.string().min(2, 'Name must be at least 2 characters').max(100),
+  email: z.string().email('Please enter a valid email address'),
+  reason_id: z.string().min(1, 'Please select a reason for reaching out'),
+  message: z.string().min(0, 'Message must be at least 10 characters').max(2000),
+} satisfies { [K in keyof ContactMessageInsert]: z.ZodTypeAny })
 
 const initialValues = reactive({name: '', email: '', reason_id: '', message: ''})
 const resolver = zodResolver(ContactSchema)
@@ -36,23 +36,20 @@ const pending = ref(false)
 const submitted = ref(false)
 
 async function onFormSubmit(event: FormSubmitEvent) {
-    if (!event.valid) return
-    if (!turnstileToken.value) {
-        toast.add({severity: 'warn', summary: 'Please complete the CAPTCHA', life: 4000})
-        return
-    }
-    pending.value = true
-    try {
-        await $fetch('/api/contact', {
-            method: 'POST',
-            body: {...event.values, turnstileToken: turnstileToken.value},
-        })
-        submitted.value = true
-    } catch {
-        toast.add({severity: 'error', summary: 'Something went wrong', detail: 'Please try again later.', life: 5000})
-    } finally {
-        pending.value = false
-    }
+  if (!event.valid) return
+  if (!turnstileToken.value) {
+    toast.add({severity: 'warn', summary: 'Please complete the CAPTCHA', life: 4000})
+    return
+  }
+  pending.value = true
+
+  const {data, error} = await supabase.from('contact_messages').insert(event.values)
+
+  if (error) {
+
+    toast.add({severity: 'error', summary: 'Something went wrong', detail: 'Please try again later.', life: 5000})
+  }
+  pending.value = false
 }
 </script>
 

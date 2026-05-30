@@ -1,10 +1,12 @@
 -- Shared helpers for the pgTAP test suite.
--- This file has no begin/rollback — the functions must persist for the entire test session.
--- The underscore prefix ensures lexicographic sort order places this file first.
+-- No begin/rollback — CREATE FUNCTION auto-commits so helpers persist for the entire test session.
+-- plan(0)/finish() satisfies pg_prove's requirement for a TAP header without running any assertions.
 --
 -- IMPORTANT: Database role switching (set local role anon / authenticated) must be done
 -- as bare statements in each test file, NOT via helper functions. PL/pgSQL functions
 -- restore GUC values on exit, which undoes SET LOCAL ROLE changes before the test can use them.
+
+select plan(1);
 
 create schema if not exists tests;
 
@@ -43,3 +45,7 @@ as $$
     true
   );
 $$;
+
+select pass('test helpers loaded');
+
+select * from finish();

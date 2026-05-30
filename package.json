@@ -13,6 +13,7 @@
     "supabase:link": "npx supabase link --project-ref nunhhchnxyreoflgxxdd",
     "supabase:start": "npx supabase start",
     "db:reset": "npx supabase db reset",
+    "db:migrate": "npx supabase db migrate up",
     "supabase:types": "npx supabase gen types typescript --local > shared/types/database.types.ts",
     "supabase:types-linked": "npx supabase gen types typescript --project-id nunhhchnxyreoflgxxdd > shared/types/database.types.ts",
     "test:db": "npx supabase test db",
