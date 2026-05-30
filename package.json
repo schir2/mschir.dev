@@ -14,7 +14,9 @@
     "supabase:start": "npx supabase start",
     "db:reset": "npx supabase db reset",
     "supabase:types": "npx supabase gen types typescript --local > shared/types/database.types.ts",
-    "supabase:types-linked": "npx supabase gen types typescript --project-id nunhhchnxyreoflgxxdd > shared/types/database.types.ts"
+    "supabase:types-linked": "npx supabase gen types typescript --project-id nunhhchnxyreoflgxxdd > shared/types/database.types.ts",
+    "test:db": "npx supabase test db",
+    "test:edge": "deno test --allow-all supabase/functions/tests/"
   },
   "dependencies": {
     "@nuxt/icon": "^2.2.2",
