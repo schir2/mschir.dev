@@ -19,8 +19,12 @@ pnpm run dev          # Start dev server at http://localhost:3000
 pnpm run build        # Build for production
 pnpm run preview      # Preview production build
 
+pnpm run supabase:start  # Start local Supabase stack (required before test:db and local dev against DB)
 pnpm run supabase:types  # Regenerate types/database.types.ts from remote Supabase schema
-pnpm run db:reset        # Reset linked remote Supabase DB and re-run migrations + seeds
+pnpm run db:reset        # Reset local Supabase DB and re-run migrations + seeds
+pnpm run db:migrate      # Apply pending migrations to the local DB without a full reset
+pnpm run test:db         # Run pgTAP database tests (requires supabase:start)
+pnpm run test:edge       # Run Deno edge function tests
 ```
 
 ## Architecture
@@ -32,7 +36,9 @@ This is a **Nuxt 4** personal portfolio site (mschir.dev) backed by **Supabase**
 - `app/` — Nuxt application root (pages, components, layouts, plugins)
 - `shared/types/` — TypeScript types shared across the app; `database.types.ts` is auto-generated from Supabase; domain types (e.g. `Projects.ts`) re-export from it
 - `supabase/migrations/` — ordered SQL migration files that define the schema
-- `supabase/seeds/` — numbered seed SQL files (`01_blog.sql`, `02_content.sql`, `03_projects.sql`, `04_project_skills.sql`)
+- `supabase/seeds/` — numbered seed SQL files run in order: `01_blog.sql`, `02_content.sql`, `03_projects.sql`, `04_project_skills.sql`, `05_test_users.sql` (test user for integration tests)
+- `supabase/seed.sql` — runs before numbered seeds; enables the pgTAP extension for local dev
+- `supabase/tests/` — pgTAP database tests and Deno edge function tests; see `supabase/tests/CLAUDE.md`
 - `primevue-theme.ts` — custom PrimeVue theme imported by `nuxt.config.ts`
 
 ### Key patterns
@@ -60,7 +66,15 @@ See `CONTEXT.md` for the domain model.
 
 ### Testing
 
-See `test/CLAUDE.md` for full testing rules — folder placement, naming conventions, and component requirements.
+Two separate test suites — do not mix them:
+
+| Layer | Location | Runner | Command |
+|---|---|---|---|
+| Vue components, composables, utils | `test/` | Vitest | `pnpm test` |
+| DB tables, functions, RLS policies | `supabase/tests/database/` | pgTAP | `pnpm run test:db` |
+| Edge functions | `supabase/functions/tests/` | Deno | `pnpm run test:edge` |
+
+See `test/CLAUDE.md` for Vitest rules. See `supabase/tests/CLAUDE.md` for pgTAP and edge function rules.
 
 ## Agent skills
 
