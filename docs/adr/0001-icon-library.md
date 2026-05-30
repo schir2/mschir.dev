@@ -15,3 +15,7 @@ PrimeIcons remain in the CSS bundle only to support PrimeVue's internal componen
 - Icon usage is consistent and not locked to PrimeVue's limited set.
 - Any Iconify icon is available with no additional setup.
 - `primeicons` CSS is kept but treated as an internal PrimeVue dependency, not a source for application icons.
+
+## Extension: database icon columns
+
+The `skills.icon` and `skill_categories.icon` columns store **Iconify icon names** (e.g. `"devicons:django"`, `"devicons:postgresql"`), not image file paths. The `devicons` and `simple-icons` Iconify collections cover all current skill entries. This avoids any need for custom image storage for skills, and keeps icon rendering consistent with the rest of the application. If a skill genuinely has no Iconify icon available, `icon` is left null.
