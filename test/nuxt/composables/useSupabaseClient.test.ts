@@ -1,5 +1,5 @@
 import { expect, it } from 'vitest'
-import { describeAuthenticated } from '../../helpers/auth'
+import { describeAuthenticated } from '#tests/helpers/auth'
 
 describeAuthenticated('useSupabaseClient', () => {
     it('fetches from a known table without error', async () => {

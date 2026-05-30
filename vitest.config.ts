@@ -7,6 +7,7 @@ export default defineConfig({
         alias: {
             '~': fileURLToPath(new URL('./', import.meta.url)),
             '@': fileURLToPath(new URL('./', import.meta.url)),
+            '#tests': fileURLToPath(new URL('./test', import.meta.url)),
         },
     },
     test: {
@@ -32,6 +33,11 @@ export default defineConfig({
                 },
             },
             await defineVitestProject({
+                resolve: {
+                    alias: {
+                        '#tests': fileURLToPath(new URL('./test', import.meta.url)),
+                    },
+                },
                 test: {
                     name: 'nuxt',
                     include: [

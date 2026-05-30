@@ -45,10 +45,10 @@ The shared auth helper lives in `test/helpers/auth.ts`.
 
 Use plain `describe(...)` when the test deliberately exercises unauthenticated behaviour.
 
-The helper must be explicitly imported in test files (it is not auto-imported):
+The helper must be explicitly imported in test files (it is not auto-imported). Use the `#tests` alias rather than a relative path:
 
 ```typescript
-import { describeAuthenticated } from '../../helpers/auth'
+import { describeAuthenticated } from '#tests/helpers/auth'
 
 describeAuthenticated('useMyComposable', () => {
     it('does something as an authenticated user', async () => {

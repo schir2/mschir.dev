@@ -1,7 +1,11 @@
 import {customTheme} from './primevue-theme'
+import { fileURLToPath } from 'node:url'
 
 export default defineNuxtConfig({
     compatibilityDate: '2026-01-10',
+    alias: {
+        '#tests': fileURLToPath(new URL('./test', import.meta.url)),
+    },
     devtools: {enabled: true},
     modules: [
         '@nuxt/icon',
