@@ -10,9 +10,10 @@
     "postinstall": "nuxt prepare",
     "supabase:login": "npx supabase login",
     "supabase:link": "npx supabase link --project-ref nunhhchnxyreoflgxxdd",
-    "supbase:start": "npx supbase start",
-    "db:reset": "npx supabase db reset --linked",
-    "supabase:types": "npx supabase gen types typescript --project-id nunhhchnxyreoflgxxdd > types/database.types.ts"
+    "supabase:start": "npx supabase start",
+    "db:reset": "npx supabase db reset",
+    "supabase:types": "npx supabase gen types typescript --local > shared/types/database.types.ts",
+    "supabase:types-linked": "npx supabase gen types typescript --project-id nunhhchnxyreoflgxxdd > shared/types/database.types.ts"
   },
   "dependencies": {
     "@nuxt/icon": "^2.2.2",

@@ -107,6 +107,7 @@ export default defineNuxtConfig({
                 'MenuItem',
                 'TieredMenu',
                 'ProgressSpinner',
+                'TextArea',
             ]
         },
         options: {

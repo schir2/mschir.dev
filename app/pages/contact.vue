@@ -2,7 +2,8 @@
 import {z} from 'zod'
 import {zodResolver} from '@primevue/forms/resolvers/zod'
 import type {FormSubmitEvent} from '@primevue/forms/form'
-import type {ContactReason} from '#shared/types/Contact'
+
+import {ContactReason} from "../../shared/types/ContactReason";
 
 definePageMeta({title: 'Contact'})
 
