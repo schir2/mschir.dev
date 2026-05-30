@@ -20,8 +20,8 @@ const {
 
 <template>
   <section>
-    <p-progress-spinner v-if="articlesLoading" />Let's go with the drop down.
-    <p v-else-if="articlesError">{{ articlesError.message }}</p>
+    <p-progress-spinner v-if="articlesLoading" />
+    <p v-else-if="articlesError">{{ articlesError?.message }}</p>
     <div v-else class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
       <p-card v-for="article in articles ?? []" :key="article.id">
         <template v-if="article.image_url" #header>

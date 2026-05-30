@@ -7,7 +7,7 @@ const config = useRuntimeConfig()
 const toast = useToast()
 
 definePageMeta({
-  title: 'Login',.
+  title: 'Login',
   layout: 'default'
 })
 
