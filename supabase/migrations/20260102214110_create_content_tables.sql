@@ -75,7 +75,8 @@ create table public.projects
     description text         not null,
     company_id  uuid         references public.companies (id) on delete set null,
     year        smallint     not null default extract(year from now()),
-    image_url   text
+    image_url   text,
+    constraint unique_project_name unique (name)
 );
 
 create index idx_projects_year on public.projects (year);
