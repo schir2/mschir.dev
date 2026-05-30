@@ -5,10 +5,9 @@ create table public.companies
 (
     id   uuid primary key default gen_random_uuid(),
     name varchar(255) not null,
-    url  text
+    url  text,
+    constraint unique_company_name unique (name)
 );
-
-create index idx_companies_name on public.companies (name);
 
 -- --------------------
 -- contact_messages

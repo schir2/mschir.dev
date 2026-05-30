@@ -27,3 +27,4 @@ logs
 # Claude
 .claude/settings.local.json
 /.nuxtrc
+/.claude/worktrees/
