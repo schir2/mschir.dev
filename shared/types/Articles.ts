@@ -13,7 +13,9 @@ export type ArticleDetail = Pick<Article, 'id' | 'title' | 'content' | 'created_
   article_topics: Pick<ArticleTopic, 'name'> | null
 }
 
-export type ArticleAdminListItem = Pick<Article, 'id' | 'title' | 'is_published' | 'created_at'> & {
+export type WritingStage = 'idea' | 'outline' | 'draft' | 'ready'
+
+export type ArticleAdminListItem = Pick<Article, 'id' | 'title' | 'writing_stage' | 'published_at' | 'created_at'> & {
   article_topics: Pick<ArticleTopic, 'name'> | null
   article_series: Pick<ArticleSeries, 'title'> | null
 }

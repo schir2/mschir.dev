@@ -1,75 +1,37 @@
-# Nuxt Minimal Starter
+# mschir.dev
 
-Look at the [Nuxt documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
+Personal portfolio site for Matthew Schiraldi. Built with Nuxt 4, Supabase (PostgreSQL + auth), and PrimeVue.
 
-## Setup
+## Stack
 
-Make sure to install dependencies:
+- **Frontend**: Nuxt 4, Vue 3, PrimeVue 4, Tailwind CSS
+- **Backend**: Supabase (PostgreSQL, Row-Level Security, Storage, Auth)
+- **Testing**: Vitest (components/composables), pgTAP (DB layer), Deno (edge functions)
+- **Markdown**: md-editor-v3 (editor + public rendering, with Mermaid and KaTeX)
 
-```bash
-# npm
-npm install
+## Development
 
-# pnpm
-pnpm install
-
-# yarn
-yarn install
-
-# bun
-bun install
+```powershell
+pnpm install              # Install dependencies
+pnpm run supabase:start   # Start local Supabase stack (required for local dev)
+pnpm run db:reset         # Reset local DB and re-run migrations + seeds
+pnpm run dev              # Start dev server at http://localhost:3000
 ```
 
-## Development Server
+## Commands
 
-Start the development server on `http://localhost:3000`:
-
-```bash
-# npm
-npm run dev
-
-# pnpm
-pnpm dev
-
-# yarn
-yarn dev
-
-# bun
-bun run dev
+```powershell
+pnpm run build            # Build for production
+pnpm run preview          # Preview production build
+pnpm run supabase:types   # Regenerate types/database.types.ts from schema
+pnpm run db:migrate       # Apply pending migrations without a full reset
+pnpm test                 # Run Vitest component/composable tests
+pnpm run test:db          # Run pgTAP database tests (requires supabase:start)
+pnpm run test:edge        # Run Deno edge function tests
 ```
 
-## Production
+## Documentation
 
-Build the application for production:
-
-```bash
-# npm
-npm run build
-
-# pnpm
-pnpm build
-
-# yarn
-yarn build
-
-# bun
-bun run build
-```
-
-Locally preview production build:
-
-```bash
-# npm
-npm run preview
-
-# pnpm
-pnpm preview
-
-# yarn
-yarn preview
-
-# bun
-bun run preview
-```
-
-Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
+- [`CLAUDE.md`](./CLAUDE.md) — development environment, conventions, and architecture guide for Claude Code
+- [`CONTEXT.md`](./CONTEXT.md) — domain glossary (canonical terms for all domain concepts)
+- [`docs/adr/`](./docs/adr/) — architecture decision records

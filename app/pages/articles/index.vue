@@ -11,7 +11,8 @@ const {
   const { data, error } = await supabase
     .from('articles')
     .select('id, title, slug, author, created_at, image_url, article_topics(name, slug)')
-    .eq('is_published', true)
+    .not('published_at', 'is', null)
+    .is('archived_at', null)
     .order('created_at', { ascending: false })
   if (error) throw error
   return data as ArticleListItem[]

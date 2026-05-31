@@ -14,8 +14,10 @@ The project already has `@tailwindcss/typography` installed. The obvious default
 
 ## Decision
 Use **md-editor-v3** for both surfaces:
-- `<md-editor>` in the admin editor page
-- `<md-editor-v3 type="preview">` (read-only) on the public article page
+- `MdEditor` component in the admin editor page
+- `MdPreview` component (read-only, lighter bundle) on the public article page
+
+Both components are registered globally via `app/plugins/md-editor-v3.client.ts` (Nuxt `.client.ts` convention — runs client-side only). On the public article page, the component is additionally wrapped in `<client-only>` because Mermaid rendering requires browser APIs. `md-editor-v3/lib/style.css` (full CSS) is imported once in the plugin and covers both components.
 
 Use md-editor-v3's own built-in CSS for all article content styling. Do not apply Tailwind Typography `prose` classes to article content.
 

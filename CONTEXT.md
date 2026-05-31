@@ -40,14 +40,45 @@ When an entity's image is replaced: (1) upload the new file to a new UUID path, 
 
 ## Article Domain
 
+### Article Category
+A first-class browse lane that classifies every article into one of a small, stable set of mutually exclusive buckets (e.g. *Software Development*, *Career*, *Finance*). Each article belongs to exactly one category. Stored in the `article_categories` table (`id`, `name`, `slug`, `description`); articles reference it via `category_id`. Distinct from Article Tags, which are cross-cutting labels that span multiple categories.
+
+### Article Tag
+A cross-cutting label attached to an article. An article can have many tags; the same tag can appear on articles across different categories (e.g. *Python* might appear on both a Software Development article and a Finance article). Stored in `article_tags` with a many-to-many join via `article_tags_links`. Tags are used for drill-down filtering, not top-level navigation.
+
 ### Article Editor
-The admin UI for creating and editing articles, at `/admin/articles/[id]`. Layout: a metadata bar across the top (series, topic, tags, slug, hero image, publish toggle) and a split markdown editor + live preview below. Access is restricted to admin users via global Nuxt middleware.
+The admin UI for creating and editing articles. `/admin/articles/new` creates a new article; `/admin/articles/[id]` edits an existing one. Layout: a metadata bar across the top (title, slug, hero image, category, tags, series + sequence number, publish date, archive date) and a full-width split markdown editor + live preview below. Access is restricted to admin users via global Nuxt middleware.
+
+Keyboard shortcuts in the editor: **Ctrl+Alt+1–6** apply heading levels 1–6 (wraps selected text or inserts the prefix at the cursor). Standard shortcuts (Ctrl+B, Ctrl+I, etc.) are handled natively by the editor's CodeMirror layer.
 
 ### Article List (Admin)
-The `/admin/articles` page. A PrimeVue DataTable showing all articles including drafts, with metadata columns: title, topic, series, status, created date, and edit/delete actions. Modelled after Django's changelist — every relevant property visible at a glance without opening the record.
+The `/admin/articles` page. A PrimeVue DataTable showing all articles including drafts, with metadata columns: title, category, series, status, created date, and edit/delete actions. Modelled after Django's changelist — every relevant property visible at a glance without opening the record.
 
-### Draft
-An article with `is_published = false`. Visible in the Article List (Admin) but excluded from the public `/articles` page.
+### Writing Stage
+The editorial workflow state of an article. Stored as the `writing_stage` enum column on `articles`. Tracks where the article is in the writing process, independent of whether it is published. Default is `idea`.
+
+| Value | Meaning |
+|---|---|
+| `idea` | Title or topic captured; no content yet |
+| `outline` | Structure exists; no prose written |
+| `draft` | Writing in progress |
+| `ready` | Writing complete and polished; waiting to be published |
+
+### Article Status
+Derived from two nullable timestamp columns on `articles`: `published_at` and `archived_at`. Distinct from Writing Stage — status describes visibility, not editorial progress.
+
+| `published_at` | `archived_at` | Derived status |
+|---|---|---|
+| NULL | NULL | Unpublished |
+| NOT NULL | NULL | Published |
+| NOT NULL | NOT NULL | Archived |
+| NULL | NOT NULL | (invalid — archive without publish is not meaningful) |
+
+### Published Article
+An article where `published_at IS NOT NULL` and `archived_at IS NULL`. Readable on the public article page. `published_at` records when the article was first made public.
+
+### Archived Article
+An article where `archived_at IS NOT NULL`. Still publicly readable, but displayed with an "archived" banner indicating the content may be outdated. `archived_at` records when archiving occurred.
 
 ### Article Slug
 Auto-generated from the article title on creation (e.g. "My First Article" → "my-first-article"). Manually overridable before first publish. Locked after first publish to prevent breaking external links.
@@ -62,7 +93,35 @@ An image embedded within article markdown body (e.g. a diagram or callout screen
 A Postgres table recording every INSERT, UPDATE, and DELETE event on `articles` via a trigger. Not exposed in the UI. Serves as a reconstruction ladder — past article states can be rebuilt by walking the log backward. Restore as a first-class feature is deferred.
 
 ### Inline Metadata Creation
-Topics, tags, and series can be created on the fly from within the Article Editor without leaving the page. The series sequence number auto-assigns to `max + 1` for the chosen series, with manual override available.
+Categories, tags, and series can be created on the fly from within the Article Editor without leaving the page. The series sequence number auto-assigns to `max + 1` for the chosen series, with manual override available.
+
+### Article Landing Page
+The `/articles` route. A visual dashboard that serves as the entry point to the article section. Four sections in order: Featured Articles (from the `featured_articles` table), Recent Articles (latest 5 published, excluding featured), Series (all series with at least one published article, rendered as Series Cards), and Browse by Category (chip links into the Article Browse Page filtered by category). Sections with no content are hidden.
+
+### Article Browse Page
+The `/articles/browse` route. A filterable grid of all published articles. Filters by category (single-select) and tags (multi-select) are reflected in the URL query string (`?category=` and `?tag=`) so filtered views are bookmarkable and shareable. Filtering is client-side (computed properties over the full loaded list). Initialises filter state from the URL on mount; updates the URL via `router.replace` on filter change.
+
+### Article Series Page
+The `/articles/series/[slug]` route. Displays a series title and description, then lists all published articles in the series ordered by `series_sequence_number` ascending. Used to read a series sequentially from part 1 to the end. Returns 404 if the series slug does not exist.
+
+### Article Detail Page
+The `/articles/[slug]` route. The full reading experience for a single published or archived article. Layout and features:
+
+- **Hero image** — constrained banner (within the article container) above the title if `image_url` is set.
+- **Metadata bar** — category, tags (as chips linking to `/articles/browse?tag=[slug]`), `published_at` date, `view_count`, and hard-coded author name. Archived articles display a prominent "Archived" banner.
+- **Series panel** — shown when the article belongs to a series. Collapsible panel near the top displaying the series title and a numbered list of all articles in the series, with the current article highlighted. Allows jumping to any part directly.
+- **Article content** — rendered via `MdPreview` (md-editor-v3) inside `<client-only>`.
+- **TOC sidebar** — fixed collapsible right sidebar using `MdCatalog` (md-editor-v3 built-in). Collapsed to a toggle button when the reader wants a distraction-free view. Hidden on mobile.
+- **Series prev/next** — at the bottom of the article, links to the previous and next articles in the series by `series_sequence_number`.
+- **Admin edit button** — visible only to admin users; links to `/admin/articles/[id]`.
+
+Drafts (`published_at IS NULL`) return 404 for all users on this page — preview happens in the Article Editor. Archived articles (`archived_at IS NOT NULL`) remain publicly readable with an archived banner.
+
+### Article TOC
+The collapsible fixed right-sidebar table of contents on the Article Detail Page. Rendered by md-editor-v3's `MdCatalog` component, which auto-generates entries from the headings in the rendered article content. Highlights the active section as the reader scrolls. Collapsible to a toggle button so readers can enter a distraction-free reading mode.
+
+### Series Panel
+A collapsible UI block on the Article Detail Page, shown when the article belongs to a series. Displays the series title, a numbered list of all articles in the series (ordered by `series_sequence_number`), and highlights the currently-reading article. Allows the reader to jump to any part. Distinct from the Series Prev/Next nav at the bottom, which only exposes the immediately adjacent articles.
 
 ### Admin Route Protection
 All `/admin/**` routes are guarded by a global Nuxt route middleware (`middleware/admin.global.ts`) that checks both authentication and `app_metadata.role === 'admin'`. The DB-level RLS is the authoritative security boundary; the middleware prevents non-admin users from seeing a broken UI.

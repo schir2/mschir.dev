@@ -34,6 +34,30 @@ export type Database = {
   }
   public: {
     Tables: {
+      article_audit_log: {
+        Row: {
+          changed_at: string
+          id: string
+          new_data: Json | null
+          old_data: Json | null
+          operation: string
+        }
+        Insert: {
+          changed_at?: string
+          id?: string
+          new_data?: Json | null
+          old_data?: Json | null
+          operation: string
+        }
+        Update: {
+          changed_at?: string
+          id?: string
+          new_data?: Json | null
+          old_data?: Json | null
+          operation?: string
+        }
+        Relationships: []
+      }
       article_interactions: {
         Row: {
           article_id: string
@@ -170,12 +194,13 @@ export type Database = {
       }
       articles: {
         Row: {
+          archived_at: string | null
           author: string
           content: string
           created_at: string
           id: string
           image_url: string | null
-          is_published: boolean
+          published_at: string | null
           series_id: string | null
           series_sequence_number: number | null
           slug: string
@@ -183,14 +208,16 @@ export type Database = {
           topic_id: string | null
           updated_at: string
           view_count: number
+          writing_stage: Database["public"]["Enums"]["writing_stage"]
         }
         Insert: {
+          archived_at?: string | null
           author?: string
           content: string
           created_at?: string
           id?: string
           image_url?: string | null
-          is_published?: boolean
+          published_at?: string | null
           series_id?: string | null
           series_sequence_number?: number | null
           slug: string
@@ -198,14 +225,16 @@ export type Database = {
           topic_id?: string | null
           updated_at?: string
           view_count?: number
+          writing_stage?: Database["public"]["Enums"]["writing_stage"]
         }
         Update: {
+          archived_at?: string | null
           author?: string
           content?: string
           created_at?: string
           id?: string
           image_url?: string | null
-          is_published?: boolean
+          published_at?: string | null
           series_id?: string | null
           series_sequence_number?: number | null
           slug?: string
@@ -213,6 +242,7 @@ export type Database = {
           topic_id?: string | null
           updated_at?: string
           view_count?: number
+          writing_stage?: Database["public"]["Enums"]["writing_stage"]
         }
         Relationships: [
           {
@@ -272,16 +302,19 @@ export type Database = {
       companies: {
         Row: {
           id: string
+          logo_url: string | null
           name: string
           url: string | null
         }
         Insert: {
           id?: string
+          logo_url?: string | null
           name: string
           url?: string | null
         }
         Update: {
           id?: string
+          logo_url?: string | null
           name?: string
           url?: string | null
         }
@@ -683,6 +716,7 @@ export type Database = {
     Enums: {
       interaction_type: "like" | "dislike"
       skill_proficiency: "beginner" | "intermediate" | "advanced" | "expert"
+      writing_stage: "idea" | "outline" | "draft" | "ready"
     }
     CompositeTypes: {
       _time_trial_type: {
@@ -817,6 +851,7 @@ export const Constants = {
     Enums: {
       interaction_type: ["like", "dislike"],
       skill_proficiency: ["beginner", "intermediate", "advanced", "expert"],
+      writing_stage: ["idea", "outline", "draft", "ready"],
     },
   },
 } as const
