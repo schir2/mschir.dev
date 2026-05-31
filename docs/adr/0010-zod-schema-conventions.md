@@ -14,7 +14,10 @@ Early implementations (e.g. `useAuthCredentials.ts`) bundled the schema, inferre
 
 ### Schema files live in `app/schemas/`
 
-File naming: `<Domain>Schema.ts` — e.g. `CredentialsSchema.ts`, `ContactSchema.ts`.
+File naming follows two patterns:
+
+- **DB-backed CRUD forms**: `<Entity><Operation>Schema.ts` — e.g. `ContactMessageInsertSchema.ts`, `ContactMessageUpdateSchema.ts`. The operation suffix matches the Supabase-generated type being satisfied (`Insert` / `Update`) and signals which form the schema belongs to. Insert and Update schemas are kept in separate files because their field sets often differ (e.g. an Update schema may require an `id` and make most fields optional).
+- **Non-DB forms**: `<Domain>Schema.ts` — e.g. `CredentialsSchema.ts`.
 
 ### Schema files export the Zod schema only
 

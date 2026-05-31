@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import {zodResolver} from '@primevue/forms/resolvers/zod'
 import type {FormSubmitEvent} from '@primevue/forms/form'
-import { ContactMessageInsertSchema } from '../schemas/ContactMessageInsertSchema'
+import { ContactMessageInsertSchema } from '~/schemas/ContactMessageInsertSchema'
 
 import type {ContactReason} from "#shared/types/ContactReason";
 
