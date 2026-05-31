@@ -1,0 +1,20 @@
+/* md-editor-v3 overrides
+ * All colors use var(--p-*) tokens so dark mode stays consistent.
+ * Base styles are imported in app/plugins/md-editor-v3.client.ts.
+ */
+
+/* Article detail preview: remove editor chrome */
+#article-detail {
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  padding: 0;
+}
+
+#article-detail .md-editor-preview-wrapper {
+  padding: 0;
+}
+
+#article-detail .md-editor-preview {
+  --md-theme-bg-color: transparent;
+}
