@@ -7,7 +7,7 @@ const config = useRuntimeConfig()
 const toast = useToast()
 
 definePageMeta({
-  title: 'Login',
+  title: 'Register',
   layout: 'default'
 })
 
@@ -34,9 +34,6 @@ async function signUp(signUpCredentials: Credentials) {
       detail: error.message
     })
   }
-  else {
-    console.log(data)
-  }
 }
 
 async function onFormSubmit(event: FormSubmitEvent) {
@@ -51,8 +48,6 @@ async function onLoginWithGoogle() {
     options: {
       redirectTo: `${config.public.siteUrl}`,
     }
-  }).finally(async () => {
-    console.log('done')
   })
 }
 </script>
@@ -64,7 +59,7 @@ async function onLoginWithGoogle() {
       </template>
     </p-card>
     <p-card v-else>
-      <template #title>Login to mschir.dev</template>
+      <template #title>Create an Account</template>
       <template #content>
         <p-form
             v-slot="$form"
