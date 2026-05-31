@@ -19,8 +19,13 @@ export type ArticleListItem = Pick<Article, 'id' | 'title' | 'slug' | 'author' |
   article_categories: Pick<ArticleCategory, 'name' | 'slug'> | null
 }
 
-export type ArticleDetail = Pick<Article, 'id' | 'title' | 'content' | 'created_at' | 'archived_at'> & {
-  article_categories: Pick<ArticleCategory, 'name'> | null
+export type ArticleDetail = Pick<Article,
+  'id' | 'title' | 'slug' | 'content' | 'image_url' | 'published_at' | 'archived_at' |
+  'view_count' | 'series_id' | 'series_sequence_number'
+> & {
+  article_categories: Pick<ArticleCategory, 'name' | 'slug'> | null
+  article_tags_links: Array<{ article_tags: Pick<ArticleTag, 'name' | 'slug'> }>
+  article_series: Pick<ArticleSeries, 'title' | 'slug' | 'description'> | null
 }
 
 export type WritingStage = 'idea' | 'outline' | 'draft' | 'ready'
