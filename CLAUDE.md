@@ -53,6 +53,13 @@ This is a **Nuxt 4** personal portfolio site (mschir.dev) backed by **Supabase**
 
 **Forms** — Zod schemas validated with `@primevue/forms/resolvers/zod` inside PrimeVue `<p-form>`.
 
+**md-editor-v3** — `MdEditor`, `MdPreview`, and `MdCatalog` are registered globally in `app/plugins/md-editor-v3.client.ts`. Three props are required on every usage:
+- `language="en-US"` — the library defaults to `zh-CN`; omitting this produces Chinese UI strings
+- `:theme="mdTheme"` — use the `useMdEditorTheme()` composable; do not hardcode `"dark"`
+- `scroll-element="html"` on `<md-catalog>` — the default scroll target is the non-scrollable preview wrapper; without this, TOC clicks do nothing
+
+See `docs/adr/0006-md-editor-v3-for-article-rendering.md` for the full rationale and CSS override patterns.
+
 ### Database schema (high level)
 
 See `CONTEXT.md` for the domain model.

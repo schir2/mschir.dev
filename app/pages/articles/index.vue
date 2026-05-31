@@ -73,9 +73,9 @@ const {
 </script>
 
 <template>
-  <div class="articles-landing">
-    <section v-if="featuredPending || (featuredArticles && featuredArticles.length > 0)" class="section">
-      <h2 class="section-title">Featured Articles</h2>
+  <div class="max-w-6xl mx-auto px-6 py-12 flex flex-col gap-16">
+    <section v-if="featuredPending || (featuredArticles && featuredArticles.length > 0)" class="flex flex-col gap-6">
+      <h2 class="text-2xl font-bold">Featured Articles</h2>
       <p-progress-spinner v-if="featuredPending" />
       <p v-else-if="featuredError">{{ featuredError.message }}</p>
       <div v-else class="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -88,10 +88,10 @@ const {
       </div>
     </section>
 
-    <section class="section">
-      <div class="flex items-center justify-between mb-4">
-        <h2 class="section-title">Recent Articles</h2>
-        <nuxt-link to="/articles/browse" class="browse-link">Browse all articles</nuxt-link>
+    <section class="flex flex-col gap-6">
+      <div class="flex items-center justify-between">
+        <h2 class="text-2xl font-bold">Recent Articles</h2>
+        <nuxt-link to="/articles/browse" class="text-primary text-sm hover:underline">Browse all articles</nuxt-link>
       </div>
       <p-progress-spinner v-if="recentPending" />
       <p v-else-if="recentError">{{ recentError.message }}</p>
@@ -104,8 +104,8 @@ const {
       </div>
     </section>
 
-    <section v-if="seriesPending || (seriesList && seriesList.length > 0)" class="section">
-      <h2 class="section-title">Series</h2>
+    <section v-if="seriesPending || (seriesList && seriesList.length > 0)" class="flex flex-col gap-6">
+      <h2 class="text-2xl font-bold">Series</h2>
       <p-progress-spinner v-if="seriesPending" />
       <p v-else-if="seriesError">{{ seriesError.message }}</p>
       <div v-else class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -117,8 +117,8 @@ const {
       </div>
     </section>
 
-    <section class="section">
-      <h2 class="section-title">Browse by Category</h2>
+    <section class="flex flex-col gap-6">
+      <h2 class="text-2xl font-bold">Browse by Category</h2>
       <p-progress-spinner v-if="categoriesPending" />
       <p v-else-if="categoriesError">{{ categoriesError.message }}</p>
       <div v-else class="flex flex-wrap gap-2">
@@ -126,7 +126,7 @@ const {
           v-for="category in categories ?? []"
           :key="category.slug"
           :to="`/articles/browse?category=${category.slug}`"
-          class="category-chip"
+          class="inline-flex items-center px-3 py-1 rounded-full border border-surface-600 text-sm hover:border-primary hover:text-primary transition-colors"
         >
           {{ category.name }}
         </nuxt-link>

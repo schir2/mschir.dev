@@ -47,10 +47,48 @@ const formattedPublishedAt = computed(() => {
     day: 'numeric',
   })
 })
+
+type SeriesSibling = {
+  id: string
+  title: string
+  slug: string
+  series_sequence_number: number | null
+}
+
+const { data: seriesSiblings } = await useAsyncData<SeriesSibling[]>(
+  `series-${slug}`,
+  async () => {
+    const seriesId = article.value?.series_id
+    if (!seriesId) return []
+
+    const { data, error } = await supabase
+      .from('articles')
+      .select('id, title, slug, series_sequence_number')
+      .eq('series_id', seriesId)
+      .not('published_at', 'is', null)
+      .order('series_sequence_number')
+
+    if (error) throw error
+    return data ?? []
+  },
+  { lazy: true, watch: [() => article.value?.series_id] },
+)
+
+const mdTheme = useMdEditorTheme()
+
+const { previousArticle, nextArticle, allArticles } = useSeriesNavigation(
+  computed(() => ({
+    id: article.value?.id ?? '',
+    series_sequence_number: article.value?.series_sequence_number ?? null,
+  })),
+  computed(() => seriesSiblings.value ?? []),
+)
 </script>
 
 <template>
   <div class="max-w-4xl mx-auto px-4 py-8">
+    <article-toc-sidebar editor-id="article-detail" />
+
     <p-progress-spinner v-if="articleLoading" />
     <article v-else-if="article">
       <article-archived-banner :archived-at="article.archived_at" />
@@ -63,7 +101,10 @@ const formattedPublishedAt = computed(() => {
       />
 
       <header class="mb-8">
-        <h1 class="text-3xl font-bold mb-4">{{ article.title }}</h1>
+        <div class="flex justify-between items-start mb-4">
+          <h1 class="text-3xl font-bold">{{ article.title }}</h1>
+          <article-admin-edit-button :article-id="article.id" />
+        </div>
         <div class="flex flex-wrap gap-3 text-sm text-color-secondary items-center">
           <span v-if="article.article_categories">
             {{ article.article_categories.name }}
@@ -83,13 +124,45 @@ const formattedPublishedAt = computed(() => {
         </div>
       </header>
 
+      <article-series-panel
+        v-if="article.article_series && allArticles.length > 1"
+        :series="article.article_series"
+        :all-articles="allArticles"
+        :current-article-id="article.id"
+      />
+
       <client-only>
-        <!-- editorId "article-detail" is referenced by the TOC sidebar (MdCatalog) -->
+        <!-- editorId "article-detail" is referenced by ArticleTocSidebar (MdCatalog) -->
         <md-preview
           editor-id="article-detail"
+          language="en-US"
+          :theme="mdTheme"
           :model-value="article.content"
         />
       </client-only>
+
+      <article-series-prev-next
+        v-if="article.series_id"
+        :previous-article="previousArticle"
+        :next-article="nextArticle"
+      />
     </article>
   </div>
 </template>
+
+<style>
+#article-detail {
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  padding: 0;
+}
+
+#article-detail .md-editor-preview-wrapper {
+  padding: 0;
+}
+
+#article-detail .md-editor-preview {
+  --md-theme-bg-color: transparent;
+}
+</style>

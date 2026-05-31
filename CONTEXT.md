@@ -95,6 +95,15 @@ A Postgres table recording every INSERT, UPDATE, and DELETE event on `articles` 
 ### Inline Metadata Creation
 Categories, tags, and series can be created on the fly from within the Article Editor without leaving the page. The series sequence number auto-assigns to `max + 1` for the chosen series, with manual override available.
 
+### Article Card
+A reusable card component (`ArticleCard`) that renders a single article preview from an `ArticleCardItem` prop. Does no data fetching. Displays: hero image, title (link to `/articles/[slug]`), category chip (link to `/articles/browse?category=[slug]`), up to three tag badges, publish date, and a series badge when the article belongs to a series. Accepts an optional `size` prop (`'featured' | 'default'`) for layout variation. Visual hierarchy: category uses `<p-chip>` (pill, folder icon), tags use `<p-tag severity="secondary">` (small rectangular), series badge uses `<p-tag severity="info">` (blue, list icon).
+
+### Series Card
+A reusable card component (`SeriesCard`) that renders a series preview from an `ArticleSeriesSummary` prop. Does no data fetching. Displays: series title (link to `/articles/series/[slug]`), article count as a `<p-tag severity="secondary">` badge, and series description.
+
+### Category Tag Filter
+A reusable filter bar component (`CategoryTagFilter`) used on the Article Browse Page. Accepts `categories`, `tags`, `modelCategory` (single-select slug or null), and `modelTags` (multi-select slug array) as props. Emits `update:modelCategory` and `update:modelTags` on interaction. Clicking an active category chip deselects it (emits null). Tag chips toggle on/off independently (multi-select). Does no data fetching — the parent page owns query and URL state.
+
 ### Article Landing Page
 The `/articles` route. A visual dashboard that serves as the entry point to the article section. Four sections in order: Featured Articles (from the `featured_articles` table), Recent Articles (latest 5 published, excluding featured), Series (all series with at least one published article, rendered as Series Cards), and Browse by Category (chip links into the Article Browse Page filtered by category). Sections with no content are hidden.
 
