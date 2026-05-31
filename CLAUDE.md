@@ -52,6 +52,8 @@ This is a **Nuxt 4** personal portfolio site (mschir.dev) backed by **Supabase**
 
 **UI** — PrimeVue 4 components are auto-imported with the `p` prefix (e.g. `<p-card>`, `<p-button>`). Dark mode is always active (`htmlAttrs.class: 'dark-mode'`). PrimeVue `DialogService` and `ToastService` are registered as Nuxt plugins.
 
+**CSS layering** — three layers in strict priority order: (1) PrimeVue tokens (`var(--p-primary-*)`, `var(--p-surface-*)`) for all colors; (2) Tailwind utilities for layout/spacing/breakpoints only — no raw color class names for brand colors; (3) third-party overrides in `app/assets/css/overrides/<lib>.css`, imported via `app/assets/css/main.css`. See `docs/adr/0008-css-layering-strategy.md`.
+
 **Forms** — Zod schemas validated with `@primevue/forms/resolvers/zod` inside PrimeVue `<p-form>`.
 
 **md-editor-v3** — `MdEditor`, `MdPreview`, and `MdCatalog` are registered globally in `app/plugins/md-editor-v3.client.ts`. Three props are required on every usage:
