@@ -51,7 +51,7 @@ VALUES (
            '',
            NULL,
            '2026-05-05 01:18:38.747891+00',
-           '{"provider":"email","providers":["email"]}'::jsonb,
+           '{"provider":"email","providers":["email"],"role":"admin"}'::jsonb,
            '{"email_verified":true}'::jsonb,
            NULL,
            '2026-05-05 01:17:50.40333+00',
