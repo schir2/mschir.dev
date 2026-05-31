@@ -140,7 +140,7 @@ async function onFormSubmit(event: FormSubmitEvent) {
           </p-message>
         </div>
 
-        <turnstile-placeholder v-model="turnstileToken"/>
+        <auth-turnstile-placeholder v-model="turnstileToken"/>
 
         <p-button type="submit" label="Send Message" :loading="pending" fluid>
           <template #icon>

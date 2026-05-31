@@ -174,6 +174,10 @@ As the admin section grows, additional admin links are added here. A Profile ite
 ### About Page
 The `/about` route. Positions the site owner as an independent expert and solution provider — not a job seeker. Tone is that of a selective, already-busy consultant who chooses engagements, not someone pitching for work. Written for business decision-makers, potential contracting clients, and developer peers. Deliberately distinct from the Portfolio Page (which goes deep on skills and projects for someone who already has a resume in hand). Drives visitors toward the Contact page to start a conversation.
 
+**Layout**: B+C hybrid — two-column hero (prose left, service pillar cards right), narrative tone throughout (no hard section labels), full-width articles strip and CTA below. Four sections in order: (1) Hero — opener + how-I-work paragraph, (2) Service Pillars — 2×2 card grid, (3) Recent Writing — latest 3 published articles from DB, (4) CTA.
+
+**Articles**: latest 3 published articles fetched from DB (`ORDER BY published_at DESC LIMIT 3`). Distinct from Portfolio's curated `featured_articles`. Signals ongoing activity rather than curation. Portfolio = best work; About = active expert.
+
 ### Service Pillars
 The four core capability areas presented on the About Page. Each is a distinct type of engagement, but all share the same consulting-first approach: understand the business workflow before writing any code.
 

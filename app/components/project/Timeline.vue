@@ -12,7 +12,7 @@ defineProps<{
     <p-timeline :value="projects" align="alternate" class="customized-timeline">
       <template #marker>
         <span class="flex w-8 h-8 items-center justify-center text-white rounded-full z-10 shadow-sm bg-primary">
-          <Icon name="material-symbols:code"/>
+          <icon name="material-symbols:code"/>
         </span>
       </template>
       <template #content="slotProps">

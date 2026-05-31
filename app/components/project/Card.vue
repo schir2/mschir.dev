@@ -15,5 +15,4 @@ const {project} = defineProps<Props>()
     <template #subtitle>{{ project.year}}</template>
     <template #content>{{ project.description }}</template>
   </p-card>
-  <pre>{{project}}</pre>
 </template>

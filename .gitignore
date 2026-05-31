@@ -6,6 +6,11 @@
 .cache
 dist
 
+# Temp Files
+/.nuxtrc
+/.npmrc
+/*.stackdump
+
 # Node dependencies
 node_modules
 
@@ -26,5 +31,4 @@ logs
 
 # Claude
 .claude/settings.local.json
-/.nuxtrc
 /.claude/worktrees/
