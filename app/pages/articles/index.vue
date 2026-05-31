@@ -1,46 +1,136 @@
 <script lang="ts" setup>
-import type { ArticleListItem } from '#shared/types/Articles'
+import type { ArticleCardItem, ArticleSeriesSummary, ArticleCategory } from '#shared/types/Articles'
 
 const supabase = useSupabaseClient()
 
+const articleCardSelect = 'id, title, slug, published_at, image_url, series_id, series_sequence_number, article_categories(name, slug), article_tags_links(article_tags(name, slug)), article_series(title, slug)'
+
 const {
-  data: articles,
-  error: articlesError,
-  pending: articlesLoading,
-} = await useAsyncData<ArticleListItem[]>('articles', async () => {
+  data: featuredArticles,
+  error: featuredError,
+  pending: featuredPending,
+} = useAsyncData<ArticleCardItem[]>('featured-articles', async () => {
+  const { data, error } = await supabase
+    .from('featured_articles')
+    .select(`article_id, articles(${articleCardSelect})`)
+    .limit(3)
+  if (error) throw error
+  return (data ?? []).map((row: any) => row.articles).filter(Boolean) as ArticleCardItem[]
+}, { lazy: true })
+
+const featuredIds = computed(() => (featuredArticles.value ?? []).map((article) => article.id))
+
+const {
+  data: recentArticles,
+  error: recentError,
+  pending: recentPending,
+} = useAsyncData<ArticleCardItem[]>('recent-articles', async () => {
   const { data, error } = await supabase
     .from('articles')
-    .select('id, title, slug, author, created_at, image_url, article_categories(name, slug)')
+    .select(articleCardSelect)
     .not('published_at', 'is', null)
     .is('archived_at', null)
-    .order('created_at', { ascending: false })
+    .order('published_at', { ascending: false })
+    .limit(10)
   if (error) throw error
-  return data as ArticleListItem[]
+  const allRecent = (data ?? []) as ArticleCardItem[]
+  const excluded = new Set(featuredIds.value)
+  return allRecent.filter((article) => !excluded.has(article.id)).slice(0, 5)
+}, { lazy: true, watch: [featuredIds] })
+
+const {
+  data: seriesList,
+  error: seriesError,
+  pending: seriesPending,
+} = useAsyncData<ArticleSeriesSummary[]>('article-series', async () => {
+  const { data, error } = await supabase
+    .from('article_series')
+    .select('id, title, slug, description, articles(id, published_at)')
+  if (error) throw error
+  return (data ?? [])
+    .map((seriesRow: any) => ({
+      id: seriesRow.id,
+      title: seriesRow.title,
+      slug: seriesRow.slug,
+      description: seriesRow.description,
+      article_count: (seriesRow.articles ?? []).filter((article: any) => article.published_at !== null).length,
+    }))
+    .filter((series: ArticleSeriesSummary) => series.article_count > 0) as ArticleSeriesSummary[]
+}, { lazy: true })
+
+const {
+  data: categories,
+  error: categoriesError,
+  pending: categoriesPending,
+} = useAsyncData<Pick<ArticleCategory, 'name' | 'slug'>[]>('article-categories', async () => {
+  const { data, error } = await supabase
+    .from('article_categories')
+    .select('name, slug')
+    .order('name')
+  if (error) throw error
+  return (data ?? []) as Pick<ArticleCategory, 'name' | 'slug'>[]
 }, { lazy: true })
 </script>
 
 <template>
-  <section>
-    <p-progress-spinner v-if="articlesLoading" />
-    <p v-else-if="articlesError">{{ articlesError?.message }}</p>
-    <div v-else class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-      <p-card v-for="article in articles ?? []" :key="article.id">
-        <template v-if="article.image_url" #header>
-          <img :src="article.image_url" :alt="article.title" class="w-full object-cover" />
-        </template>
-        <template #title>
-          <NuxtLink :to="`/articles/${article.slug}`">{{ article.title }}</NuxtLink>
-        </template>
-        <template v-if="article.article_categories" #subtitle>
-          {{ article.article_categories.name }}
-        </template>
-        <template #content>
-          <div class="flex justify-between text-sm">
-            <span>{{ article.author }}</span>
-            <span>{{ new Date(article.created_at).toLocaleDateString() }}</span>
-          </div>
-        </template>
-      </p-card>
-    </div>
-  </section>
+  <div class="articles-landing">
+    <section v-if="featuredPending || (featuredArticles && featuredArticles.length > 0)" class="section">
+      <h2 class="section-title">Featured Articles</h2>
+      <p-progress-spinner v-if="featuredPending" />
+      <p v-else-if="featuredError">{{ featuredError.message }}</p>
+      <div v-else class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <article-card
+          v-for="article in featuredArticles"
+          :key="article.id"
+          :article="article"
+          size="featured"
+        />
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="flex items-center justify-between mb-4">
+        <h2 class="section-title">Recent Articles</h2>
+        <nuxt-link to="/articles/browse" class="browse-link">Browse all articles</nuxt-link>
+      </div>
+      <p-progress-spinner v-if="recentPending" />
+      <p v-else-if="recentError">{{ recentError.message }}</p>
+      <div v-else class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <article-card
+          v-for="article in recentArticles ?? []"
+          :key="article.id"
+          :article="article"
+        />
+      </div>
+    </section>
+
+    <section v-if="seriesPending || (seriesList && seriesList.length > 0)" class="section">
+      <h2 class="section-title">Series</h2>
+      <p-progress-spinner v-if="seriesPending" />
+      <p v-else-if="seriesError">{{ seriesError.message }}</p>
+      <div v-else class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <series-card
+          v-for="series in seriesList"
+          :key="series.id"
+          :series="series"
+        />
+      </div>
+    </section>
+
+    <section class="section">
+      <h2 class="section-title">Browse by Category</h2>
+      <p-progress-spinner v-if="categoriesPending" />
+      <p v-else-if="categoriesError">{{ categoriesError.message }}</p>
+      <div v-else class="flex flex-wrap gap-2">
+        <nuxt-link
+          v-for="category in categories ?? []"
+          :key="category.slug"
+          :to="`/articles/browse?category=${category.slug}`"
+          class="category-chip"
+        >
+          {{ category.name }}
+        </nuxt-link>
+      </div>
+    </section>
+  </div>
 </template>
