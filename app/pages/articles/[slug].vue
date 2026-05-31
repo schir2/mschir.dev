@@ -12,10 +12,9 @@ const {
 } = await useAsyncData<ArticleDetail | null>(`article-${slug}`, async () => {
   const { data, error } = await supabase
     .from('articles')
-    .select('id, title, content, created_at, article_categories(name)')
+    .select('id, title, content, created_at, archived_at, article_categories(name)')
     .eq('slug', slug)
     .not('published_at', 'is', null)
-    .is('archived_at', null)
     .maybeSingle()
 
   if (error) throw error
@@ -33,6 +32,7 @@ watchEffect(() => {
   <div class="max-w-4xl mx-auto px-4 py-8">
     <p-progress-spinner v-if="articleLoading" />
     <article v-else-if="article">
+      <article-archived-banner :archived-at="article.archived_at" />
       <header class="mb-8">
         <h1 class="text-3xl font-bold mb-2">{{ article.title }}</h1>
         <div class="flex gap-4 text-sm text-color-secondary">
