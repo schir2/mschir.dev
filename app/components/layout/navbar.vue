@@ -42,13 +42,26 @@ function onLogout() {
       </a>
     </template>
     <template #end>
-      <client-only>
-        <div class="flex items-center gap-2">
-          <p-button v-if="user" label="Logout" @click="onLogout"></p-button>
-          <p-button v-else label="Login" severity="secondary" @click="router.push('/login')">
+      <div class="flex items-center gap-2">
+        <a href="https://github.com/schir2" target="_blank" rel="noopener noreferrer">
+          <p-button text rounded aria-label="GitHub">
+            <template #icon>
+              <icon name="mdi:github"/>
+            </template>
           </p-button>
-        </div>
-      </client-only>
+        </a>
+        <a href="https://www.linkedin.com/in/marek-schir-95229684/" target="_blank" rel="noopener noreferrer">
+          <p-button text rounded aria-label="LinkedIn">
+            <template #icon>
+              <icon name="mdi:linkedin"/>
+            </template>
+          </p-button>
+        </a>
+        <client-only>
+          <p-button v-if="user" label="Logout" @click="onLogout"></p-button>
+          <p-button v-else label="Login" severity="secondary" @click="router.push('/login')"/>
+        </client-only>
+      </div>
     </template>
   </p-menubar>
 </template>
