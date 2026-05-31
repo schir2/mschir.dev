@@ -12,7 +12,7 @@ const {
 } = await useAsyncData<ArticleAdminListItem[]>('admin-articles', async () => {
   const { data, error } = await supabase
     .from('articles')
-    .select('id, title, writing_stage, published_at, created_at, article_topics(name), article_series(title)')
+    .select('id, title, writing_stage, published_at, created_at, article_categories(name), article_series(title)')
     .order('created_at', { ascending: false })
 
   if (error) throw error
@@ -69,9 +69,9 @@ async function deleteArticle(articleId: string) {
     >
       <p-column field="title" header="Title" />
 
-      <p-column header="Topic">
+      <p-column header="Category">
         <template #body="{ data: row }">
-          {{ row.article_topics?.name ?? '—' }}
+          {{ row.article_categories?.name ?? '—' }}
         </template>
       </p-column>
 

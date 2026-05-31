@@ -36,30 +36,30 @@ create policy "Admin can delete articles"
     using ((auth.jwt() -> 'app_metadata' ->> 'role') = 'admin');
 
 -- ============================================================
--- Article Topics (reference data — public read, admin write)
+-- Article Categories (reference data — public read, admin write)
 -- ============================================================
 
-create policy "Public can read article topics"
-    on public.article_topics
+create policy "Public can read article categories"
+    on public.article_categories
     for select
     to public
     using (true);
 
-create policy "Admin can insert article topics"
-    on public.article_topics
+create policy "Admin can insert article categories"
+    on public.article_categories
     for insert
     to authenticated
     with check ((auth.jwt() -> 'app_metadata' ->> 'role') = 'admin');
 
-create policy "Admin can update article topics"
-    on public.article_topics
+create policy "Admin can update article categories"
+    on public.article_categories
     for update
     to authenticated
     using ((auth.jwt() -> 'app_metadata' ->> 'role') = 'admin')
     with check ((auth.jwt() -> 'app_metadata' ->> 'role') = 'admin');
 
-create policy "Admin can delete article topics"
-    on public.article_topics
+create policy "Admin can delete article categories"
+    on public.article_categories
     for delete
     to authenticated
     using ((auth.jwt() -> 'app_metadata' ->> 'role') = 'admin');

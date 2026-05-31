@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import type { ExposeParam } from 'md-editor-v3'
-import type { ArticleTopic, ArticleTag, ArticleSeries, WritingStage } from '#shared/types/Articles'
+import type { ArticleCategory, ArticleTag, ArticleSeries, WritingStage } from '#shared/types/Articles'
 
 const props = defineProps<{
   articleId?: string
@@ -23,7 +23,7 @@ const writingStageOptions: WritingStage[] = ['idea', 'outline', 'draft', 'ready'
 function togglePublished(value: boolean) {
   publishedAt.value = value ? new Date().toISOString() : null
 }
-const topicId = ref<string | null>(null)
+const categoryId = ref<string | null>(null)
 const selectedTagIds = ref<string[]>([])
 const seriesId = ref<string | null>(null)
 const seriesSequenceNumber = ref<number | null>(null)
@@ -40,7 +40,7 @@ const heroImagePublicUrl = computed(() =>
 const heroImageInput = ref<HTMLInputElement | null>(null)
 
 // --- Reference data ---
-const topics = ref<ArticleTopic[]>([])
+const categories = ref<ArticleCategory[]>([])
 const tags = ref<ArticleTag[]>([])
 const seriesList = ref<ArticleSeries[]>([])
 
@@ -50,7 +50,7 @@ const loading = ref(true)
 const currentArticleId = ref<string | null>(props.articleId ?? null)
 
 // --- Inline creation inputs ---
-const newTopicName = ref('')
+const newCategoryName = ref('')
 const newTagName = ref('')
 const newSeriesTitle = ref('')
 
@@ -101,13 +101,13 @@ function onSlugInput() {
 }
 
 async function loadReferenceData() {
-  const [topicsResult, tagsResult, seriesResult] = await Promise.all([
-    supabase.from('article_topics').select('id, name, slug, description').order('name'),
+  const [categoriesResult, tagsResult, seriesResult] = await Promise.all([
+    supabase.from('article_categories').select('id, name, slug, description').order('name'),
     supabase.from('article_tags').select('id, name, slug').order('name'),
     supabase.from('article_series').select('id, title, slug, description, author, created_at, updated_at').order('title'),
   ])
 
-  if (topicsResult.data) topics.value = topicsResult.data
+  if (categoriesResult.data) categories.value = categoriesResult.data
   if (tagsResult.data) tags.value = tagsResult.data
   if (seriesResult.data) seriesList.value = seriesResult.data
 }
@@ -115,7 +115,7 @@ async function loadReferenceData() {
 async function loadArticle(articleId: string) {
   const { data, error } = await supabase
     .from('articles')
-    .select('id, title, slug, content, writing_stage, published_at, image_url, topic_id, series_id, series_sequence_number, article_tags_links(tag_id)')
+    .select('id, title, slug, content, writing_stage, published_at, image_url, category_id, series_id, series_sequence_number, article_tags_links(tag_id)')
     .eq('id', articleId)
     .single()
 
@@ -129,7 +129,7 @@ async function loadArticle(articleId: string) {
   content.value = data.content
   writingStage.value = data.writing_stage
   publishedAt.value = data.published_at
-  topicId.value = data.topic_id
+  categoryId.value = data.category_id
   selectedTagIds.value = data.article_tags_links.map((link: { tag_id: string }) => link.tag_id)
   seriesId.value = data.series_id
   seriesSequenceNumber.value = data.series_sequence_number
@@ -186,7 +186,7 @@ async function save() {
       writing_stage: writingStage.value,
       published_at: publishedAt.value,
       image_url: imageUrl.value,
-      topic_id: topicId.value,
+      category_id: categoryId.value,
       series_id: seriesId.value,
       series_sequence_number: seriesSequenceNumber.value,
     }
@@ -286,24 +286,24 @@ async function handleEditorImageUpload(files: File[], callback: (urls: string[])
   callback(urls)
 }
 
-async function createTopic() {
-  const name = newTopicName.value.trim()
+async function createCategory() {
+  const name = newCategoryName.value.trim()
   if (!name) return
 
   const { data, error } = await supabase
-    .from('article_topics')
+    .from('article_categories')
     .insert({ name, slug: generateSlug(name) })
     .select('id, name, slug, description')
     .single()
 
   if (error) {
-    toast.add({ severity: 'error', summary: 'Failed to create topic', detail: error.message, life: 4000 })
+    toast.add({ severity: 'error', summary: 'Failed to create category', detail: error.message, life: 4000 })
     return
   }
 
-  topics.value.push(data)
-  topicId.value = data.id
-  newTopicName.value = ''
+  categories.value.push(data)
+  categoryId.value = data.id
+  newCategoryName.value = ''
 }
 
 async function createTag() {
@@ -433,30 +433,30 @@ async function createSeries() {
           </div>
         </div>
 
-        <!-- Row 2: Topic, Tags, Series, Published -->
+        <!-- Row 2: Category, Tags, Series, Published -->
         <div class="flex gap-3 items-start flex-wrap">
 
-          <!-- Topic -->
+          <!-- Category -->
           <p-select
-            v-model="topicId"
-            :options="topics"
+            v-model="categoryId"
+            :options="categories"
             option-label="name"
             option-value="id"
             filter
             show-clear
-            placeholder="Topic"
+            placeholder="Category"
             class="w-44"
           >
             <template #footer>
               <div class="p-2 border-t flex gap-2">
                 <p-input-text
-                  v-model="newTopicName"
-                  placeholder="New topic…"
+                  v-model="newCategoryName"
+                  placeholder="New category…"
                   size="small"
                   class="flex-1"
-                  @keydown.enter.prevent="createTopic"
+                  @keydown.enter.prevent="createCategory"
                 />
-                <p-button size="small" label="Add" :disabled="!newTopicName.trim()" @click="createTopic" />
+                <p-button size="small" label="Add" :disabled="!newCategoryName.trim()" @click="createCategory" />
               </div>
             </template>
           </p-select>

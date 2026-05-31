@@ -1,4 +1,4 @@
-alter table public.article_topics enable row level security;
+alter table public.article_categories enable row level security;
 alter table public.article_tags enable row level security;
 alter table public.article_series enable row level security;
 alter table public.articles enable row level security;

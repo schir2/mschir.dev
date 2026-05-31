@@ -54,7 +54,7 @@ values ('Python', 'python'),
        ('HIIT', 'hiit'),
        ('Yoga', 'yoga');
 
-insert into public.article_topics (name, slug, description)
+insert into public.article_categories (name, slug, description)
 values ('Software Development',
         'software-development',
         'Articles about programming concepts, software design patterns, tutorials, and code samples.'),

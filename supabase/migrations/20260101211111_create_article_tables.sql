@@ -2,7 +2,7 @@ create type interaction_type as enum ('like', 'dislike');
 
 
 
-create table public.article_topics
+create table public.article_categories
 (
     id          uuid primary key default gen_random_uuid(),
     name        varchar(100) not null,
@@ -37,7 +37,7 @@ create table public.articles
     slug                   varchar(200) not null unique,
     content                text         not null,
 
-    topic_id               uuid         references public.article_topics (id) on delete set null,
+    category_id            uuid         references public.article_categories (id) on delete set null,
     image_url              text,
 
     is_published           boolean      not null default true,
@@ -112,7 +112,7 @@ create table public.featured_articles
 );
 
 create index idx_articles_author on public.articles (author);
-create index idx_articles_topic on public.articles (topic_id);
+create index idx_articles_category on public.articles (category_id);
 create index idx_articles_series on public.articles (series_id);
 
 create index idx_comments_article on public.comments (article_id);

@@ -12,7 +12,7 @@ const {
 } = await useAsyncData<ArticleDetail | null>(`article-${slug}`, async () => {
   const { data, error } = await supabase
     .from('articles')
-    .select('id, title, content, created_at, article_topics(name)')
+    .select('id, title, content, created_at, article_categories(name)')
     .eq('slug', slug)
     .not('published_at', 'is', null)
     .is('archived_at', null)
@@ -36,7 +36,7 @@ watchEffect(() => {
       <header class="mb-8">
         <h1 class="text-3xl font-bold mb-2">{{ article.title }}</h1>
         <div class="flex gap-4 text-sm text-color-secondary">
-          <span v-if="article.article_topics">{{ article.article_topics.name }}</span>
+          <span v-if="article.article_categories">{{ article.article_categories.name }}</span>
           <span>{{ new Date(article.created_at).toLocaleDateString() }}</span>
         </div>
       </header>

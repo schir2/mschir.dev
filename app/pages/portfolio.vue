@@ -37,7 +37,7 @@ const {data: featuredArticles} = await useAsyncData<ArticleListItem[]>(
     async () => {
       const {data} = await supabase
           .from('featured_articles')
-          .select('articles(id, title, slug, image_url, created_at, author, article_topics(name, slug))')
+          .select('articles(id, title, slug, image_url, created_at, author, article_categories(name, slug))')
       const articles = data?.map(row => row.articles).filter(Boolean) ?? []
       return articles as unknown as ArticleListItem[]
     },
@@ -80,8 +80,8 @@ const {data: featuredArticles} = await useAsyncData<ArticleListItem[]>(
             <template #content>
               <div class="flex flex-wrap gap-2 mt-1">
                 <p-tag
-                    v-if="article.article_topics"
-                    :value="article.article_topics.name"
+                    v-if="article.article_categories"
+                    :value="article.article_categories.name"
                     severity="secondary"
                 />
               </div>

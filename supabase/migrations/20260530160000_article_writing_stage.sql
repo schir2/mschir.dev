@@ -17,7 +17,7 @@ create policy "Public can read published articles"
     on public.articles
     for select
     to public
-    using (published_at is not null and archived_at is null);
+    using (published_at is not null);
 
 alter table public.articles
     drop column is_published;

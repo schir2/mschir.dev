@@ -126,6 +126,23 @@ A collapsible UI block on the Article Detail Page, shown when the article belong
 ### Admin Route Protection
 All `/admin/**` routes are guarded by a global Nuxt route middleware (`middleware/admin.global.ts`) that checks both authentication and `app_metadata.role === 'admin'`. The DB-level RLS is the authoritative security boundary; the middleware prevents non-admin users from seeing a broken UI.
 
+## Site Navigation Domain
+
+### Site Navbar
+A sticky top navbar (`position: sticky; top: 0`) visible at all times as the user scrolls. Adds a drop shadow when the page has scrolled past 10px. Nav items: Portfolio, Articles, About, Contact. Social links (GitHub, LinkedIn) appear on the right and are hidden on mobile. Auth area is on the far right.
+
+### Navbar Auth Area
+The right-most section of the Site Navbar that reflects authentication state:
+- **Unauthenticated**: icon-only person button linking to `/login`.
+- **Authenticated**: a `<p-avatar>` showing the user's email initial (future: profile picture). Clicking it opens a popup menu.
+
+### Navbar User Menu
+A `<p-menu popup>` triggered by clicking the Navbar Auth Area avatar. Contains:
+- **Admin Articles** → `/admin/articles` (shown only when `app_metadata.role === 'admin'`)
+- **Logout**
+
+As the admin section grows, additional admin links are added here. A Profile item is planned when user profile editing is built out.
+
 ## Contact Domain
 
 ### ContactReason

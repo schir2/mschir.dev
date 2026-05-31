@@ -10,7 +10,7 @@ const {
 } = await useAsyncData<ArticleListItem[]>('articles', async () => {
   const { data, error } = await supabase
     .from('articles')
-    .select('id, title, slug, author, created_at, image_url, article_topics(name, slug)')
+    .select('id, title, slug, author, created_at, image_url, article_categories(name, slug)')
     .not('published_at', 'is', null)
     .is('archived_at', null)
     .order('created_at', { ascending: false })
@@ -31,8 +31,8 @@ const {
         <template #title>
           <NuxtLink :to="`/articles/${article.slug}`">{{ article.title }}</NuxtLink>
         </template>
-        <template v-if="article.article_topics" #subtitle>
-          {{ article.article_topics.name }}
+        <template v-if="article.article_categories" #subtitle>
+          {{ article.article_categories.name }}
         </template>
         <template #content>
           <div class="flex justify-between text-sm">

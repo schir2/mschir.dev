@@ -58,6 +58,27 @@ export type Database = {
         }
         Relationships: []
       }
+      article_categories: {
+        Row: {
+          description: string | null
+          id: string
+          name: string
+          slug: string
+        }
+        Insert: {
+          description?: string | null
+          id?: string
+          name: string
+          slug: string
+        }
+        Update: {
+          description?: string | null
+          id?: string
+          name?: string
+          slug?: string
+        }
+        Relationships: []
+      }
       article_interactions: {
         Row: {
           article_id: string
@@ -171,31 +192,11 @@ export type Database = {
           },
         ]
       }
-      article_topics: {
-        Row: {
-          description: string | null
-          id: string
-          name: string
-          slug: string
-        }
-        Insert: {
-          description?: string | null
-          id?: string
-          name: string
-          slug: string
-        }
-        Update: {
-          description?: string | null
-          id?: string
-          name?: string
-          slug?: string
-        }
-        Relationships: []
-      }
       articles: {
         Row: {
           archived_at: string | null
           author: string
+          category_id: string | null
           content: string
           created_at: string
           id: string
@@ -205,7 +206,6 @@ export type Database = {
           series_sequence_number: number | null
           slug: string
           title: string
-          topic_id: string | null
           updated_at: string
           view_count: number
           writing_stage: Database["public"]["Enums"]["writing_stage"]
@@ -213,6 +213,7 @@ export type Database = {
         Insert: {
           archived_at?: string | null
           author?: string
+          category_id?: string | null
           content: string
           created_at?: string
           id?: string
@@ -222,7 +223,6 @@ export type Database = {
           series_sequence_number?: number | null
           slug: string
           title: string
-          topic_id?: string | null
           updated_at?: string
           view_count?: number
           writing_stage?: Database["public"]["Enums"]["writing_stage"]
@@ -230,6 +230,7 @@ export type Database = {
         Update: {
           archived_at?: string | null
           author?: string
+          category_id?: string | null
           content?: string
           created_at?: string
           id?: string
@@ -239,24 +240,23 @@ export type Database = {
           series_sequence_number?: number | null
           slug?: string
           title?: string
-          topic_id?: string | null
           updated_at?: string
           view_count?: number
           writing_stage?: Database["public"]["Enums"]["writing_stage"]
         }
         Relationships: [
           {
+            foreignKeyName: "articles_category_id_fkey"
+            columns: ["category_id"]
+            isOneToOne: false
+            referencedRelation: "article_categories"
+            referencedColumns: ["id"]
+          },
+          {
             foreignKeyName: "articles_series_id_fkey"
             columns: ["series_id"]
             isOneToOne: false
             referencedRelation: "article_series"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "articles_topic_id_fkey"
-            columns: ["topic_id"]
-            isOneToOne: false
-            referencedRelation: "article_topics"
             referencedColumns: ["id"]
           },
         ]
