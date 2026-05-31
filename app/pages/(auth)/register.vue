@@ -34,6 +34,7 @@ async function signUp(signUpCredentials: Credentials) {
       detail: error.message
     })
   }
+
 }
 
 async function onFormSubmit(event: FormSubmitEvent) {

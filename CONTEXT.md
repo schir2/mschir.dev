@@ -172,14 +172,20 @@ As the admin section grows, additional admin links are added here. A Profile ite
 ## About Page Domain
 
 ### About Page
-The `/about` route. Positions the site owner as an independent expert and solution provider — not a job seeker. Tone is that of a selective, already-busy consultant who chooses engagements, not someone pitching for work. Written for business decision-makers, potential contracting clients, and developer peers. Deliberately distinct from the Portfolio Page (which goes deep on skills and projects for someone who already has a resume in hand). Drives visitors toward the Contact page to start a conversation.
+The `/about` route. A personal introduction page presenting the site owner's background, experience, and approach. Serves two audiences: potential contracting clients evaluating whether to reach out, and employers or recruiters considering an opportunity. Tone is direct and personal — genuine breadth built over 14 years, someone who enjoys building things and helping people — not a polished pitch. Distinct from the Portfolio Page (which showcases specific work for someone who already has a resume) and the Homepage (which carries service positioning and the Service Pillar cards).
 
-**Layout**: B+C hybrid — two-column hero (prose left, service pillar cards right), narrative tone throughout (no hard section labels), full-width articles strip and CTA below. Four sections in order: (1) Hero — opener + how-I-work paragraph, (2) Service Pillars — 2×2 card grid, (3) Recent Writing — latest 3 published articles from DB, (4) CTA.
+**Owner background (for copy reference)**: Computer engineering education. Holds CCNA and CCNP (Cisco). Started as a part-time software developer, grew through IT and network infrastructure, now IT Director + software project manager + application and integration builder at a field service company. 14 years of experience spanning small to medium-sized businesses. Originally drawn to 3D graphics design (3D Studio Max, Photoshop, Figma); that creative drive carries into software architecture and UI work. Core motivation: building things, making people's lives easier and more efficient.
 
-**Articles**: latest 3 published articles fetched from DB (`ORDER BY published_at DESC LIMIT 3`). Distinct from Portfolio's curated `featured_articles`. Signals ongoing activity rather than curation. Portfolio = best work; About = active expert.
+**Layout**: Single-column narrative with photo. Four sections in order: (1) Photo + name + brief identity line, (2) Personal narrative — 2–3 paragraphs covering background/origin, scope of work, and what drives the approach, (3) Recent Articles — latest 3 published from DB, (4) CTA toward Contact.
+
+**Photo**: Stored as a static file at `public/img/profile.jpg` (not Supabase Storage — no admin upload UI needed for a headshot). Referenced as `/img/profile.jpg`. Layout: side-by-side with the intro text — photo on the right (~30%), name + first paragraph on the left (~70%). Mobile: photo stacks below text.
+
+**Articles**: latest 3 published articles fetched from DB (`ORDER BY published_at DESC LIMIT 3`). Displayed as a borderless link list (title + category + date, no card chrome). Signals ongoing intellectual activity. Portfolio = best work; About = active person.
+
+**Personality traits for copy reference**: Methodical and deliberate — prefers to plan thoroughly before acting, front-loads work to accelerate later. Utility over beauty (but beauty matters). Finds genuine satisfaction in making people's work faster and easier. Creative at heart (started in 3D design, still takes design courses, uses Figma) — that creativity shows up in software architecture.
 
 ### Service Pillars
-The four core capability areas presented on the About Page. Each is a distinct type of engagement, but all share the same consulting-first approach: understand the business workflow before writing any code.
+The four core capability areas presented on the **Homepage**. Each is a distinct type of engagement, but all share the same consulting-first approach: understand the business workflow before writing any code.
 
 1. **Integrations & API Development** — connecting disparate platforms, building APIs, and modernizing the data flows between systems. Includes CRM platforms (HubSpot, Zoho, Salesforce) and communication systems (3CX, FreePBX).
 2. **Application Development & Digital Transformation** — building net-new applications for specific business needs (e.g. field service management, job scheduling, technician dispatch), and rebuilding or extending legacy software.
@@ -187,10 +193,10 @@ The four core capability areas presented on the About Page. Each is a distinct t
 4. **Infrastructure & Cloud Architecture** — cloud platforms (AWS, Cloudflare, DigitalOcean, Azure), network architecture (Cisco, Juniper), and security. Enables end-to-end ownership of a client's technology stack, not just the application layer.
 
 ### Consulting Approach
-The process that precedes all implementation work on the About Page. Involves working directly with business owners and domain experts to diagram existing workflows, identify inefficiencies, and define a technology strategy before any code is written. Distinguishes the site owner from a pure-execution developer.
+The process that precedes all implementation work. Involves working directly with business owners and domain experts to understand existing workflows, identify inefficiencies, and define a technology strategy before any code is written. Distinguishes the site owner from a pure-execution developer.
 
-### About Page Opener
-The opening statement of the About Page. Resolved copy: *"I work with business owners and technical teams to understand how their operations actually run — then design and build the software, integrations, and automation systems that make them run better."* Chosen because it leads with process (the consulting approach) rather than a title or a services list, which is the primary differentiator.
+### About Page Personal Narrative
+The 2–3 paragraph personal section of the About Page. Covers: origin (started in graphics/design, shifted to software and IT via computer engineering education and Cisco certifications, grew into full-lifecycle ownership), scope (14 years spanning networking, infrastructure, software development, integrations, and automation across SMBs and field service companies), and motivation (enjoys building and creating, finds satisfaction in making people's work faster and easier). Copy is conversational and first-person, not resume-style. Tone reflects the site owner's methodical personality — does not oversell or rush.
 
 ## Contact Domain
 

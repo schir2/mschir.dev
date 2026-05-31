@@ -149,20 +149,3 @@ const { previousArticle, nextArticle, allArticles } = useSeriesNavigation(
     </article>
   </div>
 </template>
-
-<style>
-#article-detail {
-  background: transparent;
-  border: none;
-  box-shadow: none;
-  padding: 0;
-}
-
-#article-detail .md-editor-preview-wrapper {
-  padding: 0;
-}
-
-#article-detail .md-editor-preview {
-  --md-theme-bg-color: transparent;
-}
-</style>
