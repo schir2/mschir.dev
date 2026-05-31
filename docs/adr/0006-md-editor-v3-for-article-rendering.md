@@ -16,10 +16,26 @@ The project already has `@tailwindcss/typography` installed. The obvious default
 Use **md-editor-v3** for both surfaces:
 - `MdEditor` component in the admin editor page
 - `MdPreview` component (read-only, lighter bundle) on the public article page
+- `MdCatalog` component for the TOC sidebar on the public article page
 
-Both components are registered globally via `app/plugins/md-editor-v3.client.ts` (Nuxt `.client.ts` convention — runs client-side only). On the public article page, the component is additionally wrapped in `<client-only>` because Mermaid rendering requires browser APIs. `md-editor-v3/lib/style.css` (full CSS) is imported once in the plugin and covers both components.
+All three components are registered globally via `app/plugins/md-editor-v3.client.ts` (Nuxt `.client.ts` convention — runs client-side only). On the public article page, `MdPreview` and `MdCatalog` are wrapped in `<client-only>` because Mermaid rendering requires browser APIs. `md-editor-v3/lib/style.css` (full CSS) is imported once in the plugin and covers all components.
 
 Use md-editor-v3's own built-in CSS for all article content styling. Do not apply Tailwind Typography `prose` classes to article content.
+
+### Configuration requirements (non-obvious)
+
+**Language** — md-editor-v3 defaults to `zh-CN`. Always pass `language="en-US"` to `MdPreview` and `MdEditor` to get English UI strings (copy buttons, fold/expand labels, etc.).
+
+**Theme** — md-editor-v3 has its own theme system independent of PrimeVue. Use the `useMdEditorTheme()` composable (`app/composables/useMdEditorTheme.ts`) which watches the `dark-mode` class on `<html>` via `MutationObserver` and returns `'dark' | 'light'`. Bind this to the `:theme` prop on all md-editor-v3 components. Do not hardcode `theme="dark"`.
+
+**Preview background** — `MdPreview` renders with its own background colour (`#fff` / `#000`). Override via CSS scoped to the `editor-id` value used as the element ID:
+```css
+#article-detail { background: transparent; border: none; box-shadow: none; padding: 0; }
+#article-detail .md-editor-preview-wrapper { padding: 0; }
+#article-detail .md-editor-preview { --md-theme-bg-color: transparent; }
+```
+
+**MdCatalog scroll target** — `MdCatalog`'s default `scrollElement` is `#${editorId}-preview-wrapper`, the non-scrollable inner div of the preview. Clicking TOC links will silently do nothing unless you override it. Always pass `scroll-element="html"` to target the page scroll container.
 
 ## Reasons
 - md-editor-v3 is Vue 3 native and ships official plugins for both Mermaid and KaTeX — the two hard requirements
@@ -31,3 +47,4 @@ Use md-editor-v3's own built-in CSS for all article content styling. Do not appl
 - `prose` classes are not used for article content; md-editor-v3's own styles govern article typography
 - Article rendering is coupled to md-editor-v3's release cadence — switching editors later would require migrating the public article page too
 - Tailwind Preflight conflicts with the editor container must be handled via CSS scoping if they arise
+- Three non-obvious configuration pitfalls exist (language, theme, catalog scroll target) — see Configuration requirements above
