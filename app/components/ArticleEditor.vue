@@ -16,12 +16,19 @@ const slug = ref('')
 const content = ref('')
 const writingStage = ref<WritingStage>('idea')
 const publishedAt = ref<string | null>(null)
+const archivedAt = ref<string | null>(null)
 const isPublished = computed(() => publishedAt.value !== null)
+const isArchived = computed(() => archivedAt.value !== null)
+const articleStatus = computed(() => deriveArticleStatus(publishedAt.value, archivedAt.value, writingStage.value))
 
 const writingStageOptions: WritingStage[] = ['idea', 'outline', 'draft', 'ready']
 
 function togglePublished(value: boolean) {
   publishedAt.value = value ? new Date().toISOString() : null
+}
+
+function toggleArchived(value: boolean) {
+  archivedAt.value = value ? new Date().toISOString() : null
 }
 const categoryId = ref<string | null>(null)
 const selectedTagIds = ref<string[]>([])
@@ -115,7 +122,7 @@ async function loadReferenceData() {
 async function loadArticle(articleId: string) {
   const { data, error } = await supabase
     .from('articles')
-    .select('id, title, slug, content, writing_stage, published_at, image_url, category_id, series_id, series_sequence_number, article_tags_links(tag_id)')
+    .select('id, title, slug, content, writing_stage, published_at, archived_at, image_url, category_id, series_id, series_sequence_number, article_tags_links(tag_id)')
     .eq('id', articleId)
     .single()
 
@@ -129,6 +136,7 @@ async function loadArticle(articleId: string) {
   content.value = data.content
   writingStage.value = data.writing_stage
   publishedAt.value = data.published_at
+  archivedAt.value = data.archived_at
   categoryId.value = data.category_id
   selectedTagIds.value = data.article_tags_links.map((link: { tag_id: string }) => link.tag_id)
   seriesId.value = data.series_id
@@ -185,6 +193,7 @@ async function save() {
       content: content.value,
       writing_stage: writingStage.value,
       published_at: publishedAt.value,
+      archived_at: archivedAt.value,
       image_url: imageUrl.value,
       category_id: categoryId.value,
       series_id: seriesId.value,
@@ -363,8 +372,8 @@ async function createSeries() {
         {{ currentArticleId ? 'Edit Article' : 'New Article' }}
       </span>
       <p-tag
-        :value="isPublished ? 'Published' : writingStage"
-        :severity="isPublished ? 'success' : 'secondary'"
+        :value="articleStatus.label"
+        :severity="articleStatus.severity"
       />
       <p-button
         label="Save"
@@ -536,6 +545,15 @@ async function createSeries() {
             <p-toggle-switch
               :model-value="isPublished"
               @update:model-value="togglePublished"
+            />
+          </div>
+
+          <!-- Archived toggle -->
+          <div v-if="isPublished" class="flex items-center gap-2">
+            <label class="text-sm">Archived</label>
+            <p-toggle-switch
+              :model-value="isArchived"
+              @update:model-value="toggleArchived"
             />
           </div>
 
