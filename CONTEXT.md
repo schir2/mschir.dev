@@ -135,6 +135,23 @@ A collapsible UI block on the Article Detail Page, shown when the article belong
 ### Admin Route Protection
 All `/admin/**` routes are guarded by a global Nuxt route middleware (`middleware/admin.global.ts`) that checks both authentication and `app_metadata.role === 'admin'`. The DB-level RLS is the authoritative security boundary; the middleware prevents non-admin users from seeing a broken UI.
 
+## Homepage Domain
+
+### Homepage
+The `/` route. First impression for all visitors. Leads with value — what gets built and who it helps — not personal narrative (that's `/about`). Drives visitors toward `/portfolio` and `/contact`.
+
+**Sections** (in order): (1) Hero — name + subtitle + headline + two CTAs, (2) Service Pillars — 2×2 `<p-card>` grid, (3) Recent Articles — latest 3 published from DB (borderless link list), (4) Bottom CTA.
+
+**Hero name**: "Marek Schir" (h1, `text-6xl`, Fraunces)
+**Hero subtitle**: "Software Developer & Systems Architect" (`text-2xl`)
+**Hero headline**: *"Building the software and systems that make businesses run better."* (`text-xl`)
+**Hero CTAs**: Two buttons — "See My Work" (outlined) → `/portfolio` and "Get in Touch" (filled) → `/contact`.
+**Hero visual**: Full-bleed animated gradient — `--p-primary-950` → `--p-primary-800` → amber `#92400e` (placeholder hex; replace with `var(--p-accent-800)` once accent tokens are confirmed available). Entrance animation staggers name, subtitle, headline, buttons in on load.
+
+**Bottom CTA copy**: *"Got a system, workflow, or idea that needs the right technology behind it? Let's talk."* Button: "Get in Touch" → `/contact`.
+
+**Typography**: Tracked in issue #57. Two-font system: **Fraunces** (serif, display) + **Inter** (sans-serif, body). Fraunces applies to `h1` and `h2` only — hero name, article titles, major section breaks. `h3` and below use Inter. Implementation spans PrimeVue theme, Tailwind config, and md-editor override (`#article-detail .md-editor-preview h1, h2`).
+
 ## Site Design Domain
 
 ### Brand Palette
@@ -144,6 +161,16 @@ Two semantic colors defined in `primevue-theme.ts`:
 
 Raw Tailwind color values (e.g. `text-red-600`, `bg-yellow-500`) are not used for brand colors. All color references go through PrimeVue tokens (`var(--p-primary-*)`, `var(--p-surface-*)`, or the accent token once added).
 
+### Typography System
+Two-font system loaded via Google Fonts `<link>` tags in `nuxt.config.ts` (no `@nuxt/fonts` module):
+
+- **Display font**: Fraunces (variable serif) — applied to `h1` and `h2` only. Configured as `fontFamily.display` in `tailwind.config.ts`. Used via `font-display` utility class or targeted CSS.
+- **Body font**: Inter (sans-serif) — all other text: prose, UI labels, form inputs, card content. Configured as `fontFamily.sans` in `tailwind.config.ts` and as `fontFamily` in `primevue-theme.ts` semantic tokens so PrimeVue components inherit it automatically.
+
+**Hero type scale**: h1 `text-6xl` (Fraunces) / subtitle `text-2xl` / headline `text-xl`.
+
+**md-editor-v3**: `app/assets/css/overrides/md-editor.css` overrides `h1, h2` inside `#article-detail .md-editor-preview` to use Fraunces. Body text inside the preview inherits Inter from the page-level font-family.
+
 ### CSS Layering Rule
 Three layers, each with a defined responsibility:
 1. **PrimeVue tokens** — colors, spacing scale, border-radius, shadows. Single source of truth for the visual language.
@@ -151,6 +178,22 @@ Three layers, each with a defined responsibility:
 3. **Third-party CSS overrides** — `app/assets/css/overrides/<lib>.css`, imported via `app/assets/css/main.css`. Each library gets its own override file; overrides use `var(--p-*)` tokens so dark mode stays consistent.
 
 Custom component styles use `<style scoped>` with `var(--p-*)` for any color values. Documented in `docs/adr/0008-css-layering-strategy.md` (tracked in issue #48).
+
+## Site Footer Domain
+
+### Site Footer
+The `<layout-footer>` component rendered at the bottom of every page via `app/layouts/default.vue`. Persistent across all routes. Secondary navigation aid — not the primary CTA (those live on individual pages). Has a slightly darker background (`var(--p-surface-900)`) to visually close the page.
+
+**Layout**: Three columns + bottom strip.
+- **Left**: logo, site name ("Marek Schir"), Site Tagline
+- **Center**: nav links (Portfolio, Articles, About, Contact)
+- **Right**: "Connect" section — GitHub, LinkedIn, and mail icon buttons (mail links to `/contact`). All icon-only, same size, not small.
+- **Bottom strip**: copyright only (`© {year} Marek Schir`). No CTA in the bottom strip.
+
+Mobile: columns stack; nav links become a 2×2 grid.
+
+### Site Tagline
+Short descriptor used in the footer beneath the site name. Resolved copy: *"Software and integrations for growing businesses."*
 
 ## Site Navigation Domain
 
@@ -197,6 +240,16 @@ The process that precedes all implementation work. Involves working directly wit
 
 ### About Page Personal Narrative
 The 2–3 paragraph personal section of the About Page. Covers: origin (started in graphics/design, shifted to software and IT via computer engineering education and Cisco certifications, grew into full-lifecycle ownership), scope (14 years spanning networking, infrastructure, software development, integrations, and automation across SMBs and field service companies), and motivation (enjoys building and creating, finds satisfaction in making people's work faster and easier). Copy is conversational and first-person, not resume-style. Tone reflects the site owner's methodical personality — does not oversell or rush.
+
+## Auth Domain
+
+### Zod Schema Location
+Form validation schemas live in `app/schemas/`. File naming: `<Domain>Schema.ts` (e.g. `CredentialsSchema.ts`, `ContactSchema.ts`).
+
+Each schema file exports **only the Zod schema object** — no resolver, no inferred types.
+
+- **Types** come from `shared/types/` (DB-derived) or `app/types/` (frontend-only). Schemas use `satisfies` to validate against those types, not `z.infer<>`.
+- **Resolver** (`zodResolver(...)`) is PrimeVue-specific wiring and lives in the component's `<script setup>`, not in the schema file.
 
 ## Contact Domain
 

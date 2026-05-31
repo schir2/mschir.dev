@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import type { ArticleCardItem, ArticleCategory, ArticleTag } from '#shared/types/Articles'
+import type { ArticleCardItem, ArticleCategory, ArticleTag } from '#shared/types/Article'
 
 const supabase = useSupabaseClient()
 const route = useRoute()

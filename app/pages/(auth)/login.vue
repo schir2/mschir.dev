@@ -1,27 +1,20 @@
 <script lang="ts" setup>
-import {z} from 'zod';
-import {zodResolver} from '@primevue/forms/resolvers/zod';
 import type {FormSubmitEvent} from "@primevue/forms/form";
+import { zodResolver } from '@primevue/forms/resolvers/zod'
+import { CredentialsSchema } from '~/schemas/CredentialsSchema'
+import type { Credentials } from '~/types/Credentials'
 
 definePageMeta({
   title: 'Login',
   layout: 'default'
 })
 
-const config = useRuntimeConfig()
 const supabase = useSupabaseClient()
 const user = useSupabaseUser()
 
 const toast = useToast()
 
-const CredentialsSchema = z.object({
-  email: z.string().min(3).email(),
-  password: z.string().min(8),
-})
-
 const resolver = zodResolver(CredentialsSchema);
-
-type Credentials = z.infer<typeof CredentialsSchema>
 
 const initialValues = reactive<Credentials>({email: '', password: ''});
 
@@ -44,14 +37,6 @@ async function onFormSubmit(event: FormSubmitEvent) {
   }
 }
 
-async function onLoginWithGoogle() {
-  await supabase.auth.signInWithOAuth({
-    provider: 'google',
-    options: {
-      redirectTo: `${config.public.siteUrl}`,
-    }
-  })
-}
 
 </script>
 <template>

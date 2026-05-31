@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import type { ExposeParam } from 'md-editor-v3'
-import type { ArticleCategory, ArticleTag, ArticleSeries, WritingStage } from '#shared/types/Articles'
+import type { ArticleCategory, ArticleTag, ArticleSeries, WritingStage } from '#shared/types/Article'
 
 const props = defineProps<{
   articleId?: string

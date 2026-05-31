@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import type { ArticleSeriesSummary } from '#shared/types/Articles'
+import type { ArticleSeriesSummary } from '#shared/types/Article'
 
 const props = defineProps<{ series: ArticleSeriesSummary }>()
 </script>

@@ -1,7 +1,7 @@
 <script lang="ts" setup>
-import {z} from 'zod'
 import {zodResolver} from '@primevue/forms/resolvers/zod'
 import type {FormSubmitEvent} from '@primevue/forms/form'
+import { ContactMessageInsertSchema } from '../schemas/ContactMessageInsertSchema'
 
 import type {ContactReason} from "#shared/types/ContactReason";
 
@@ -22,15 +22,8 @@ const {data: reasons} = await useAsyncData<ContactReason[]>(
     {lazy: true}
 )
 
-const ContactSchema = z.object({
-  name: z.string().min(2, 'Name must be at least 2 characters').max(100),
-  email: z.string().email('Please enter a valid email address'),
-  reason_id: z.string().min(1, 'Please select a reason for reaching out'),
-  message: z.string().min(0, 'Message must be at least 10 characters').max(2000),
-} satisfies { [K in keyof ContactMessageInsert]: z.ZodTypeAny })
-
 const initialValues = reactive({name: '', email: '', reason_id: '', message: ''})
-const resolver = zodResolver(ContactSchema)
+const resolver = zodResolver(ContactMessageInsertSchema)
 const turnstileToken = ref('')
 const pending = ref(false)
 const submitted = ref(false)

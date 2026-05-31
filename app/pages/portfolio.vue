@@ -1,13 +1,13 @@
 <script lang="ts" setup>
-import type {Skill} from "#shared/types/Skill";
-import type {FeaturedProject} from "#shared/types/Projects";
-import type {ArticleListItem} from "#shared/types/Articles";
+import type {FeaturedProject} from "#shared/types/Project";
+import type {ArticleListItem} from "#shared/types/Article";
+import type {SkillSnapshot} from "~/types/Skill";
 
 definePageMeta({title: 'Portfolio'})
 
 const supabase = useSupabaseClient()
 
-const {data: highlightedSkills} = await useAsyncData<Pick<Skill, 'id' | 'name' | 'icon'>[]>(
+const {data: highlightedSkills} = await useAsyncData<SkillSnapshot[]>(
     'portfolio-skills',
     async () => {
       const {data} = await supabase

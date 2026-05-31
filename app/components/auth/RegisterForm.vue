@@ -1,16 +1,11 @@
 <script lang="ts" setup>
-import {z} from "zod";
 import {zodResolver} from "@primevue/forms/resolvers/zod";
 import type {FormSubmitEvent} from "@primevue/forms/form";
+import { CredentialsSchema } from '~/schemas/CredentialsSchema'
+import type { Credentials } from '~/types/Credentials'
 
 const supabase = useSupabaseClient()
 const toast = useToast()
-
-const CredentialsSchema = z.object({
-  email: z.string().min(3).email(),
-  password: z.string().min(8),
-})
-type Credentials = z.infer<typeof CredentialsSchema>
 
 const initialValues = reactive<Credentials>({email: '', password: ''});
 const resolver = zodResolver(CredentialsSchema);

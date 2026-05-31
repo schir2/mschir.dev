@@ -1,4 +1,4 @@
-import type { WritingStage } from '#shared/types/Articles'
+import type { WritingStage } from '#shared/types/Article'
 
 type ArticleStatus = {
   label: string

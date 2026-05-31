@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import type { ArticleAdminListItem } from '#shared/types/Articles'
+import type { ArticleAdminListItem } from '#shared/types/Article'
 
 const supabase = useSupabaseClient()
 const confirm = useConfirm()

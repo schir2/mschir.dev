@@ -1,5 +1,6 @@
 <script lang="ts" setup>
-import type { ArticleDetail } from '#shared/types/Articles'
+import type { ArticleDetail } from '#shared/types/Article'
+import type { SeriesArticle } from '~/types/Article'
 
 const route = useRoute()
 const supabase = useSupabaseClient()
@@ -48,14 +49,7 @@ const formattedPublishedAt = computed(() => {
   })
 })
 
-type SeriesSibling = {
-  id: string
-  title: string
-  slug: string
-  series_sequence_number: number | null
-}
-
-const { data: seriesSiblings } = await useAsyncData<SeriesSibling[]>(
+const { data: seriesSiblings } = await useAsyncData<SeriesArticle[]>(
   `series-${slug}`,
   async () => {
     const seriesId = article.value?.series_id

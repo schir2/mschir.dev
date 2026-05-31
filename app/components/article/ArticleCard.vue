@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import type { ArticleCardItem } from '#shared/types/Articles'
+import type { ArticleCardItem } from '#shared/types/Article'
 
 const props = defineProps<{
   article: ArticleCardItem

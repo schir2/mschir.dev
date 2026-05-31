@@ -25,7 +25,10 @@ pnpm run db:reset        # Reset local Supabase DB and re-run migrations + seeds
 pnpm run db:migrate      # Apply pending migrations to the local DB without a full reset
 pnpm run test:db         # Run pgTAP database tests (requires supabase:start)
 pnpm run test:edge       # Run Deno edge function tests
+nuxi typecheck            # TypeScript type check — requires pnpm approve-builds to have been run once interactively first (see note below)
 ```
+
+> **pnpm non-TTY note**: Claude Code runs without a TTY, so any pnpm command that triggers interactive prompts will fail with `ERR_PNPM_ABORTED_REMOVE_MODULES_DIR_NO_TTY` or `ERR_PNPM_IGNORED_BUILDS`. If `nuxi typecheck` or other pnpm commands fail with those errors, the user must run `pnpm approve-builds` once in their own terminal to approve build scripts for `@parcel/watcher` and `esbuild`. The `.npmrc` setting `confirm-module-purge=false` suppresses the purge prompt; the builds approval is a one-time manual step.
 
 ## Architecture
 
@@ -53,6 +56,10 @@ This is a **Nuxt 4** personal portfolio site (mschir.dev) backed by **Supabase**
 **UI** — PrimeVue 4 components are auto-imported with the `p` prefix (e.g. `<p-card>`, `<p-button>`). Dark mode is always active (`htmlAttrs.class: 'dark-mode'`). PrimeVue `DialogService` and `ToastService` are registered as Nuxt plugins.
 
 **CSS layering** — three layers in strict priority order: (1) PrimeVue tokens (`var(--p-primary-*)`, `var(--p-surface-*)`) for all colors; (2) Tailwind utilities for layout/spacing/breakpoints only — no raw color class names for brand colors; (3) third-party overrides in `app/assets/css/overrides/<lib>.css`, imported via `app/assets/css/main.css`. See `docs/adr/0008-css-layering-strategy.md`.
+
+**No inline styles** — never use `style=""` attributes for colors or theming. Component-specific color overrides belong in `<style scoped>` using `var(--p-*)` tokens. Inline styles bypass the theme system and are invisible to scoped overrides.
+
+**Typography** — two-font system: Fraunces (serif, display) + Inter (sans-serif, body). A global `h1, h2` rule in `app/assets/css/main.css` applies Fraunces automatically — no class needed on headings. Use the `font-display` Tailwind utility only when forcing Fraunces outside of `h1`/`h2` (e.g. a large pull-quote). Never hardcode `font-family` strings in component templates or scoped styles. See `docs/adr/0009-typography-system.md`.
 
 **Forms** — Zod schemas validated with `@primevue/forms/resolvers/zod` inside PrimeVue `<p-form>`.
 

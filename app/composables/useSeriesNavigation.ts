@@ -1,11 +1,5 @@
-import { computed, toValue, type MaybeRef } from 'vue'
-
-type SeriesArticle = {
-  id: string
-  title: string
-  slug: string
-  series_sequence_number: number | null
-}
+import { type MaybeRef } from 'vue'
+import type { SeriesArticle } from '~/types/Article'
 
 type CurrentArticle = {
   id: string

@@ -18,3 +18,8 @@
 #article-detail .md-editor-preview {
   --md-theme-bg-color: transparent;
 }
+
+#article-detail .md-editor-preview h1,
+#article-detail .md-editor-preview h2 {
+  font-family: 'Fraunces', serif;
+}

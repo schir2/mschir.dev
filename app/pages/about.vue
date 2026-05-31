@@ -1,4 +1,3 @@
-<!-- PROTOTYPE — layout resolved, copy is draft. Delete switcher and placeholder photo once real headshot is added. -->
 <script lang="ts" setup>
 definePageMeta({ title: 'About' })
 
@@ -45,12 +44,10 @@ function formatDate(dateString: string) {
           <p class="text-lg mt-1" style="color: var(--p-text-muted-color)">Software Developer & Systems Architect</p>
         </div>
         <p class="leading-relaxed">
-          I didn't take the straight path here. I started out wanting to work in 3D graphics and design — building
-          with tools like 3ds Max and Photoshop felt creative in a way that was hard to articulate. When that path
-          didn't make practical sense, I shifted to software development, then to network infrastructure (I hold CCNA
-          and CCNP certifications from that era), and eventually landed at the intersection of all of it. For the past
-          14 years I've been the person who sees the whole picture — the network, the application, the integrations,
-          and the people who depend on all of it working together.
+          I didn't take the straight path here. I started out in 3D graphics and design, moved into networking
+          (CCNA, CCNP), got hired as a software developer to integrate and automate systems, and eventually took on
+          an IT director role on top of that. Fourteen years later I'm still the person who sees the whole picture:
+          the network, the application, the integrations, and the people who depend on all of it working together.
         </p>
       </div>
 
@@ -64,16 +61,17 @@ function formatDate(dateString: string) {
     <!-- Continued narrative: full width below the intro block -->
     <div class="flex flex-col gap-5 max-w-2xl">
       <p class="leading-relaxed">
-        Most of my work has been with small and medium-sized businesses — field service companies, operations-heavy
+        Most of my work has been with small and medium-sized businesses: field service companies, operations-heavy
         organizations, and teams where technology needs to fit the workflow rather than reshape it. I spend a lot of
         time upfront mapping out how things actually work before writing any code. It's slower at the start, but it
         means what gets built doesn't need to be undone six months later.
       </p>
       <p class="leading-relaxed">
         At the core of it, I like building things. There's something satisfying about starting with a complicated
-        problem and ending with something that makes someone's day move faster and easier — whether that's a custom
-        application, an automation that eliminates a tedious manual process, or an integration that finally makes two
-        systems talk to each other. The goal is always the same: make it work better than it did before.
+        problem and ending with something that makes someone's work faster, easier, and more efficient. If I can
+        remove a tedious manual process, connect two systems that should have been talking to each other, or set up
+        an AI workflow that handles the repetitive parts of someone's day, that's a good outcome. The goal is always
+        the same: make it work better than it did before.
       </p>
     </div>
 

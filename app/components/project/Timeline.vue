@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type {ProjectWithSkills} from '#shared/types/Projects'
+import type {ProjectWithSkills} from '#shared/types/Project'
 
 defineProps<{
   projects: ProjectWithSkills[]

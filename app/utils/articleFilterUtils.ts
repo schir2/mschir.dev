@@ -1,4 +1,4 @@
-import type { ArticleCardItem } from '#shared/types/Articles'
+import type { ArticleCardItem } from '#shared/types/Article'
 
 export function filterArticles(
   articles: ArticleCardItem[],

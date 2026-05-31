@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import type {FeaturedProject} from "#shared/types/Projects";
+import type {FeaturedProject} from "#shared/types/Project";
 
 interface Props {
   featuredProject: FeaturedProject

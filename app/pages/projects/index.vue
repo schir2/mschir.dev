@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import type { ProjectWithSkills } from '#shared/types/Projects'
+import type { ProjectWithSkills } from '#shared/types/Project'
 
 const supabase = useSupabaseClient()
 

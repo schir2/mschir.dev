@@ -3,6 +3,7 @@ import {definePreset} from '@primeuix/themes'
 
 export const customTheme = definePreset(Aura, {
     semantic: {
+        fontFamily: "'Inter', sans-serif",
         primary: {
             50: '{indigo.50}',
             100: '{indigo.100}',

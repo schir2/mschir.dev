@@ -1,8 +1,8 @@
 <script lang="ts" setup>
-import type {Skill} from "#shared/types/Skill";
+import type {SkillSnapshot} from "~/types/Skill";
 
 interface Props {
-  skills: Pick<Skill, 'id' | 'name' | 'icon'>[]
+  skills: SkillSnapshot[]
 }
 
 const {skills} = defineProps<Props>()
