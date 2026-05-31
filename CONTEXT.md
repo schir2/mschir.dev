@@ -38,6 +38,35 @@ When an entity's image is replaced: (1) upload the new file to a new UUID path, 
 - **Read**: public (enforced at bucket level — no RLS policy needed for reads on public buckets).
 - **Write** (INSERT, UPDATE, DELETE): restricted to users where `(auth.jwt() -> 'app_metadata' ->> 'role') = 'admin'`. Upsert requires all three: INSERT + SELECT + UPDATE.
 
+## Article Domain
+
+### Article Editor
+The admin UI for creating and editing articles, at `/admin/articles/[id]`. Layout: a metadata bar across the top (series, topic, tags, slug, hero image, publish toggle) and a split markdown editor + live preview below. Access is restricted to admin users via global Nuxt middleware.
+
+### Article List (Admin)
+The `/admin/articles` page. A PrimeVue DataTable showing all articles including drafts, with metadata columns: title, topic, series, status, created date, and edit/delete actions. Modelled after Django's changelist — every relevant property visible at a glance without opening the record.
+
+### Draft
+An article with `is_published = false`. Visible in the Article List (Admin) but excluded from the public `/articles` page.
+
+### Article Slug
+Auto-generated from the article title on creation (e.g. "My First Article" → "my-first-article"). Manually overridable before first publish. Locked after first publish to prevent breaking external links.
+
+### Hero Image
+The banner/thumbnail image representing an article. Stored at `article-heroes/{uuid}.ext` in the `images` bucket. Uploaded via an inline file picker in the metadata bar. Distinct from Inline Content Images.
+
+### Inline Content Image
+An image embedded within article markdown body (e.g. a diagram or callout screenshot). Uploaded via the editor's drag-drop or paste handler and stored at `article-content/{uuid}.ext` in the `images` bucket. The editor inserts the markdown `![alt](url)` syntax automatically.
+
+### Article Audit Log
+A Postgres table recording every INSERT, UPDATE, and DELETE event on `articles` via a trigger. Not exposed in the UI. Serves as a reconstruction ladder — past article states can be rebuilt by walking the log backward. Restore as a first-class feature is deferred.
+
+### Inline Metadata Creation
+Topics, tags, and series can be created on the fly from within the Article Editor without leaving the page. The series sequence number auto-assigns to `max + 1` for the chosen series, with manual override available.
+
+### Admin Route Protection
+All `/admin/**` routes are guarded by a global Nuxt route middleware (`middleware/admin.global.ts`) that checks both authentication and `app_metadata.role === 'admin'`. The DB-level RLS is the authoritative security boundary; the middleware prevents non-admin users from seeing a broken UI.
+
 ## Contact Domain
 
 ### ContactReason
