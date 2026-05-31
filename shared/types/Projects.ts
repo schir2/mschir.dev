@@ -8,3 +8,9 @@ export type ProjectInsert = Database['public']['Tables']['projects']['Insert']
 export type ProjectWithSkills = Project & {
   project_skills: { skills: Pick<Skill, 'id' | 'name' | 'icon'> }[]
 }
+
+export type FeaturedProject = Database['public']['Tables']['featured_projects']['Row'] & {
+  projects: Pick<Project, 'name' | 'description' | 'image_url' | 'year'> & {
+    project_skills: { skills: Pick<Skill, 'id' | 'name' | 'icon'> }[]
+  }
+}
