@@ -2,6 +2,20 @@
 
 This file covers Vitest tests for the Nuxt application layer only. For database-layer tests (tables, functions, RLS policies) and edge function tests, see `supabase/tests/CLAUDE.md`.
 
+## Running tests
+
+Use `npx vitest run [path]` to run specific test files:
+
+```powershell
+npx vitest run test/unit/utils/articleFilterUtils.test.ts   # single file
+npx vitest run test/nuxt/components/article/               # whole folder
+npx vitest run                                              # all tests
+```
+
+Do **not** use `pnpm test -- [path]` for targeted runs. In non-interactive shells (e.g. Claude Code's Bash tool), pnpm may try to run `pnpm install` first and abort with `ERR_PNPM_ABORTED_REMOVE_MODULES_DIR_NO_TTY`. `npx vitest run` bypasses this entirely.
+
+Unit tests (`test/unit/`) are fully offline — no Supabase needed. Composable tests under `test/nuxt/composables/` that call `useSupabaseClient()` hit the real local Supabase instance and require `pnpm run supabase:start` first.
+
 ## Test folder placement
 
 Every agent must follow these rules:
@@ -11,6 +25,7 @@ Every agent must follow these rules:
 | Pure functions, utils, helpers | `test/unit/` | Vitest (no Nuxt runtime) |
 | Components, composables, store-dependent code | `test/nuxt/` | `@nuxt/test-utils` + Vitest |
 | Shared mocks and test setup | `test/helpers/` | — |
+| Pages | — | **Not tested at page level** — extract logic into composables or utils instead. See issue [#47](https://github.com/schir2/mschir.dev/issues/47) to set up proper page-test infrastructure later. |
 
 ## Naming conventions
 

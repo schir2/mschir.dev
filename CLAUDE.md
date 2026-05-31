@@ -33,7 +33,8 @@ This is a **Nuxt 4** personal portfolio site (mschir.dev) backed by **Supabase**
 
 ### Directory layout
 
-- `app/` — Nuxt application root (pages, components, layouts, plugins)
+- `app/` — Nuxt application root (pages, components, layouts, plugins); see `app/components/CLAUDE.md` for component folder organization
+- `app/types/` — frontend-only exported types (composable interfaces, UI shapes with no server consumers); see `app/types/CLAUDE.md`
 - `shared/types/` — TypeScript types shared across the app; `database.types.ts` is auto-generated from Supabase; domain types (e.g. `Projects.ts`) re-export from it
 - `supabase/migrations/` — ordered SQL migration files that define the schema
 - `supabase/seeds/` — numbered seed SQL files run in order: `01_blog.sql`, `02_content.sql`, `03_projects.sql`, `04_project_skills.sql`, `05_test_users.sql` (test user for integration tests)
@@ -45,7 +46,7 @@ This is a **Nuxt 4** personal portfolio site (mschir.dev) backed by **Supabase**
 
 **Data fetching** — pages call `useSupabaseClient()` directly inside `useAsyncData()` with `lazy: true`. There is no intermediate service/store layer for reads.
 
-**Type flow** — Supabase generates `shared/types/database.types.ts`. Domain type files in `shared/types/` create named aliases (e.g. `export type Project = Database['public']['Tables']['projects']['Row']`). Components import from those aliases, not from `database.types.ts` directly.
+**Type flow** — Supabase generates `shared/types/database.types.ts`. Domain type files in `shared/types/` create named aliases (e.g. `export type Project = Database['public']['Tables']['projects']['Row']`). Components import from those aliases, not from `database.types.ts` directly. Three tiers: `shared/types/` (DB-derived, server+client), `app/types/` (frontend-only exported), local (unexported, single-file). See `shared/types/CLAUDE.md` and `app/types/CLAUDE.md`.
 
 **Auth** — Supabase auth via `@nuxtjs/supabase`. All routes are excluded from redirect (`exclude: ['/**']`), so auth is opt-in per page. `useSupabaseUser()` is available everywhere; login/logout live in the navbar.
 

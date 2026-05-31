@@ -135,6 +135,23 @@ A collapsible UI block on the Article Detail Page, shown when the article belong
 ### Admin Route Protection
 All `/admin/**` routes are guarded by a global Nuxt route middleware (`middleware/admin.global.ts`) that checks both authentication and `app_metadata.role === 'admin'`. The DB-level RLS is the authoritative security boundary; the middleware prevents non-admin users from seeing a broken UI.
 
+## Site Design Domain
+
+### Brand Palette
+Two semantic colors defined in `primevue-theme.ts`:
+- **Primary**: indigo — structural UI color (buttons, links, active states)
+- **Accent**: yellow/amber — highlights, CTAs, personal touches (to be added in #48)
+
+Raw Tailwind color values (e.g. `text-red-600`, `bg-yellow-500`) are not used for brand colors. All color references go through PrimeVue tokens (`var(--p-primary-*)`, `var(--p-surface-*)`, or the accent token once added).
+
+### CSS Layering Rule
+Three layers, each with a defined responsibility:
+1. **PrimeVue tokens** — colors, spacing scale, border-radius, shadows. Single source of truth for the visual language.
+2. **Tailwind utilities** — layout, positioning, flex/grid, responsive breakpoints. No semantic color classes.
+3. **Third-party CSS overrides** — `app/assets/css/overrides/<lib>.css`, imported via `app/assets/css/main.css`. Each library gets its own override file; overrides use `var(--p-*)` tokens so dark mode stays consistent.
+
+Custom component styles use `<style scoped>` with `var(--p-*)` for any color values. Documented in `docs/adr/0008-css-layering-strategy.md` (tracked in issue #48).
+
 ## Site Navigation Domain
 
 ### Site Navbar
@@ -151,6 +168,25 @@ A `<p-menu popup>` triggered by clicking the Navbar Auth Area avatar. Contains:
 - **Logout**
 
 As the admin section grows, additional admin links are added here. A Profile item is planned when user profile editing is built out.
+
+## About Page Domain
+
+### About Page
+The `/about` route. Positions the site owner as an independent expert and solution provider — not a job seeker. Tone is that of a selective, already-busy consultant who chooses engagements, not someone pitching for work. Written for business decision-makers, potential contracting clients, and developer peers. Deliberately distinct from the Portfolio Page (which goes deep on skills and projects for someone who already has a resume in hand). Drives visitors toward the Contact page to start a conversation.
+
+### Service Pillars
+The four core capability areas presented on the About Page. Each is a distinct type of engagement, but all share the same consulting-first approach: understand the business workflow before writing any code.
+
+1. **Integrations & API Development** — connecting disparate platforms, building APIs, and modernizing the data flows between systems. Includes CRM platforms (HubSpot, Zoho, Salesforce) and communication systems (3CX, FreePBX).
+2. **Application Development & Digital Transformation** — building net-new applications for specific business needs (e.g. field service management, job scheduling, technician dispatch), and rebuilding or extending legacy software.
+3. **AI Workflows & Automation** — designing and building AI-enriched automation pipelines using tools like N8n, Zapier, or custom webhook integrations. Applies AI to improve operational efficiency, not as a novelty.
+4. **Infrastructure & Cloud Architecture** — cloud platforms (AWS, Cloudflare, DigitalOcean, Azure), network architecture (Cisco, Juniper), and security. Enables end-to-end ownership of a client's technology stack, not just the application layer.
+
+### Consulting Approach
+The process that precedes all implementation work on the About Page. Involves working directly with business owners and domain experts to diagram existing workflows, identify inefficiencies, and define a technology strategy before any code is written. Distinguishes the site owner from a pure-execution developer.
+
+### About Page Opener
+The opening statement of the About Page. Resolved copy: *"I work with business owners and technical teams to understand how their operations actually run — then design and build the software, integrations, and automation systems that make them run better."* Chosen because it leads with process (the consulting approach) rather than a title or a services list, which is the primary differentiator.
 
 ## Contact Domain
 
