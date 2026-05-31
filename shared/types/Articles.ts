@@ -5,17 +5,27 @@ export type ArticleCategory = Database['public']['Tables']['article_categories']
 export type ArticleTag = Database['public']['Tables']['article_tags']['Row']
 export type ArticleSeries = Database['public']['Tables']['article_series']['Row']
 
+export type ArticleSeriesSummary = Pick<ArticleSeries, 'id' | 'title' | 'slug' | 'description'> & {
+  article_count: number
+}
+
+export type ArticleCardItem = Pick<Article, 'id' | 'title' | 'slug' | 'published_at' | 'image_url' | 'series_id' | 'series_sequence_number'> & {
+  article_categories: Pick<ArticleCategory, 'name' | 'slug'> | null
+  article_tags_links: Array<{ article_tags: Pick<ArticleTag, 'name' | 'slug'> }>
+  article_series: Pick<ArticleSeries, 'title' | 'slug'> | null
+}
+
 export type ArticleListItem = Pick<Article, 'id' | 'title' | 'slug' | 'author' | 'created_at' | 'image_url'> & {
   article_categories: Pick<ArticleCategory, 'name' | 'slug'> | null
 }
 
-export type ArticleDetail = Pick<Article, 'id' | 'title' | 'content' | 'created_at'> & {
+export type ArticleDetail = Pick<Article, 'id' | 'title' | 'content' | 'created_at' | 'archived_at'> & {
   article_categories: Pick<ArticleCategory, 'name'> | null
 }
 
 export type WritingStage = 'idea' | 'outline' | 'draft' | 'ready'
 
-export type ArticleAdminListItem = Pick<Article, 'id' | 'title' | 'writing_stage' | 'published_at' | 'created_at'> & {
+export type ArticleAdminListItem = Pick<Article, 'id' | 'title' | 'writing_stage' | 'published_at' | 'archived_at' | 'created_at'> & {
   article_categories: Pick<ArticleCategory, 'name'> | null
   article_series: Pick<ArticleSeries, 'title'> | null
 }
