@@ -31,7 +31,7 @@ values
 ('Digital Ocean', 'simple-icons:digitalocean', 'intermediate', (select id from public.skill_categories where name = 'Other')),
 ('Github', 'simple-icons:github', 'intermediate', (select id from public.skill_categories where name = 'Other')),
 ('Linux', 'simple-icons:linux', 'intermediate', (select id from public.skill_categories where name = 'Other')),
-('Nuxt3', 'simple-icons:nuxtdotjs', 'intermediate', (select id from public.skill_categories where name = 'Frameworks and Libraries')),
+('Nuxt', 'simple-icons:nuxtdotjs', 'intermediate', (select id from public.skill_categories where name = 'Frameworks and Libraries')),
 ('PHP', 'simple-icons:php', 'intermediate', (select id from public.skill_categories where name = 'Programming Languages')),
 ('Postgres', 'simple-icons:postgresql', 'intermediate', (select id from public.skill_categories where name = 'Databases')),
 ('REST', 'mdi:api', 'intermediate', (select id from public.skill_categories where name = 'Other')),

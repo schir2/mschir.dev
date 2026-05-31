@@ -5,7 +5,7 @@ select
 from public.projects p
          join public.skills s on s.name in (
     -- Customer Quoting Application
-                                            'Django', 'HTML', 'Python', 'CSS', 'Figma', 'SQLite', 'VUE', 'Nuxt3', 'REST', 'Vuetify', 'JS'
+                                            'Django', 'HTML', 'Python', 'CSS', 'Figma', 'SQLite', 'VUE', 'Nuxt', 'REST', 'Vuetify', 'JS'
     )
 where p.name = 'Customer Quoting Application'
 
