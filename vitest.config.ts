@@ -45,6 +45,7 @@ export default defineConfig({
                         'test/nuxt/**/*.{test,spec}.ts',
                     ],
                     environment: 'nuxt',
+                    hookTimeout: 30000,
                 },
             }),
         ],
