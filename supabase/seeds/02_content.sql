@@ -16,6 +16,7 @@ values
 ('Windows', 'simple-icons:windows', 'expert', (select id from public.skill_categories where name = 'Other')),
 
 -- Advanced
+('TypeScript', 'simple-icons:typescript', 'advanced', (select id from public.skill_categories where name = 'Programming Languages')),
 ('Bootstrap', 'simple-icons:bootstrap', 'advanced', (select id from public.skill_categories where name = 'Front-End Technologies')),
 ('CSS', 'simple-icons:css3', 'advanced', (select id from public.skill_categories where name = 'Front-End Technologies')),
 ('Figma', 'simple-icons:figma', 'advanced', (select id from public.skill_categories where name = 'Front-End Technologies')),
