@@ -2,7 +2,6 @@
 import {z} from 'zod';
 import {zodResolver} from '@primevue/forms/resolvers/zod';
 import type {FormSubmitEvent} from "@primevue/forms/form";
-import {useToast} from "primevue/usetoast";
 
 definePageMeta({
   title: 'Login',
@@ -51,8 +50,6 @@ async function onLoginWithGoogle() {
     options: {
       redirectTo: `${config.public.siteUrl}`,
     }
-  }).finally(async () => {
-    console.log('done')
   })
 }
 
