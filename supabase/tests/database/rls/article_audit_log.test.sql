@@ -15,8 +15,8 @@ insert into public.article_audit_log (operation, old_data, new_data)
 values ('INSERT', null, '{"test": true}'::jsonb);
 
 -- Anon cannot SELECT
-set local role anon;
 select tests.jwt_anon();
+set local role anon;
 
 select throws_ok(
     $$ select * from public.article_audit_log $$,
@@ -26,8 +26,9 @@ select throws_ok(
 );
 
 -- Non-admin authenticated user cannot SELECT
-set local role authenticated;
+set local role postgres;
 select tests.jwt_authenticated('00000000-0000-0000-0000-000000000001');
+set local role authenticated;
 
 select throws_ok(
     $$ select * from public.article_audit_log $$,
@@ -37,8 +38,9 @@ select throws_ok(
 );
 
 -- Admin user can SELECT
-set local role authenticated;
+set local role postgres;
 select tests.jwt_admin('00000000-0000-0000-0000-000000000002');
+set local role authenticated;
 
 select isnt_empty(
     $$ select * from public.article_audit_log $$,
