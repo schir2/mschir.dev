@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import type { ArticleDetail } from '#shared/types/Article'
 import type { SeriesArticle } from '~/types/Article'
+import { formatArticleDate } from '~/utils/formatArticleDate'
 
 const route = useRoute()
 const supabase = useSupabaseClient()
@@ -40,14 +41,7 @@ const heroImageUrl = computed(() => {
   return data.publicUrl
 })
 
-const formattedPublishedAt = computed(() => {
-  if (!article.value?.published_at) return null
-  return new Date(article.value.published_at).toLocaleDateString('en-US', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
-  })
-})
+const formattedPublishedAt = computed(() => formatArticleDate(article.value?.published_at ?? null) || null)
 
 const { data: seriesSiblings } = await useAsyncData<SeriesArticle[]>(
   `series-${slug}`,

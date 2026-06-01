@@ -232,7 +232,9 @@ Short descriptor used in the footer beneath the site name. Resolved copy: *"Soft
 ## Site Navigation Domain
 
 ### Breadcrumb
-A contextual navigation trail rendered at the top of deep content pages, inside the page's content container, immediately below the navbar. Hidden on mobile (`hidden md:flex`). The last item (current page) is plain text — not a link. Scoped to the article section for now; project detail pages will follow the same pattern when built.
+A contextual navigation trail rendered at the top of deep content pages, inside the page's content container, immediately below the navbar. Hidden on mobile (`hidden md:block`). The last item (current page) is plain text — not a link. Scoped to the article section for now; project detail pages will follow the same pattern when built.
+
+On browse and series pages, rendered via `article-page-header` (which wraps the breadcrumb + h1 + optional description). On the article detail page, rendered directly as `article-breadcrumb` since that page's header has a different structure (metadata bar, tags, admin edit button).
 
 **Trails by route:**
 - `/articles/browse` → `Articles > Browse`

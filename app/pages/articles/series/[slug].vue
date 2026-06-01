@@ -59,11 +59,11 @@ const {
     <p-progress-spinner v-if="seriesPending" />
     <p v-else-if="seriesError">{{ seriesError.message }}</p>
     <template v-else-if="seriesData">
-      <header class="flex flex-col gap-4">
-        <article-breadcrumb :crumbs="[{ label: 'Articles', to: '/articles' }, { label: seriesData.title }]" />
-        <h1 class="text-4xl font-bold">{{ seriesData.title }}</h1>
-        <p v-if="seriesData.description" class="text-color-secondary text-lg">{{ seriesData.description }}</p>
-      </header>
+      <article-page-header
+        :crumbs="[{ label: 'Articles', to: '/articles' }, { label: seriesData.title }]"
+        :title="seriesData.title"
+        :description="seriesData.description ?? undefined"
+      />
 
       <section class="flex flex-col gap-6">
         <h2 class="text-2xl font-bold">Articles in this Series</h2>
