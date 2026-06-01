@@ -20,8 +20,15 @@ const userMenuItems = computed<MenuItem[]>(() => {
   const items: MenuItem[] = []
 
   if (isAdmin.value) {
-    items.push({ label: 'Admin Articles', route: '/admin/articles', icon: 'pi pi-file-edit' })
-    items.push({ separator: true })
+    items.push({
+      label: 'Admin',
+      icon: 'pi pi-shield',
+      items: [
+        { label: 'Articles', route: '/admin/articles', icon: 'pi pi-file-edit' },
+        { label: 'Projects', route: '/admin/projects', icon: 'pi pi-briefcase' },
+        { label: 'Companies', route: '/admin/companies', icon: 'pi pi-building' },
+      ],
+    })
   }
 
   items.push({ label: 'Logout', icon: 'pi pi-sign-out', command: onLogout })
@@ -90,7 +97,7 @@ onUnmounted(() => window.removeEventListener('scroll', handleScroll))
           </div>
           <client-only>
             <template v-if="user">
-              <p-menu ref="userMenuRef" :model="userMenuItems" popup>
+              <p-tiered-menu ref="userMenuRef" :model="userMenuItems" popup>
                 <template #item="{ item, props: menuProps }">
                   <router-link v-if="item.route" v-slot="{ href, navigate }" :to="item.route" custom>
                     <a v-ripple :href="href" v-bind="menuProps.action" @click="navigate">
@@ -103,7 +110,7 @@ onUnmounted(() => window.removeEventListener('scroll', handleScroll))
                     <span class="ml-2">{{ item.label }}</span>
                   </a>
                 </template>
-              </p-menu>
+              </p-tiered-menu>
               <p-avatar
                 :label="userInitial"
                 shape="circle"
