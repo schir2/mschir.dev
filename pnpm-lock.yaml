@@ -26,6 +26,9 @@ importers:
       '@primeuix/themes':
         specifier: ^2.0.3
         version: 2.0.3
+      '@primevue/forms':
+        specifier: ^4.5.5
+        version: 4.5.5(vue@3.5.34)
       katex:
         specifier: ^0.17.0
         version: 0.17.0
