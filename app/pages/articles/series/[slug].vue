@@ -55,12 +55,12 @@ const {
 </script>
 
 <template>
-  <div class="max-w-6xl mx-auto px-6 py-12 flex flex-col gap-12">
+  <div class="max-w-6xl mx-auto px-6 pt-6 pb-12 flex flex-col gap-12">
     <p-progress-spinner v-if="seriesPending" />
     <p v-else-if="seriesError">{{ seriesError.message }}</p>
     <template v-else-if="seriesData">
       <header class="flex flex-col gap-4">
-        <nuxt-link to="/articles" class="text-primary text-sm hover:underline">&larr; Back to Articles</nuxt-link>
+        <article-breadcrumb :crumbs="[{ label: 'Articles', to: '/articles' }, { label: seriesData.title }]" />
         <h1 class="text-4xl font-bold">{{ seriesData.title }}</h1>
         <p v-if="seriesData.description" class="text-color-secondary text-lg">{{ seriesData.description }}</p>
       </header>

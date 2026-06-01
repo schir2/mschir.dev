@@ -70,6 +70,25 @@ const { data: seriesSiblings } = await useAsyncData<SeriesArticle[]>(
 
 const mdTheme = useMdEditorTheme()
 
+const breadcrumbs = computed(() => {
+  if (!article.value) return []
+  const crumbs = [{ label: 'Articles', to: '/articles' }]
+  if (article.value.article_categories) {
+    crumbs.push({
+      label: article.value.article_categories.name,
+      to: `/articles/browse?category=${article.value.article_categories.slug}`,
+    })
+  }
+  if (article.value.article_series) {
+    crumbs.push({
+      label: article.value.article_series.title,
+      to: `/articles/series/${article.value.article_series.slug}`,
+    })
+  }
+  crumbs.push({ label: article.value.title })
+  return crumbs
+})
+
 const { previousArticle, nextArticle, allArticles } = useSeriesNavigation(
   computed(() => ({
     id: article.value?.id ?? '',
@@ -80,11 +99,12 @@ const { previousArticle, nextArticle, allArticles } = useSeriesNavigation(
 </script>
 
 <template>
-  <div class="max-w-4xl mx-auto px-4 py-8">
+  <div class="max-w-4xl mx-auto px-4 pt-6 pb-8">
     <article-toc-sidebar editor-id="article-detail" />
 
     <p-progress-spinner v-if="articleLoading" />
     <article v-else-if="article">
+      <article-breadcrumb :crumbs="breadcrumbs" />
       <article-archived-banner :archived-at="article.archived_at" />
 
       <img

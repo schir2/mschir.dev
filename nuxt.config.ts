@@ -121,6 +121,7 @@ export default defineNuxtConfig({
                 'TieredMenu',
                 'ProgressSpinner',
                 'TextArea',
+                'Breadcrumb',
             ]
         },
         options: {

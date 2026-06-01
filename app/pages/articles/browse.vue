@@ -83,9 +83,9 @@ function onTagsUpdate(slugs: string[]) {
 </script>
 
 <template>
-  <div class="max-w-3xl mx-auto px-6 py-12 flex flex-col gap-8">
+  <div class="max-w-3xl mx-auto px-6 pt-6 pb-12 flex flex-col gap-8">
     <header class="flex flex-col gap-2">
-      <nuxt-link to="/articles" class="text-primary text-sm hover:underline">&larr; Back to Articles</nuxt-link>
+      <article-breadcrumb :crumbs="[{ label: 'Articles', to: '/articles' }, { label: 'Browse' }]" />
       <h1 class="text-4xl font-bold">Browse Articles</h1>
     </header>
 
