@@ -5,7 +5,7 @@ import { ContactMessageInsertSchema } from '~/schemas/ContactMessageInsertSchema
 
 import type {ContactReason} from "#shared/types/ContactReason";
 
-definePageMeta({title: 'Contact'})
+definePageMeta({ title: 'Contact', layout: 'page' })
 
 const supabase = useSupabaseClient()
 const toast = useToast()
@@ -47,7 +47,7 @@ async function onFormSubmit(event: FormSubmitEvent) {
 </script>
 
 <template>
-  <section class="max-w-6xl mx-auto px-6 py-16">
+  <section class="py-16">
 
     <!-- Confirmation state -->
     <div v-if="submitted" class="flex flex-col items-center justify-center py-24 gap-6 text-center">

@@ -1,6 +1,6 @@
 # mschir.dev
 
-Personal portfolio site for Matthew Schiraldi. Built with Nuxt 4, Supabase (PostgreSQL + auth), and PrimeVue.
+Personal portfolio site for Marek Schir. Built with Nuxt 4, Supabase (PostgreSQL + auth), and PrimeVue.
 
 ## Stack
 

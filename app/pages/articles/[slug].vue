@@ -1,7 +1,9 @@
 <script lang="ts" setup>
 import type { ArticleDetail } from '#shared/types/Article'
-import type { SeriesArticle } from '~/types/Article'
+import type { Crumb, SeriesArticle } from '~/types/Article'
 import { formatArticleDate } from '~/utils/formatArticleDate'
+
+definePageMeta({ layout: 'page' })
 
 const route = useRoute()
 const supabase = useSupabaseClient()
@@ -64,9 +66,9 @@ const { data: seriesSiblings } = await useAsyncData<SeriesArticle[]>(
 
 const mdTheme = useMdEditorTheme()
 
-const breadcrumbs = computed(() => {
+const breadcrumbs = computed<Crumb[]>(() => {
   if (!article.value) return []
-  const crumbs = [{ label: 'Articles', to: '/articles' }]
+  const crumbs: Crumb[] = [{ label: 'Articles', to: '/articles' }]
   if (article.value.article_categories) {
     crumbs.push({
       label: article.value.article_categories.name,
@@ -93,12 +95,12 @@ const { previousArticle, nextArticle, allArticles } = useSeriesNavigation(
 </script>
 
 <template>
-  <div class="max-w-4xl mx-auto px-4 pt-6 pb-8">
+  <div>
     <article-toc-sidebar editor-id="article-detail" />
 
     <p-progress-spinner v-if="articleLoading" />
     <article v-else-if="article">
-      <article-breadcrumb :crumbs="breadcrumbs" />
+      <p-breadcrumb :model="breadcrumbs" />
       <article-archived-banner :archived-at="article.archived_at" />
 
       <img
@@ -119,7 +121,7 @@ const { previousArticle, nextArticle, allArticles } = useSeriesNavigation(
           </span>
           <span v-if="formattedPublishedAt">{{ formattedPublishedAt }}</span>
           <span>{{ article.view_count }} views</span>
-          <span>Matthew Schiraldi</span>
+          <span>Marek Schir</span>
         </div>
         <div v-if="article.article_tags_links?.length" class="flex flex-wrap gap-2 mt-3">
           <nuxt-link
@@ -139,15 +141,17 @@ const { previousArticle, nextArticle, allArticles } = useSeriesNavigation(
         :current-article-id="article.id"
       />
 
-      <client-only>
-        <!-- editorId "article-detail" is referenced by ArticleTocSidebar (MdCatalog) -->
-        <md-preview
-          editor-id="article-detail"
-          language="en-US"
-          :theme="mdTheme"
-          :model-value="article.content"
-        />
-      </client-only>
+      <div class="max-w-4xl mx-auto">
+        <client-only>
+          <!-- editorId "article-detail" is referenced by ArticleTocSidebar (MdCatalog) -->
+          <md-preview
+            editor-id="article-detail"
+            language="en-US"
+            :theme="mdTheme"
+            :model-value="article.content"
+          />
+        </client-only>
+      </div>
 
       <article-series-prev-next
         v-if="article.series_id"

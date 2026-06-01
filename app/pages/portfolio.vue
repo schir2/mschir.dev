@@ -3,7 +3,7 @@ import type {FeaturedProject} from "#shared/types/Project";
 import type {ArticleCardItem} from "#shared/types/Article";
 import type {SkillSnapshot} from "~/types/Skill";
 
-definePageMeta({title: 'Portfolio'})
+definePageMeta({ title: 'Portfolio', layout: 'page' })
 
 const supabase = useSupabaseClient()
 
@@ -47,7 +47,7 @@ const {data: featuredArticles} = await useAsyncData<ArticleCardItem[]>(
 )
 </script>
 <template>
-  <section class="max-w-6xl mx-auto px-6 py-16 flex flex-col gap-16">
+  <section class="py-16 flex flex-col gap-16">
 
     <!-- Skills Snapshot -->
     <div>

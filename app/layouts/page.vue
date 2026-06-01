@@ -5,20 +5,22 @@ const route = useRoute()
 const config = useRuntimeConfig()
 
 const pageTitle = computed(() =>
-    route.meta.title ?? config.public.defaultTitle
+  route.meta.title ?? config.public.defaultTitle
 )
 
 useHead(() => ({
   title: pageTitle.value
 }))
-
 </script>
+
 <template>
   <main class="min-h-nav-offset">
-    <p-toast position="top-center"/>
-    <layout-navbar/>
-    <dynamic-dialog/>
-    <slot/>
+    <p-toast position="top-center" />
+    <layout-navbar />
+    <dynamic-dialog />
+    <div class="max-w-4xl mx-auto px-6">
+      <slot />
+    </div>
   </main>
-  <layout-footer/>
+  <layout-footer />
 </template>

@@ -5,6 +5,7 @@ Frontend-only exported types live here. These are types that are reused across m
 ## What belongs here
 
 - Composable parameter/return shapes that callers need to reference (e.g. the `SeriesArticle` interface accepted by `useSeriesNavigation`)
+- UI navigation shapes shared across multiple components (e.g. `Crumb` used by `Breadcrumb.vue`, `PageHeader.vue`, and article pages)
 - UI-specific types that are exported and reused across multiple files but are not DB-derived
 - Any type that crosses file boundaries within the frontend but does not belong in `shared/types/`
 

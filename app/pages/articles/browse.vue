@@ -1,6 +1,8 @@
 <script lang="ts" setup>
 import type { ArticleCardItem, ArticleCategory, ArticleTag } from '#shared/types/Article'
 
+definePageMeta({ layout: 'page' })
+
 const supabase = useSupabaseClient()
 const route = useRoute()
 const router = useRouter()
@@ -83,7 +85,7 @@ function onTagsUpdate(slugs: string[]) {
 </script>
 
 <template>
-  <div class="max-w-3xl mx-auto px-6 pt-6 pb-12 flex flex-col gap-8">
+  <div class="pt-6 pb-12 flex flex-col gap-8">
     <article-page-header
       :crumbs="[{ label: 'Articles', to: '/articles' }, { label: 'Browse' }]"
       title="Browse Articles"

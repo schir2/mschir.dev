@@ -1,6 +1,8 @@
 <script lang="ts" setup>
 import type { ArticleCardItem, ArticleSeries } from '#shared/types/Article'
 
+definePageMeta({ layout: 'page' })
+
 const route = useRoute()
 const supabase = useSupabaseClient()
 
@@ -42,7 +44,7 @@ const {
 
     const { data, error } = await supabase
       .from('articles')
-      .select('id, title, slug, published_at, image_url, series_id, series_sequence_number, article_categories(name, slug), article_tags_links(article_tags(name, slug)), article_series(title, slug)')
+      .select('id, title, slug, summary, published_at, image_url, series_id, series_sequence_number, article_categories(name, slug, color, image_url), article_tags_links(article_tags(name, slug)), article_series(title, slug, image_url), featured_articles(id, featured_reason)')
       .eq('series_id', seriesId)
       .not('published_at', 'is', null)
       .is('archived_at', null)
@@ -55,7 +57,7 @@ const {
 </script>
 
 <template>
-  <div class="max-w-6xl mx-auto px-6 pt-6 pb-12 flex flex-col gap-12">
+  <div class="pt-6 pb-12 flex flex-col gap-12">
     <p-progress-spinner v-if="seriesPending" />
     <p v-else-if="seriesError">{{ seriesError.message }}</p>
     <template v-else-if="seriesData">

@@ -1,6 +1,8 @@
 <script lang="ts" setup>
 import type { ArticleCardItem, ArticleSeriesSummary, ArticleCategory } from '#shared/types/Article'
 
+definePageMeta({ layout: 'page' })
+
 const supabase = useSupabaseClient()
 
 const articleCardSelect = 'id, title, slug, summary, published_at, image_url, series_id, series_sequence_number, article_categories(name, slug, color, image_url), article_tags_links(article_tags(name, slug)), article_series(title, slug, image_url), featured_articles(id, featured_reason)'
@@ -74,7 +76,7 @@ const {
 </script>
 
 <template>
-  <div class="max-w-3xl mx-auto px-6 py-12 flex flex-col gap-16">
+  <div class="py-12 flex flex-col gap-16">
     <section v-if="featuredPending || (featuredArticles && featuredArticles.length > 0)" class="flex flex-col gap-6">
       <h2 class="text-2xl font-bold">Featured Articles</h2>
       <p-progress-spinner v-if="featuredPending" />

@@ -143,3 +143,20 @@ Always use kebab-case for component names in templates, not PascalCase. This app
 ### Variable naming
 
 Always use full, descriptive variable names. Never use single-letter variables or opaque abbreviations. Code must be readable at a glance.
+
+### TypeScript style
+
+Prefer explicit typing over inference. Annotate `computed<T>()` return types and local arrays with their type rather than relying on inference from the first element:
+
+```typescript
+// ✅ explicit
+const crumbs: Crumb[] = [{ label: 'Articles', to: '/articles' }]
+const breadcrumbs = computed<Crumb[]>(() => { ... })
+
+// ❌ inferred — inference from first element locks in a too-narrow type
+const crumbs = [{ label: 'Articles', to: '/articles' }]
+```
+
+Avoid the `as` keyword. Cast only where genuinely unavoidable — the one accepted exception is coercing Supabase query return types to domain aliases (`return (data ?? []) as ArticleCardItem[]`), because Supabase's inferred structural type is not directly assignable to hand-crafted domain types.
+
+Use generics with explicit type parameters rather than relying on inference. When a type has optional variants, prefer optional fields over union types where possible.
