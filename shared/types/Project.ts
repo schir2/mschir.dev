@@ -20,5 +20,5 @@ export type FeaturedProject = FeaturedProjectRow & {
 
 export type ProjectAdminListItem = Pick<Project, 'id' | 'name' | 'year'> & {
   companies: Pick<Company, 'name'> | null
-  featured_projects: Pick<FeaturedProjectRow, 'id'>[]
+  featured_projects: Pick<FeaturedProjectRow, 'id'> | null
 }

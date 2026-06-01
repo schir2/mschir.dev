@@ -22,6 +22,7 @@ const {
 /** Local list that may contain an unsaved new row (no id yet). */
 const localCompanies = computed<(Company | CompanyInsert)[]>(() => companies.value ?? [])
 const pendingNewRow = ref<CompanyInsert | null>(null)
+ const editingRows = ref<(Company | CompanyInsert)[]>([])
 
 /** Rows shown in the table — pending new row prepended when present. */
 const tableRows = computed<(Company | CompanyInsert)[]>(() => {
@@ -38,7 +39,8 @@ function getLogoPublicUrl(logoPath: string | null | undefined): string | null {
 
 function addNewRow() {
   if (pendingNewRow.value) return // already adding one
-  pendingNewRow.value = { name: '', url: null, logo_url: null }
+  pendingNewRow.value = { id: '', name: '', url: null, logo_url: null }
+  editingRows.value = [pendingNewRow.value]
 }
 
 /** File picked in the editor slot — held until the row is saved. */
@@ -166,6 +168,7 @@ async function deleteCompany(companyId: string) {
     <p-data-table
       v-else
       :value="tableRows"
+      v-model:editingRows="editingRows"
       edit-mode="row"
       data-key="id"
       empty-message="No companies found."

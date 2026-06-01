@@ -3,7 +3,7 @@ import type { ArticleCardItem, ArticleSeriesSummary, ArticleCategory } from '#sh
 
 const supabase = useSupabaseClient()
 
-const articleCardSelect = 'id, title, slug, summary, published_at, image_url, series_id, series_sequence_number, article_categories(name, slug, color, image_url), article_tags_links(article_tags(name, slug)), article_series(title, slug, image_url)'
+const articleCardSelect = 'id, title, slug, summary, published_at, image_url, series_id, series_sequence_number, article_categories(name, slug, color, image_url), article_tags_links(article_tags(name, slug)), article_series(title, slug, image_url), featured_articles(id, featured_reason)'
 
 const {
   data: featuredArticles,
@@ -74,17 +74,16 @@ const {
 </script>
 
 <template>
-  <div class="max-w-6xl mx-auto px-6 py-12 flex flex-col gap-16">
+  <div class="max-w-3xl mx-auto px-6 py-12 flex flex-col gap-16">
     <section v-if="featuredPending || (featuredArticles && featuredArticles.length > 0)" class="flex flex-col gap-6">
       <h2 class="text-2xl font-bold">Featured Articles</h2>
       <p-progress-spinner v-if="featuredPending" />
       <p v-else-if="featuredError">{{ featuredError.message }}</p>
-      <div v-else class="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div v-else class="flex flex-col gap-3">
         <article-card
           v-for="article in featuredArticles"
           :key="article.id"
           :article="article"
-          size="featured"
         />
       </div>
     </section>
@@ -96,7 +95,7 @@ const {
       </div>
       <p-progress-spinner v-if="recentPending" />
       <p v-else-if="recentError">{{ recentError.message }}</p>
-      <div v-else class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      <div v-else class="flex flex-col gap-3">
         <article-card
           v-for="article in recentArticles ?? []"
           :key="article.id"

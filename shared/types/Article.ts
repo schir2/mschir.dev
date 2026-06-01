@@ -13,6 +13,7 @@ export type ArticleCardItem = Pick<Article, 'id' | 'title' | 'slug' | 'summary' 
   article_categories: Pick<ArticleCategory, 'name' | 'slug' | 'color' | 'image_url'> | null
   article_tags_links: Array<{ article_tags: Pick<ArticleTag, 'name' | 'slug'> }>
   article_series: Pick<ArticleSeries, 'title' | 'slug' | 'image_url'> | null
+  featured_articles: { id: string; featured_reason: string | null } | null
 }
 
 export type ArticleListItem = Pick<Article, 'id' | 'title' | 'slug' | 'author' | 'created_at' | 'image_url'> & {

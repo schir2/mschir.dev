@@ -83,7 +83,7 @@ async function deleteProject(projectId: string) {
       <p-column header="Featured">
         <template #body="{ data: row }">
           <p-tag
-            v-if="row.featured_projects.length > 0"
+            v-if="row.featured_projects !== null"
             value="Featured"
             severity="success"
           />

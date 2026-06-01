@@ -15,7 +15,7 @@ A skill marked `is_highlighted = true` on the `skills` table. Controls which ski
 A project selected for portfolio showcase. Stored in the `featured_projects` table (separate from `projects`). Carries a portfolio-specific `tagline` — a short punchy hook written for the portfolio context, distinct from the canonical `description` on `projects`. Also carries `display_order` to control sequence on the page. Follows the same pattern as `featured_articles`.
 
 ### Featured Article
-An article selected for portfolio showcase. Stored in the existing `featured_articles` table. Appears as an optional bonus section at the bottom of the Portfolio Page.
+An article selected for editorial showcase. Stored in the `featured_articles` table (one-to-one with `articles`, `isOneToOne: true`). Fields: `article_id`, `featured_reason` (nullable string — e.g. "Staff pick", "Most shared"), `author`, timestamps. An article is considered featured if a `featured_articles` record exists for it — there is no boolean flag on the `articles` table; featured status is derived from the join. Appears on the Article Landing Page and signals "editor's pick" with an amber bar on the Article Card.
 
 ## Storage Domain
 
@@ -111,7 +111,23 @@ A Postgres table recording every INSERT, UPDATE, and DELETE event on `articles` 
 Categories, tags, and series can be created on the fly from within the Article Editor without leaving the page. The series sequence number auto-assigns to `max + 1` for the chosen series, with manual override available.
 
 ### Article Card
-A reusable component (`ArticleCard`) that renders a single article preview from an `ArticleCardItem` prop. Does no data fetching. Layout: horizontal list row with a text block on the left (title in Fraunces display font, 2-line summary clamp when summary is set, category chip, tags, series badge, date) and a thumbnail slot on the right. Thumbnail resolves via the Thumbnail Fallback Chain. Accepts a `variant` prop (`'row' | 'row-bar'`): `'row'` is the standard horizontal layout; `'row-bar'` is an exploratory variant with a narrow category color bar on the left edge and rotated category name text. Visual hierarchy: category uses `<p-chip>` with the category `color` as background (inline style — the documented exception to the CSS Layering Rule, since per-row hex values cannot be expressed as PrimeVue tokens); tags use `<p-tag severity="secondary">` (small gray rectangular); series badge uses `<p-tag severity="info">` (blue, list icon). Used on the Article Browse Page, Article Landing Page, and Portfolio Page.
+A reusable component (`ArticleCard`) that renders a single article preview from an `ArticleCardItem` prop. Does no data fetching. Single-variant horizontal list row.
+
+**Layout (left to right):**
+- Amber left bar (`w-1.5`, `bg-amber-500`) — present only when `featured_articles` is non-null. Site-wide signal: amber always means featured.
+- Text block (flex-col, fills remaining width):
+  - *Top row*: category dot (colored circle, `w-2.5 h-2.5`, inline style for hex color) + category name, both linking to `/articles/browse?category=[slug]`. Date floated right.
+  - *Title*: Fraunces display font, `line-clamp-2`, links to `/articles/[slug]`, shifts to `text-primary-400` on hover.
+  - *Featured reason pill* (optional): amber bordered pill (`border-amber-500/50 text-amber-400`) below the title, only when `featured_articles.featured_reason` is set.
+  - *Summary* (optional): `line-clamp-2`, hidden when null.
+  - *Content/metadata divider*: `border-t border-surface-800`, always present. Separates narrative content above from discovery metadata below.
+  - *Series row* (optional, above divider): `"Part N of · [Series Title]"` — series title links to `/articles/series/[slug]`.
+  - *Tags row* (below divider): first 3 tags as pill links to `/articles/browse?tag=[slug]`. `+N` muted badge when more than 3 exist.
+- Thumbnail (96×96 square, right): `<img>` or colored rectangle via Thumbnail Fallback Chain. Zooms on hover (`group-hover:scale-110`, contained within `overflow-hidden`).
+
+**Hover/click**: `opacity-85` default → `opacity-100` on hover with shadow and border lighten. Click triggers a JavaScript ripple (`bg-white/15` expanding circle from click coordinate). No `translate-y` lift — it causes jitter in tightly-packed lists (see ADR 0011).
+
+Used on the Article Browse Page, Article Landing Page, and Portfolio Page.
 
 ### Thumbnail Fallback Chain
 The resolution order used by the `useArticleThumbnail` composable to determine the thumbnail for an Article Card. Resolves in order: article `image_url` → series `image_url` → category `image_url` → category `color` block. Returns `{ type: 'image', url: string }` when any image is found, or `{ type: 'color', color: string }` when only a color (or nothing) is available. Ensures the thumbnail slot is never empty regardless of how much metadata has been populated.
@@ -126,7 +142,7 @@ A reusable filter bar component (`CategoryTagFilter`) used on the Article Browse
 The `/articles` route. A visual dashboard that serves as the entry point to the article section. Four sections in order: Featured Articles (from the `featured_articles` table), Recent Articles (latest 5 published, excluding featured), Series (all series with at least one published article, rendered as Series Cards), and Browse by Category (chip links into the Article Browse Page filtered by category). Sections with no content are hidden.
 
 ### Article Browse Page
-The `/articles/browse` route. A filterable grid of all published articles. Filters by category (single-select) and tags (multi-select) are reflected in the URL query string (`?category=` and `?tag=`) so filtered views are bookmarkable and shareable. Filtering is client-side (computed properties over the full loaded list). Initialises filter state from the URL on mount; updates the URL via `router.replace` on filter change.
+The `/articles/browse` route. A filterable list of all published articles. Filters by category (single-select) and tags (multi-select) are reflected in the URL query string (`?category=` and `?tag=`) so filtered views are bookmarkable and shareable. Filtering is client-side (computed properties over the full loaded list). Initialises filter state from the URL on mount; updates the URL via `router.replace` on filter change. Layout: single-column list by default with a 1/2 column toggle in the top-right of the article section (state is not persisted across page loads).
 
 ### Article Series Page
 The `/articles/series/[slug]` route. Displays a series title and description, then lists all published articles in the series ordered by `series_sequence_number` ascending. Used to read a series sequentially from part 1 to the end. Returns 404 if the series slug does not exist.

@@ -28,6 +28,8 @@ pnpm run test:edge       # Run Deno edge function tests
 nuxi typecheck            # TypeScript type check — requires pnpm approve-builds to have been run once interactively first (see note below)
 ```
 
+> **IDE diagnostics**: When running inside WebStorm, the `mcp__ide__getDiagnostics` tool is available and returns live TypeScript errors from the IDE without spawning a type-check process. Prefer it over `nuxi typecheck` for quick diagnostic checks during development. Call it with no arguments to get diagnostics for all open files, or pass a `uri` to check a specific file.
+
 > **pnpm non-TTY note**: Claude Code runs without a TTY, so any pnpm command that triggers interactive prompts will fail with `ERR_PNPM_ABORTED_REMOVE_MODULES_DIR_NO_TTY` or `ERR_PNPM_IGNORED_BUILDS`. If `nuxi typecheck` or other pnpm commands fail with those errors, the user must run `pnpm approve-builds` once in their own terminal to approve build scripts for `@parcel/watcher` and `esbuild`. The `.npmrc` setting `confirm-module-purge=false` suppresses the purge prompt; the builds approval is a one-time manual step.
 
 > **supabase:types non-TTY workaround**: `pnpm run supabase:types` also fails in non-TTY environments. Use this PowerShell command instead to regenerate `shared/types/database.types.ts` cleanly:
@@ -112,6 +114,21 @@ Default canonical label vocabulary (`needs-triage`, `needs-info`, `ready-for-age
 ### Domain docs
 
 Single-context repo — one `CONTEXT.md` + `docs/adr/` at the root. See `docs/agents/domain.md`.
+
+## UI and Visual Work
+
+### Prototype before implementing
+
+For any task that involves redesigning a visual component's layout — especially one the user described as wanting to "play around with" or "prototype" — **build a visible prototype first and get explicit approval before writing tests or wiring to pages.**
+
+**The rule:**
+1. Build a throwaway prototype page (e.g. `/prototype/article-card`) with hardcoded fixture data — no Supabase needed, no real pages touched
+2. Show the user multiple layout variants side-by-side if the brief calls for exploration
+3. Wait for the user to say the design looks good before proceeding to: writing component tests, hooking into real pages, or dispatching subagents to wire up layouts
+
+**Why this matters:** Skipping the prototype phase and going straight to spec implementation burned significant tokens on a component that was visually broken — tests passed but the layout was wrong. Tests verify behavior, not visual correctness. A 5-minute browser check would have caught the issues that a full test suite missed.
+
+**Signal words that mean "prototype first":** "play around with", "experiment", "try out", "see what it looks like", "not sure if I like", "explore options", any layout redesign where the user has not pre-approved a specific design.
 
 ## Code Style
 

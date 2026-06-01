@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 defineProps<{
-  previousArticle: { title: string; slug: string } | null
-  nextArticle: { title: string; slug: string } | null
+  previousArticle?: { title: string; slug: string } | null
+  nextArticle?: { title: string; slug: string } | null
 }>()
 </script>
 

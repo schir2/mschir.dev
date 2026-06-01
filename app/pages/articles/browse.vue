@@ -5,7 +5,7 @@ const supabase = useSupabaseClient()
 const route = useRoute()
 const router = useRouter()
 
-const articleCardSelect = 'id, title, slug, summary, published_at, image_url, series_id, series_sequence_number, article_categories(name, slug, color, image_url), article_tags_links(article_tags(name, slug)), article_series(title, slug, image_url)'
+const articleCardSelect = 'id, title, slug, summary, published_at, image_url, series_id, series_sequence_number, article_categories(name, slug, color, image_url), article_tags_links(article_tags(name, slug)), article_series(title, slug, image_url), featured_articles(id, featured_reason)'
 
 const {
   data: allArticles,
@@ -48,6 +48,8 @@ const {
   return (data ?? []) as ArticleTag[]
 }, { lazy: true })
 
+const listColumns = ref<1 | 2>(1)
+
 const activeCategory = ref<string | null>((route.query.category as string) ?? null)
 const activeTags = ref<string[]>(
   route.query.tag
@@ -81,7 +83,7 @@ function onTagsUpdate(slugs: string[]) {
 </script>
 
 <template>
-  <div class="max-w-6xl mx-auto px-6 py-12 flex flex-col gap-8">
+  <div class="max-w-3xl mx-auto px-6 py-12 flex flex-col gap-8">
     <header class="flex flex-col gap-2">
       <nuxt-link to="/articles" class="text-primary text-sm hover:underline">&larr; Back to Articles</nuxt-link>
       <h1 class="text-4xl font-bold">Browse Articles</h1>
@@ -100,13 +102,36 @@ function onTagsUpdate(slugs: string[]) {
       />
     </section>
 
-    <section class="flex flex-col gap-6">
+    <section class="flex flex-col gap-4">
+      <div class="flex items-center justify-end gap-1">
+        <p-button
+          :severity="listColumns === 1 ? 'primary' : 'secondary'"
+          variant="text"
+          size="small"
+          aria-label="Single column"
+          @click="listColumns = 1"
+        >
+          <icon name="material-symbols:view-agenda-outline" />
+        </p-button>
+        <p-button
+          :severity="listColumns === 2 ? 'primary' : 'secondary'"
+          variant="text"
+          size="small"
+          aria-label="Two columns"
+          @click="listColumns = 2"
+        >
+          <icon name="material-symbols:grid-view-outline" />
+        </p-button>
+      </div>
       <p-progress-spinner v-if="articlesPending" />
       <p v-else-if="articlesError">{{ articlesError.message }}</p>
       <p v-else-if="filteredArticles.length === 0" class="text-color-secondary">
         No articles match the selected filters.
       </p>
-      <div v-else class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      <div
+        v-else
+        :class="listColumns === 2 ? 'grid grid-cols-1 sm:grid-cols-2 gap-3' : 'flex flex-col gap-3'"
+      >
         <article-card
           v-for="article in filteredArticles"
           :key="article.id"
