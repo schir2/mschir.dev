@@ -30,6 +30,7 @@ function togglePublished(value: boolean) {
 function toggleArchived(value: boolean) {
   archivedAt.value = value ? new Date().toISOString() : null
 }
+const summary = ref<string | null>(null)
 const categoryId = ref<string | null>(null)
 const selectedTagIds = ref<string[]>([])
 const seriesId = ref<string | null>(null)
@@ -122,7 +123,7 @@ async function loadReferenceData() {
 async function loadArticle(articleId: string) {
   const { data, error } = await supabase
     .from('articles')
-    .select('id, title, slug, content, writing_stage, published_at, archived_at, image_url, category_id, series_id, series_sequence_number, article_tags_links(tag_id)')
+    .select('id, title, slug, content, summary, writing_stage, published_at, archived_at, image_url, category_id, series_id, series_sequence_number, article_tags_links(tag_id)')
     .eq('id', articleId)
     .single()
 
@@ -134,6 +135,7 @@ async function loadArticle(articleId: string) {
   title.value = data.title
   slug.value = data.slug
   content.value = data.content
+  summary.value = data.summary
   writingStage.value = data.writing_stage
   publishedAt.value = data.published_at
   archivedAt.value = data.archived_at
@@ -191,6 +193,7 @@ async function save() {
       title: title.value,
       slug: slug.value,
       content: content.value,
+      summary: summary.value?.trim() || null,
       writing_stage: writingStage.value,
       published_at: publishedAt.value,
       archived_at: archivedAt.value,
@@ -442,7 +445,16 @@ async function createSeries() {
           </div>
         </div>
 
-        <!-- Row 2: Category, Tags, Series, Published -->
+        <!-- Row 2: Summary -->
+        <p-textarea
+          v-model="summary"
+          :rows="2"
+          placeholder="Short teaser (1–3 sentences)"
+          class="w-full"
+          auto-resize
+        />
+
+        <!-- Row 3: Category, Tags, Series, Published -->
         <div class="flex gap-3 items-start flex-wrap">
 
           <!-- Category -->

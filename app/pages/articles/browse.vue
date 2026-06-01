@@ -5,7 +5,7 @@ const supabase = useSupabaseClient()
 const route = useRoute()
 const router = useRouter()
 
-const articleCardSelect = 'id, title, slug, published_at, image_url, series_id, series_sequence_number, article_categories(name, slug), article_tags_links(article_tags(name, slug)), article_series(title, slug)'
+const articleCardSelect = 'id, title, slug, summary, published_at, image_url, series_id, series_sequence_number, article_categories(name, slug, color, image_url), article_tags_links(article_tags(name, slug)), article_series(title, slug, image_url)'
 
 const {
   data: allArticles,

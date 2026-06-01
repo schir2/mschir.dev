@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import type {FeaturedProject} from "#shared/types/Project";
-import type {ArticleListItem} from "#shared/types/Article";
+import type {ArticleCardItem} from "#shared/types/Article";
 import type {SkillSnapshot} from "~/types/Skill";
 
 definePageMeta({title: 'Portfolio'})
@@ -32,14 +32,16 @@ const {data: featuredProjects} = await useAsyncData<FeaturedProject[]>(
     {lazy: true}
 )
 
-const {data: featuredArticles} = await useAsyncData<ArticleListItem[]>(
+const articleCardSelect = 'id, title, slug, summary, published_at, image_url, series_id, series_sequence_number, article_categories(name, slug, color, image_url), article_tags_links(article_tags(name, slug)), article_series(title, slug, image_url)'
+
+const {data: featuredArticles} = await useAsyncData<ArticleCardItem[]>(
     'portfolio-featured-articles',
     async () => {
       const {data} = await supabase
           .from('featured_articles')
-          .select('articles(id, title, slug, image_url, created_at, author, article_categories(name, slug))')
-      const articles = data?.map(row => row.articles).filter(Boolean) ?? []
-      return articles as unknown as ArticleListItem[]
+          .select(`articles(${articleCardSelect})`)
+      const articles = data?.map((row: any) => row.articles).filter(Boolean) ?? []
+      return articles as unknown as ArticleCardItem[]
     },
     {lazy: true}
 )

@@ -41,15 +41,30 @@ When an entity's image is replaced: (1) upload the new file to a new UUID path, 
 ## Article Domain
 
 ### Article Category
-A first-class browse lane that classifies every article into one of a small, stable set of mutually exclusive buckets (e.g. *Software Development*, *Career*, *Finance*). Each article belongs to exactly one category. Stored in the `article_categories` table (`id`, `name`, `slug`, `description`); articles reference it via `category_id`. Distinct from Article Tags, which are cross-cutting labels that span multiple categories.
+A first-class browse lane that classifies every article into one of a small, stable set of mutually exclusive buckets (e.g. *Software Development*, *Career*, *Finance*). Each article belongs to exactly one category. Stored in the `article_categories` table (`id`, `name`, `slug`, `description`, `color`, `image_url`); articles reference it via `category_id`. `color` is a nullable hex string used as the category chip background color and as the final image fallback in the Thumbnail Fallback Chain. `image_url` is a nullable StoragePath in the `images` bucket used as a thumbnail fallback before the color block. Distinct from Article Tags, which are cross-cutting labels that span multiple categories.
 
 ### Article Tag
 A cross-cutting label attached to an article. An article can have many tags; the same tag can appear on articles across different categories (e.g. *Python* might appear on both a Software Development article and a Finance article). Stored in `article_tags` with a many-to-many join via `article_tags_links`. Tags are used for drill-down filtering, not top-level navigation.
 
+### Article Series
+A named sequence of related articles read in order. Stored in `article_series` (`id`, `title`, `slug`, `description`, `image_url`). `image_url` is a nullable StoragePath in the `images` bucket used as a thumbnail fallback (second in the Thumbnail Fallback Chain, after the article's own image and before the category image). Articles reference a series via `series_id` and `series_sequence_number`.
+
+### Article Summary
+A short optional teaser for an article (1–3 sentences). Stored as the nullable `summary` column on `articles`. Displayed below the title in the Article Card row layout. Not derived from content — authored manually (or eventually via AI assist). When null the Article Card row renders without a summary line.
+
 ### Article Editor
-The admin UI for creating and editing articles. `/admin/articles/new` creates a new article; `/admin/articles/[id]` edits an existing one. Layout: a metadata bar across the top (title, slug, hero image, category, tags, series + sequence number, publish date, archive date) and a full-width split markdown editor + live preview below. Access is restricted to admin users via global Nuxt middleware.
+The admin UI for creating and editing articles. `/admin/articles/new` creates a new article; `/admin/articles/[id]` edits an existing one. Layout: a metadata bar across the top (title, slug, summary, hero image, category, tags, series + sequence number, publish date, archive date) and a full-width split markdown editor + live preview below. Access is restricted to admin users via global Nuxt middleware.
 
 Keyboard shortcuts in the editor: **Ctrl+Alt+1–6** apply heading levels 1–6 (wraps selected text or inserts the prefix at the cursor). Standard shortcuts (Ctrl+B, Ctrl+I, etc.) are handled natively by the editor's CodeMirror layer.
+
+### Project List (Admin)
+The `/admin/projects` page. A PrimeVue DataTable showing all projects with columns: name, company, year, featured (boolean), and edit/delete actions. Entry point to the Project Editor. Includes a "Manage Companies" shortcut link to `/admin/companies`.
+
+### Project Editor
+The admin UI for creating and editing projects. `/admin/projects/new` creates a new project; `/admin/projects/[id]` edits an existing one. Fields: name, description, company (dropdown with inline company creation via `/admin/companies`), year, image (uploaded to `project-images/{uuid}.ext` in the `images` bucket), and skills (grouped MultiSelect by `skill_categories`). Also includes a **Featured** section: a toggle to mark the project as featured, with tagline and display_order fields shown when toggled on. Managing the featured state writes to/from the `featured_projects` table inline.
+
+### Company List (Admin)
+The `/admin/companies` page. A PrimeVue DataTable with inline row editing for all companies. Columns: logo (uploaded to the `icons` bucket), name, URL. Companies are few and simple — no separate create/edit pages; all editing happens inline in the table.
 
 ### Article List (Admin)
 The `/admin/articles` page. A PrimeVue DataTable showing all articles including drafts, with metadata columns: title, category, series, status, created date, and edit/delete actions. Modelled after Django's changelist — every relevant property visible at a glance without opening the record.
@@ -96,7 +111,10 @@ A Postgres table recording every INSERT, UPDATE, and DELETE event on `articles` 
 Categories, tags, and series can be created on the fly from within the Article Editor without leaving the page. The series sequence number auto-assigns to `max + 1` for the chosen series, with manual override available.
 
 ### Article Card
-A reusable card component (`ArticleCard`) that renders a single article preview from an `ArticleCardItem` prop. Does no data fetching. Displays: hero image, title (link to `/articles/[slug]`), category chip (link to `/articles/browse?category=[slug]`), up to three tag badges, publish date, and a series badge when the article belongs to a series. Accepts an optional `size` prop (`'featured' | 'default'`) for layout variation. Visual hierarchy: category uses `<p-chip>` (pill, folder icon), tags use `<p-tag severity="secondary">` (small rectangular), series badge uses `<p-tag severity="info">` (blue, list icon).
+A reusable component (`ArticleCard`) that renders a single article preview from an `ArticleCardItem` prop. Does no data fetching. Layout: horizontal list row with a text block on the left (title in Fraunces display font, 2-line summary clamp when summary is set, category chip, tags, series badge, date) and a thumbnail slot on the right. Thumbnail resolves via the Thumbnail Fallback Chain. Accepts a `variant` prop (`'row' | 'row-bar'`): `'row'` is the standard horizontal layout; `'row-bar'` is an exploratory variant with a narrow category color bar on the left edge and rotated category name text. Visual hierarchy: category uses `<p-chip>` with the category `color` as background (inline style — the documented exception to the CSS Layering Rule, since per-row hex values cannot be expressed as PrimeVue tokens); tags use `<p-tag severity="secondary">` (small gray rectangular); series badge uses `<p-tag severity="info">` (blue, list icon). Used on the Article Browse Page, Article Landing Page, and Portfolio Page.
+
+### Thumbnail Fallback Chain
+The resolution order used by the `useArticleThumbnail` composable to determine the thumbnail for an Article Card. Resolves in order: article `image_url` → series `image_url` → category `image_url` → category `color` block. Returns `{ type: 'image', url: string }` when any image is found, or `{ type: 'color', color: string }` when only a color (or nothing) is available. Ensures the thumbnail slot is never empty regardless of how much metadata has been populated.
 
 ### Series Card
 A reusable card component (`SeriesCard`) that renders a series preview from an `ArticleSeriesSummary` prop. Does no data fetching. Displays: series title (link to `/articles/series/[slug]`), article count as a `<p-tag severity="secondary">` badge, and series description.
@@ -206,11 +224,14 @@ The right-most section of the Site Navbar that reflects authentication state:
 - **Authenticated**: a `<p-avatar>` showing the user's email initial (future: profile picture). Clicking it opens a popup menu.
 
 ### Navbar User Menu
-A `<p-menu popup>` triggered by clicking the Navbar Auth Area avatar. Contains:
-- **Admin Articles** → `/admin/articles` (shown only when `app_metadata.role === 'admin'`)
+A `<p-tiered-menu popup>` triggered by clicking the Navbar Auth Area avatar. Contains:
+- **Admin** (nested submenu, shown only when `app_metadata.role === 'admin'`)
+  - Articles → `/admin/articles`
+  - Projects → `/admin/projects`
+  - Companies → `/admin/companies`
 - **Logout**
 
-As the admin section grows, additional admin links are added here. A Profile item is planned when user profile editing is built out.
+The "Admin" parent item expands on hover to reveal admin sub-pages. New admin sections are added as sub-items under "Admin" — not as top-level menu items. A Profile item is planned when user profile editing is built out.
 
 ## About Page Domain
 

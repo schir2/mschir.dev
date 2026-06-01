@@ -3,7 +3,7 @@ import type { ArticleCardItem, ArticleSeriesSummary, ArticleCategory } from '#sh
 
 const supabase = useSupabaseClient()
 
-const articleCardSelect = 'id, title, slug, published_at, image_url, series_id, series_sequence_number, article_categories(name, slug), article_tags_links(article_tags(name, slug)), article_series(title, slug)'
+const articleCardSelect = 'id, title, slug, summary, published_at, image_url, series_id, series_sequence_number, article_categories(name, slug, color, image_url), article_tags_links(article_tags(name, slug)), article_series(title, slug, image_url)'
 
 const {
   data: featuredArticles,
@@ -45,7 +45,7 @@ const {
 } = useAsyncData<ArticleSeriesSummary[]>('article-series', async () => {
   const { data, error } = await supabase
     .from('article_series')
-    .select('id, title, slug, description, articles(id, published_at)')
+    .select('id, title, slug, description, image_url, articles(id, published_at)')
   if (error) throw error
   return (data ?? [])
     .map((seriesRow: any) => ({
@@ -53,6 +53,7 @@ const {
       title: seriesRow.title,
       slug: seriesRow.slug,
       description: seriesRow.description,
+      image_url: seriesRow.image_url,
       article_count: (seriesRow.articles ?? []).filter((article: any) => article.published_at !== null).length,
     }))
     .filter((series: ArticleSeriesSummary) => series.article_count > 0) as ArticleSeriesSummary[]

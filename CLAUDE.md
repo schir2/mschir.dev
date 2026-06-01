@@ -20,7 +20,7 @@ pnpm run build        # Build for production
 pnpm run preview      # Preview production build
 
 pnpm run supabase:start  # Start local Supabase stack (required before test:db and local dev against DB)
-pnpm run supabase:types  # Regenerate types/database.types.ts from remote Supabase schema
+pnpm run supabase:types  # Regenerate types/database.types.ts from remote Supabase schema — fails in non-TTY (see note below)
 pnpm run db:reset        # Reset local Supabase DB and re-run migrations + seeds
 pnpm run db:migrate      # Apply pending migrations to the local DB without a full reset
 pnpm run test:db         # Run pgTAP database tests (requires supabase:start)
@@ -29,6 +29,12 @@ nuxi typecheck            # TypeScript type check — requires pnpm approve-buil
 ```
 
 > **pnpm non-TTY note**: Claude Code runs without a TTY, so any pnpm command that triggers interactive prompts will fail with `ERR_PNPM_ABORTED_REMOVE_MODULES_DIR_NO_TTY` or `ERR_PNPM_IGNORED_BUILDS`. If `nuxi typecheck` or other pnpm commands fail with those errors, the user must run `pnpm approve-builds` once in their own terminal to approve build scripts for `@parcel/watcher` and `esbuild`. The `.npmrc` setting `confirm-module-purge=false` suppresses the purge prompt; the builds approval is a one-time manual step.
+
+> **supabase:types non-TTY workaround**: `pnpm run supabase:types` also fails in non-TTY environments. Use this PowerShell command instead to regenerate `shared/types/database.types.ts` cleanly:
+> ```powershell
+> npx supabase gen types typescript --local 2>$null | Where-Object { $_ -notmatch "^(WARN:|Connecting to)" } | Out-File -FilePath shared/types/database.types.ts -Encoding utf8NoBOM
+> ```
+> Similarly, `pnpm run db:reset` fails via pnpm in non-TTY but succeeds with `npx supabase db reset` directly.
 
 ## Architecture
 

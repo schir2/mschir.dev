@@ -60,20 +60,26 @@ export type Database = {
       }
       article_categories: {
         Row: {
+          color: string | null
           description: string | null
           id: string
+          image_url: string | null
           name: string
           slug: string
         }
         Insert: {
+          color?: string | null
           description?: string | null
           id?: string
+          image_url?: string | null
           name: string
           slug: string
         }
         Update: {
+          color?: string | null
           description?: string | null
           id?: string
+          image_url?: string | null
           name?: string
           slug?: string
         }
@@ -120,6 +126,7 @@ export type Database = {
           created_at: string
           description: string
           id: string
+          image_url: string | null
           slug: string
           title: string
           updated_at: string
@@ -129,6 +136,7 @@ export type Database = {
           created_at?: string
           description?: string
           id?: string
+          image_url?: string | null
           slug: string
           title: string
           updated_at?: string
@@ -138,6 +146,7 @@ export type Database = {
           created_at?: string
           description?: string
           id?: string
+          image_url?: string | null
           slug?: string
           title?: string
           updated_at?: string
@@ -205,6 +214,7 @@ export type Database = {
           series_id: string | null
           series_sequence_number: number | null
           slug: string
+          summary: string | null
           title: string
           updated_at: string
           view_count: number
@@ -222,6 +232,7 @@ export type Database = {
           series_id?: string | null
           series_sequence_number?: number | null
           slug: string
+          summary?: string | null
           title: string
           updated_at?: string
           view_count?: number
@@ -239,6 +250,7 @@ export type Database = {
           series_id?: string | null
           series_sequence_number?: number | null
           slug?: string
+          summary?: string | null
           title?: string
           updated_at?: string
           view_count?: number

@@ -30,6 +30,12 @@ Custom component styles that don't fit either layer use `<style scoped>` with `v
 
 Raw Tailwind color names (`text-red-600`, `bg-yellow-500`, `from-indigo-500`) are **not** used for brand colors. All color references go through PrimeVue tokens so the theme file remains the single source of truth. Layout-neutral utilities like `text-white` on a known dark background are acceptable exceptions.
 
+### Inline style exception — per-row dynamic hex colors
+
+`:style` bindings are permitted **only** when a color value is a dynamic, per-entity hex string that cannot be expressed as a PrimeVue token. The documented case is the `ArticleCard` category chip: `article_categories.color` is an arbitrary hex value set per category in the database. There is no PrimeVue token that can represent it, and a CSS class cannot be generated at runtime for each possible value.
+
+All other inline styles remain prohibited. This exception does not extend to static colors, spacing, or any value that could be expressed through the token system.
+
 ### Global CSS entry point
 
 `app/assets/css/main.css` is registered in `nuxt.config.ts` as the sole custom CSS entry point. It contains only `@import` statements — no styles directly. Adding overrides for a new library means: create `app/assets/css/overrides/<lib>.css` and add one `@import` line to `main.css`.

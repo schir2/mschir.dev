@@ -5,14 +5,14 @@ export type ArticleCategory = Database['public']['Tables']['article_categories']
 export type ArticleTag = Database['public']['Tables']['article_tags']['Row']
 export type ArticleSeries = Database['public']['Tables']['article_series']['Row']
 
-export type ArticleSeriesSummary = Pick<ArticleSeries, 'id' | 'title' | 'slug' | 'description'> & {
+export type ArticleSeriesSummary = Pick<ArticleSeries, 'id' | 'title' | 'slug' | 'description' | 'image_url'> & {
   article_count: number
 }
 
-export type ArticleCardItem = Pick<Article, 'id' | 'title' | 'slug' | 'published_at' | 'image_url' | 'series_id' | 'series_sequence_number'> & {
-  article_categories: Pick<ArticleCategory, 'name' | 'slug'> | null
+export type ArticleCardItem = Pick<Article, 'id' | 'title' | 'slug' | 'summary' | 'published_at' | 'image_url' | 'series_id' | 'series_sequence_number'> & {
+  article_categories: Pick<ArticleCategory, 'name' | 'slug' | 'color' | 'image_url'> | null
   article_tags_links: Array<{ article_tags: Pick<ArticleTag, 'name' | 'slug'> }>
-  article_series: Pick<ArticleSeries, 'title' | 'slug'> | null
+  article_series: Pick<ArticleSeries, 'title' | 'slug' | 'image_url'> | null
 }
 
 export type ArticleListItem = Pick<Article, 'id' | 'title' | 'slug' | 'author' | 'created_at' | 'image_url'> & {
