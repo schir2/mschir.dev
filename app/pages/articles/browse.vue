@@ -87,7 +87,7 @@ function onTagsUpdate(slugs: string[]) {
 <template>
   <div class="flex flex-col gap-8">
     <article-page-header
-        :crumbs="[{ label: 'Articles', to: '/articles' }, { label: 'Browse' }]"
+        :crumbs="[{ label: 'Articles', route: '/articles' }, { label: 'Browse' }]"
         title="Browse Articles"
     />
 

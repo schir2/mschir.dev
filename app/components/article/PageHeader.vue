@@ -6,19 +6,11 @@ const props = defineProps<{
   title: string
   description?: string
 }>()
-
-const model = computed(() =>
-    props.crumbs.map((crumb, index) => ({
-      label: crumb.label,
-      to: crumb.to,
-      disabled: index === props.crumbs.length - 1,
-    })),
-)
 </script>
 
 <template>
   <header class="flex flex-col gap-3">
-    <p-breadcrumb :model="model"/>
+    <breadcrumb :breadcrumbs="crumbs"/>
     <h1 class="text-4xl font-bold">{{ title }}</h1>
     <p v-if="description" class="text-color-secondary text-lg">{{ description }}</p>
   </header>

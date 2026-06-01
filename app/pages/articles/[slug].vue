@@ -68,17 +68,17 @@ const mdTheme = useMdEditorTheme()
 
 const breadcrumbs = computed<Crumb[]>(() => {
   if (!article.value) return []
-  const crumbs: Crumb[] = [{ label: 'Articles', to: '/articles' }]
+  const crumbs: Crumb[] = [{ label: 'Articles', route: '/articles' }]
   if (article.value.article_categories) {
     crumbs.push({
       label: article.value.article_categories.name,
-      to: `/articles/browse?category=${article.value.article_categories.slug}`,
+      route: `/articles/browse?category=${article.value.article_categories.slug}`,
     })
   }
   if (article.value.article_series) {
     crumbs.push({
       label: article.value.article_series.title,
-      to: `/articles/series/${article.value.article_series.slug}`,
+      route: `/articles/series/${article.value.article_series.slug}`,
     })
   }
   crumbs.push({ label: article.value.title })
@@ -100,7 +100,7 @@ const { previousArticle, nextArticle, allArticles } = useSeriesNavigation(
 
     <p-progress-spinner v-if="articleLoading" />
     <article v-else-if="article">
-      <p-breadcrumb :model="breadcrumbs" />
+      <breadcrumb :model="breadcrumbs"/>
       <article-archived-banner :archived-at="article.archived_at" />
 
       <img

@@ -1,8 +1,8 @@
 <script lang="ts" setup>
 import type {FormSubmitEvent} from "@primevue/forms/form";
-import { zodResolver } from '@primevue/forms/resolvers/zod'
-import { CredentialsSchema } from '~/schemas/CredentialsSchema'
-import type { Credentials } from '~/types/Credentials'
+import {zodResolver} from '@primevue/forms/resolvers/zod'
+import {CredentialsSchema} from '~/schemas/CredentialsSchema'
+import type {Credentials} from '~/types/Credentials'
 
 definePageMeta({
   title: 'Login',
@@ -49,8 +49,8 @@ async function onFormSubmit(event: FormSubmitEvent) {
       <template #content>
         <p-form
             v-slot="$form"
-            :resolver
-            :initialValues
+            :resolver="resolver"
+            :initialValues="initialValues"
             @submit="onFormSubmit"
             class="flex flex-col gap-4 w-full"
         >

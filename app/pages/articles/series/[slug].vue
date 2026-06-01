@@ -57,12 +57,12 @@ const {
 </script>
 
 <template>
-  <div class="pt-6 pb-12 flex flex-col gap-12">
+  <div class="flex flex-col gap-16">
     <p-progress-spinner v-if="seriesPending" />
     <p v-else-if="seriesError">{{ seriesError.message }}</p>
     <template v-else-if="seriesData">
       <article-page-header
-        :crumbs="[{ label: 'Articles', to: '/articles' }, { label: seriesData.title }]"
+        :crumbs="[{ label: 'Articles', route: '/articles' }, { label: seriesData.title }]"
         :title="seriesData.title"
         :description="seriesData.description ?? undefined"
       />

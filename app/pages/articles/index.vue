@@ -76,7 +76,11 @@ const {
 </script>
 
 <template>
-  <div class="flex flex-col gap-16">
+  <div class="flex flex-col gap-8">
+    <div class="flex items-center justify-between">
+      <h1 class="text-4xl font-bold">Articles</h1>
+      <nuxt-link to="/articles/browse" class="text-primary text-sm hover:underline">Browse all articles</nuxt-link>
+    </div>
     <section v-if="featuredPending || (featuredArticles && featuredArticles.length > 0)" class="flex flex-col gap-6">
       <h2 class="text-2xl font-bold">Featured Articles</h2>
       <p-progress-spinner v-if="featuredPending"/>
@@ -91,10 +95,7 @@ const {
     </section>
 
     <section class="flex flex-col gap-6">
-      <div class="flex items-center justify-between">
-        <h2 class="text-2xl font-bold">Recent Articles</h2>
-        <nuxt-link to="/articles/browse" class="text-primary text-sm hover:underline">Browse all articles</nuxt-link>
-      </div>
+      <h2 class="text-2xl font-bold">Recent Articles</h2>
       <p-progress-spinner v-if="recentPending"/>
       <p v-else-if="recentError">{{ recentError.message }}</p>
       <div v-else class="flex flex-col gap-3">

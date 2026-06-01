@@ -1,8 +1,8 @@
 <script lang="ts" setup>
 import type {FormSubmitEvent} from "@primevue/forms/form";
-import { zodResolver } from '@primevue/forms/resolvers/zod'
-import { CredentialsSchema } from '~/schemas/CredentialsSchema'
-import type { Credentials } from '~/types/Credentials'
+import {zodResolver} from '@primevue/forms/resolvers/zod'
+import {CredentialsSchema} from '~/schemas/CredentialsSchema'
+import type {Credentials} from '~/types/Credentials'
 
 const toast = useToast()
 
@@ -49,8 +49,8 @@ async function onFormSubmit(event: FormSubmitEvent) {
       <template #content>
         <p-form
             v-slot="$form"
-            :resolver
-            :initialValues
+            :resolver="resolver"
+            :initialValues="initialValues"
             @submit="onFormSubmit"
             class="flex flex-col gap-4 w-full"
         >
@@ -73,7 +73,8 @@ async function onFormSubmit(event: FormSubmitEvent) {
           <p-button fluid variant="text" severity="danger" label="Use Google" icon="pi pi-google"
                     @click="onLoginWithGoogle"/>
           <p class="text-center">
-            Already Signed Up? <nuxt-link class="text-primary" to="/login">Login</nuxt-link>
+            Already Signed Up?
+            <nuxt-link class="text-primary" to="/login">Login</nuxt-link>
           </p>
         </p-form>
       </template>

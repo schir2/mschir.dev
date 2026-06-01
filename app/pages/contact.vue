@@ -89,8 +89,8 @@ async function onFormSubmit(event: FormSubmitEvent) {
       <!-- Right: form -->
       <p-form
           v-slot="$form"
-          :resolver
-          :initialValues
+          :resolver="resolver"
+          :initialValues="initialValues"
           @submit="onFormSubmit"
           class="flex flex-col gap-5"
       >
