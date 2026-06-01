@@ -47,7 +47,7 @@ const {data: featuredArticles} = await useAsyncData<ArticleCardItem[]>(
 )
 </script>
 <template>
-  <section class="py-16 flex flex-col gap-16">
+  <section class="flex flex-col gap-16">
 
     <!-- Skills Snapshot -->
     <div>

@@ -1,11 +1,11 @@
 <script lang="ts" setup>
 import {zodResolver} from '@primevue/forms/resolvers/zod'
 import type {FormSubmitEvent} from '@primevue/forms/form'
-import { ContactMessageInsertSchema } from '~/schemas/ContactMessageInsertSchema'
+import {ContactMessageInsertSchema} from '~/schemas/ContactMessageInsertSchema'
 
 import type {ContactReason} from "#shared/types/ContactReason";
 
-definePageMeta({ title: 'Contact', layout: 'page' })
+definePageMeta({title: 'Contact', layout: 'page'})
 
 const supabase = useSupabaseClient()
 const toast = useToast()
@@ -47,7 +47,7 @@ async function onFormSubmit(event: FormSubmitEvent) {
 </script>
 
 <template>
-  <section class="py-16">
+  <section>
 
     <!-- Confirmation state -->
     <div v-if="submitted" class="flex flex-col items-center justify-center py-24 gap-6 text-center">

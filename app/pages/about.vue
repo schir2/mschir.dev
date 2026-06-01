@@ -22,7 +22,7 @@ const { data: recentArticles } = await useAsyncData<ArticleCardItem[]>(
 </script>
 
 <template>
-  <div class="max-w-4xl mx-auto py-16 flex flex-col gap-16">
+  <div class="flex flex-col gap-16">
 
     <!-- Intro: name + photo side by side -->
     <div class="grid grid-cols-1 md:grid-cols-3 gap-10 items-start">

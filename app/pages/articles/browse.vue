@@ -1,7 +1,7 @@
 <script lang="ts" setup>
-import type { ArticleCardItem, ArticleCategory, ArticleTag } from '#shared/types/Article'
+import type {ArticleCardItem, ArticleCategory, ArticleTag} from '#shared/types/Article'
 
-definePageMeta({ layout: 'page' })
+definePageMeta({layout: 'page'})
 
 const supabase = useSupabaseClient()
 const route = useRoute()
@@ -14,61 +14,61 @@ const {
   pending: articlesPending,
   error: articlesError,
 } = useAsyncData<ArticleCardItem[]>('browse-articles', async () => {
-  const { data, error } = await supabase
-    .from('articles')
-    .select(articleCardSelect)
-    .not('published_at', 'is', null)
-    .is('archived_at', null)
-    .order('published_at', { ascending: false })
+  const {data, error} = await supabase
+      .from('articles')
+      .select(articleCardSelect)
+      .not('published_at', 'is', null)
+      .is('archived_at', null)
+      .order('published_at', {ascending: false})
   if (error) throw error
   return (data ?? []) as ArticleCardItem[]
-}, { lazy: true })
+}, {lazy: true})
 
 const {
   data: categories,
   pending: categoriesPending,
   error: categoriesError,
 } = useAsyncData<ArticleCategory[]>('browse-categories', async () => {
-  const { data, error } = await supabase
-    .from('article_categories')
-    .select('id, name, slug, description')
-    .order('name')
+  const {data, error} = await supabase
+      .from('article_categories')
+      .select('id, name, slug, description')
+      .order('name')
   if (error) throw error
   return (data ?? []) as ArticleCategory[]
-}, { lazy: true })
+}, {lazy: true})
 
 const {
   data: tags,
   pending: tagsPending,
   error: tagsError,
 } = useAsyncData<ArticleTag[]>('browse-tags', async () => {
-  const { data, error } = await supabase
-    .from('article_tags')
-    .select('id, name, slug')
-    .order('name')
+  const {data, error} = await supabase
+      .from('article_tags')
+      .select('id, name, slug')
+      .order('name')
   if (error) throw error
   return (data ?? []) as ArticleTag[]
-}, { lazy: true })
+}, {lazy: true})
 
 const listColumns = ref<1 | 2>(1)
 
 const activeCategory = ref<string | null>((route.query.category as string) ?? null)
 const activeTags = ref<string[]>(
-  route.query.tag
-    ? (Array.isArray(route.query.tag) ? (route.query.tag as string[]) : [route.query.tag as string])
-    : [],
+    route.query.tag
+        ? (Array.isArray(route.query.tag) ? (route.query.tag as string[]) : [route.query.tag as string])
+        : [],
 )
 
 const filteredArticles = computed(() =>
-  filterArticles(allArticles.value ?? [], activeCategory.value, activeTags.value),
+    filterArticles(allArticles.value ?? [], activeCategory.value, activeTags.value),
 )
 
 function onCategoryUpdate(slug: string | null) {
   activeCategory.value = slug
   router.replace({
     query: {
-      ...(slug ? { category: slug } : {}),
-      ...(activeTags.value.length ? { tag: activeTags.value } : {}),
+      ...(slug ? {category: slug} : {}),
+      ...(activeTags.value.length ? {tag: activeTags.value} : {}),
     },
   })
 }
@@ -77,67 +77,67 @@ function onTagsUpdate(slugs: string[]) {
   activeTags.value = slugs
   router.replace({
     query: {
-      ...(activeCategory.value ? { category: activeCategory.value } : {}),
-      ...(slugs.length ? { tag: slugs } : {}),
+      ...(activeCategory.value ? {category: activeCategory.value} : {}),
+      ...(slugs.length ? {tag: slugs} : {}),
     },
   })
 }
 </script>
 
 <template>
-  <div class="pt-6 pb-12 flex flex-col gap-8">
+  <div class="flex flex-col gap-8">
     <article-page-header
-      :crumbs="[{ label: 'Articles', to: '/articles' }, { label: 'Browse' }]"
-      title="Browse Articles"
+        :crumbs="[{ label: 'Articles', to: '/articles' }, { label: 'Browse' }]"
+        title="Browse Articles"
     />
 
     <section v-if="!categoriesPending && !tagsPending" class="flex flex-col gap-4">
       <p v-if="categoriesError || tagsError" class="text-red-500">Failed to load filters.</p>
-      <category-tag-filter
-        v-else
-        :categories="categories ?? []"
-        :tags="tags ?? []"
-        :model-category="activeCategory"
-        :model-tags="activeTags"
-        @update:model-category="onCategoryUpdate"
-        @update:model-tags="onTagsUpdate"
+      <article-category-tag-filter
+          v-else
+          :categories="categories ?? []"
+          :tags="tags ?? []"
+          :model-category="activeCategory"
+          :model-tags="activeTags"
+          @update:model-category="onCategoryUpdate"
+          @update:model-tags="onTagsUpdate"
       />
     </section>
 
     <section class="flex flex-col gap-4">
       <div class="flex items-center justify-end gap-1">
         <p-button
-          :severity="listColumns === 1 ? 'primary' : 'secondary'"
-          variant="text"
-          size="small"
-          aria-label="Single column"
-          @click="listColumns = 1"
+            :severity="listColumns === 1 ? 'primary' : 'secondary'"
+            variant="text"
+            size="small"
+            aria-label="Single column"
+            @click="listColumns = 1"
         >
-          <icon name="material-symbols:view-agenda-outline" />
+          <icon name="material-symbols:view-agenda-outline"/>
         </p-button>
         <p-button
-          :severity="listColumns === 2 ? 'primary' : 'secondary'"
-          variant="text"
-          size="small"
-          aria-label="Two columns"
-          @click="listColumns = 2"
+            :severity="listColumns === 2 ? 'primary' : 'secondary'"
+            variant="text"
+            size="small"
+            aria-label="Two columns"
+            @click="listColumns = 2"
         >
-          <icon name="material-symbols:grid-view-outline" />
+          <icon name="material-symbols:grid-view-outline"/>
         </p-button>
       </div>
-      <p-progress-spinner v-if="articlesPending" />
+      <p-progress-spinner v-if="articlesPending"/>
       <p v-else-if="articlesError">{{ articlesError.message }}</p>
       <p v-else-if="filteredArticles.length === 0" class="text-color-secondary">
         No articles match the selected filters.
       </p>
       <div
-        v-else
-        :class="listColumns === 2 ? 'grid grid-cols-1 sm:grid-cols-2 gap-3' : 'flex flex-col gap-3'"
+          v-else
+          :class="listColumns === 2 ? 'grid grid-cols-1 sm:grid-cols-2 gap-3' : 'flex flex-col gap-3'"
       >
         <article-card
-          v-for="article in filteredArticles"
-          :key="article.id"
-          :article="article"
+            v-for="article in filteredArticles"
+            :key="article.id"
+            :article="article"
         />
       </div>
     </section>
