@@ -4,7 +4,7 @@ export async function onLoginWithGoogle() {
   await supabase.auth.signInWithOAuth({
     provider: 'google',
     options: {
-      redirectTo: `${config.public.siteUrl}`,
+      redirectTo: `${config.public.siteUrl}/callback`,
     },
   })
 }

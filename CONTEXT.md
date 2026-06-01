@@ -231,6 +231,17 @@ Short descriptor used in the footer beneath the site name. Resolved copy: *"Soft
 
 ## Site Navigation Domain
 
+### Breadcrumb
+A contextual navigation trail rendered at the top of deep content pages, inside the page's content container, immediately below the navbar. Hidden on mobile (`hidden md:flex`). The last item (current page) is plain text — not a link. Scoped to the article section for now; project detail pages will follow the same pattern when built.
+
+**Trails by route:**
+- `/articles/browse` → `Articles > Browse`
+- `/articles/series/[slug]` → `Articles > [Series Title]`
+- `/articles/[slug]` (with series) → `Articles > [Category Name] > [Series Title] > [Article Title]`
+- `/articles/[slug]` (no series) → `Articles > [Category Name] > [Article Title]`
+
+`Articles` always links to `/articles`. Category links to `/articles/browse?category=[slug]`. Series links to `/articles/series/[slug]`. See ADR 0012.
+
 ### Site Navbar
 A sticky top navbar (`position: sticky; top: 0`) visible at all times as the user scrolls. Adds a drop shadow when the page has scrolled past 10px. Nav items: Portfolio, Articles, About, Contact. Social links (GitHub, LinkedIn) appear on the right and are hidden on mobile. Auth area is on the far right.
 
