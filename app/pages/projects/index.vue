@@ -42,11 +42,14 @@ const projectCards = computed<ProjectCardItem[]>(() =>
     <p v-if="projectsError" class="text-red-400">{{ projectsError.message }}</p>
     <p-progress-spinner v-else-if="projectsLoading" />
     <div v-else class="flex flex-col gap-3">
-      <project-card
+      <nuxt-link
         v-for="project in projectCards"
         :key="project.id"
-        :project="project"
-      />
+        :to="`/projects/${project.slug}`"
+        class="block"
+      >
+        <project-card :project="project"/>
+      </nuxt-link>
     </div>
   </section>
 </template>

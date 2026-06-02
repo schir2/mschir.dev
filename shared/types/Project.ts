@@ -33,6 +33,11 @@ export type ProjectCardItem = {
   featured: boolean
 }
 
+export type ProjectDetail = Pick<Project, 'id' | 'name' | 'slug' | 'description' | 'summary' | 'image_url' | 'year'> & {
+  companies: Pick<Company, 'name'> | null
+  project_skills: { skills: Pick<Skill, 'id' | 'name' | 'icon'> }[]
+}
+
 export type ProjectAdminListItem = Pick<Project, 'id' | 'name' | 'year'> & {
   companies: Pick<Company, 'name'> | null
   featured_projects: Pick<FeaturedProjectRow, 'id'> | null

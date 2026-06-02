@@ -303,6 +303,16 @@ async function deleteProject() {
         @click="confirmDelete($event)"
       />
       <p-button
+        v-if="currentProjectId && slug"
+        icon="pi pi-external-link"
+        text
+        size="small"
+        label="View"
+        tag="a"
+        :href="`/projects/${slug}`"
+        target="_blank"
+      />
+      <p-button
         label="Save"
         icon="pi pi-save"
         :loading="saving"

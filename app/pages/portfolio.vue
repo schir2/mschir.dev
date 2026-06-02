@@ -59,11 +59,14 @@ const featuredProjectCards = computed<ProjectCardItem[]>(() =>
     <div v-if="featuredProjectCards.length">
       <h2 class="text-2xl font-bold mb-6">Featured Projects</h2>
       <div class="flex flex-col gap-3">
-        <project-card
+        <nuxt-link
             v-for="project in featuredProjectCards"
             :key="project.id"
-            :project="project"
-        />
+            :to="`/projects/${project.slug}`"
+            class="block"
+        >
+          <project-card :project="project"/>
+        </nuxt-link>
       </div>
     </div>
 

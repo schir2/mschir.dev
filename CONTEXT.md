@@ -16,6 +16,23 @@ A project selected for portfolio showcase. Stored in the `featured_projects` tab
 
 **Decided:** `tagline` lives only on `featured_projects`, not on `projects` itself. `projects.summary` (a short plain-text blurb for cards and SEO) covers the general short-description use case. Adding a `tagline` to `projects` would blur the distinction and is not needed outside the portfolio context.
 
+### Project Card
+A reusable component (`ProjectCard`) that renders a single project preview from a `ProjectCardItem` prop. Does no data fetching. Used on the Portfolio Page (featured projects) and the Projects Page.
+
+**Layout (left to right):**
+- Amber left bar (`w-1.5`, `bg-amber-500`) — present only when `featured: true`. Same amber = featured rule as the Article Card.
+- Text block (flex-col, fills remaining width):
+  - *Metadata row*: `Company Name · Year` (plain text, no logo). Year only when no company.
+  - *Title*: Fraunces display font, `line-clamp-2`.
+  - *Body text*: when featured and `tagline` is set, the tagline fills this slot; otherwise `summary` is shown (`line-clamp-3`). Nothing shown when both are null.
+  - *Skills footer*: `border-t border-surface-800` divider, then flat icon+name chip pills. Max 5 chips, `+N` badge for overflow. No category grouping.
+- Thumbnail (96×96 square, right): real image resolved from Supabase storage (`images` bucket) when `image_url` is set; otherwise a deterministic diagonal gradient from `--p-primary-*` / `--p-surface-*` tokens, derived by hashing the project name (six variants, always the same gradient for the same project name).
+
+**Hover/click**: same pattern as Article Card — `opacity-85` default → `opacity-100` on hover with shadow and border lighten. No translate-y. See ADR 0016.
+
+### Projects Page
+The `/projects` route. A single-column vertical list of all projects, ordered by year descending. Uses `ProjectCard` for each row. Queries `projects` joined with `companies(name)` and `project_skills(skills(id, name, icon))`.
+
 ### Featured Article
 An article selected for editorial showcase. Stored in the `featured_articles` table (one-to-one with `articles`, `isOneToOne: true`). Fields: `article_id`, `featured_reason` (nullable string — e.g. "Staff pick", "Most shared"), `author`, timestamps. An article is considered featured if a `featured_articles` record exists for it — there is no boolean flag on the `articles` table; featured status is derived from the join. Appears on the Article Landing Page and signals "editor's pick" with an amber bar on the Article Card.
 
