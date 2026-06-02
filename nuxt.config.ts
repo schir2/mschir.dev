@@ -20,17 +20,17 @@ export default defineNuxtConfig({
 
     gtag: {
         id: 'G-TBFLGWRP7Y',
-        enabled: process.env.NODE_ENV === 'production' || process.env.DEBUG === 'true',
-        config: { debug_mode: process.env.DEBUG === 'true' },
-        initCommands: [
-            ['consent', 'default', {
-                analytics_storage: 'denied',
-                ad_storage: 'denied',
-                ad_user_data: 'denied',
-                ad_personalization: 'denied',
-                wait_for_update: 500,
-            }],
-        ],
+        enabled: true
+        // config: { debug_mode: true },
+        // initCommands: [
+        //     ['consent', 'default', {
+        //         analytics_storage: 'denied',
+        //         ad_storage: 'denied',
+        //         ad_user_data: 'denied',
+        //         ad_personalization: 'denied',
+        //         wait_for_update: 500,
+        //     }],
+        // ],
     },
 
     app: {

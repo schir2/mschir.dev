@@ -10,6 +10,7 @@ const supabase = useSupabaseClient()
 const toast = useToast()
 const router = useRouter()
 const confirm = useConfirm()
+const mdTheme = useMdEditorTheme()
 
 // --- Form state ---
 const title = ref('')
@@ -637,7 +638,7 @@ async function createSeries() {
             ref="editorRef"
             v-model="content"
             language="en-US"
-            theme="dark"
+            :theme="mdTheme"
             :style="{ height: editorHeight }"
             :on-upload-img="handleEditorImageUpload"
           />

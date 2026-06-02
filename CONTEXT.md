@@ -55,7 +55,11 @@ A named sequence of related articles read in order. Stored in `article_series` (
 A short optional teaser for an article (1–3 sentences). Stored as the nullable `summary` column on `articles`. Displayed below the title in the Article Card row layout. Not derived from content — authored manually (or eventually via AI assist). When null the Article Card row renders without a summary line.
 
 ### Article Editor
-The admin UI for creating and editing articles. `/admin/articles/new` creates a new article; `/admin/articles/[id]` edits an existing one. Layout: a metadata bar across the top (title, slug, summary, hero image, category, tags, series + sequence number, publish date, archive date) and a full-width split markdown editor + live preview below. Access is restricted to admin users via global Nuxt middleware.
+The admin UI for creating and editing articles. `/admin/articles/new` creates a new article; `/admin/articles/[id]` edits an existing one. Full-height layout: a compact metadata bar across the top and a full-width split Markdown editor + live preview below. Saving stays on the page. Access is restricted to admin users via global Nuxt middleware.
+
+**Metadata bar fields:** title, slug (auto-generated, locks on publish), summary, hero image, category, tags, series + sequence number, writing stage, featured toggle, archived toggle (when published). All fields use stacked `text-xs` labels.
+
+**Publish / Unpublish:** replaced the bare toggle with explicit action buttons that trigger a confirmation dialog explaining the consequences (visibility change, slug lock). Slug is locked (`disabled`) the moment publish is confirmed — derived as a computed from `publishedAt`, not deferred to save. A **View** button appears in the toolbar when the article is published, opening `/articles/[slug]` in a new tab. See ADR 0015.
 
 Keyboard shortcuts in the editor: **Ctrl+Alt+1–6** apply heading levels 1–6 (wraps selected text or inserts the prefix at the cursor). Standard shortcuts (Ctrl+B, Ctrl+I, etc.) are handled natively by the editor's CodeMirror layer.
 
@@ -104,7 +108,7 @@ An article where `published_at IS NOT NULL` and `archived_at IS NULL`. Readable 
 An article where `archived_at IS NOT NULL`. Still publicly readable, but displayed with an "archived" banner indicating the content may be outdated. `archived_at` records when archiving occurred.
 
 ### Article Slug
-Auto-generated from the article title on creation (e.g. "My First Article" → "my-first-article"). Manually overridable before first publish. Locked after first publish to prevent breaking external links.
+Auto-generated from the article title on creation (e.g. "My First Article" → "my-first-article"). Manually overridable before first publish. Locked immediately when the article is published — the lock is a computed derived from `publishedAt`, so it activates the moment publish is confirmed, not on next save. Prevents breaking external links.
 
 ### Hero Image
 The banner/thumbnail image representing an article. Stored at `article-heroes/{uuid}.ext` in the `images` bucket. Uploaded via an inline file picker in the metadata bar. Distinct from Inline Content Images.
