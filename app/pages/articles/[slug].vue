@@ -100,7 +100,7 @@ const {previousArticle, nextArticle, allArticles} = useSeriesNavigation(
     <p-progress-spinner v-if="articleLoading"/>
     <article v-else-if="article" class="flex flex-col gap-8">
       <breadcrumb :model="breadcrumbs"/>
-      <p-message v-if="article.archivedAt !== null" role="alert" severity="secondary" class="mb-8">
+      <p-message v-if="article.archived_at" role="alert" severity="secondary" class="mb-8">
         This article has been archived and may be outdated.
       </p-message>
 

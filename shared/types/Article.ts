@@ -34,4 +34,5 @@ export type WritingStage = 'idea' | 'outline' | 'draft' | 'ready'
 export type ArticleAdminListItem = Pick<Article, 'id' | 'title' | 'writing_stage' | 'published_at' | 'archived_at' | 'created_at'> & {
   article_categories: Pick<ArticleCategory, 'name'> | null
   article_series: Pick<ArticleSeries, 'title'> | null
+  featured_articles: { id: string; featured_reason: string | null } | null
 }

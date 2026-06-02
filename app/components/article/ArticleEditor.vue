@@ -31,6 +31,9 @@ function toggleArchived(value: boolean) {
   archivedAt.value = value ? new Date().toISOString() : null
 }
 const summary = ref<string | null>(null)
+const isFeatured = ref(false)
+const featuredReason = ref<string | null>(null)
+const featuredArticleId = ref<string | null>(null)
 const categoryId = ref<string | null>(null)
 const selectedTagIds = ref<string[]>([])
 const seriesId = ref<string | null>(null)
@@ -147,6 +150,18 @@ async function loadArticle(articleId: string) {
 
   slugAutoMode.value = false
   if (data.published_at) slugLocked.value = true
+
+  const { data: featuredData } = await supabase
+    .from('featured_articles')
+    .select('id, featured_reason')
+    .eq('article_id', articleId)
+    .maybeSingle()
+
+  if (featuredData) {
+    isFeatured.value = true
+    featuredArticleId.value = featuredData.id
+    featuredReason.value = featuredData.featured_reason
+  }
 }
 
 onMounted(async () => {
@@ -163,6 +178,20 @@ onMounted(async () => {
 onUnmounted(() => {
   window.removeEventListener('resize', recalculateEditorHeight)
 })
+
+async function syncFeatured(articleId: string) {
+  if (isFeatured.value) {
+    const { error } = await supabase
+      .from('featured_articles')
+      .upsert(
+        { id: featuredArticleId.value ?? undefined, article_id: articleId, featured_reason: featuredReason.value?.trim() || null },
+        { onConflict: 'article_id' },
+      )
+    if (error) throw error
+  } else {
+    await supabase.from('featured_articles').delete().eq('article_id', articleId)
+  }
+}
 
 async function autoAssignSequenceNumber(selectedSeriesId: string) {
   const { data } = await supabase
@@ -233,6 +262,8 @@ async function save() {
         .insert(selectedTagIds.value.map((tagId) => ({ article_id: savedId, tag_id: tagId })))
       if (tagsError) throw tagsError
     }
+
+    await syncFeatured(savedId)
 
     if (publishedAt.value) slugLocked.value = true
 
@@ -569,7 +600,22 @@ async function createSeries() {
             />
           </div>
 
+          <!-- Featured toggle -->
+          <div class="flex items-center gap-2">
+            <label class="text-sm">Featured</label>
+            <p-toggle-switch v-model="isFeatured" />
+          </div>
+
         </div>
+
+        <!-- Featured reason (visible only when featured) -->
+        <p-input-text
+          v-if="isFeatured"
+          v-model="featuredReason"
+          placeholder="Featured reason (optional, e.g. Editor's pick)"
+          class="w-full"
+        />
+
       </div>
 
       <!-- Editor -->
