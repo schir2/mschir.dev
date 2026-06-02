@@ -25,6 +25,7 @@ pnpm run db:reset        # Reset local Supabase DB and re-run migrations + seeds
 pnpm run db:migrate      # Apply pending migrations to the local DB without a full reset
 pnpm run test:db         # Run pgTAP database tests (requires supabase:start)
 pnpm run test:edge       # Run Deno edge function tests
+pnpm run seed:assets     # Upload cover images to Supabase Storage and set image_url on articles/projects (see supabase/seed-assets/)
 nuxi typecheck            # TypeScript type check — requires pnpm approve-builds to have been run once interactively first (see note below)
 ```
 
@@ -50,6 +51,8 @@ This is a **Nuxt 4** personal portfolio site (mschir.dev) backed by **Supabase**
 - `supabase/migrations/` — ordered SQL migration files that define the schema
 - `supabase/seeds/` — numbered seed SQL files run in order: `01_blog.sql`, `02_content.sql`, `03_projects.sql`, `04_project_skills.sql`, `05_test_users.sql` (test user for integration tests)
 - `supabase/seed.sql` — runs before numbered seeds; enables the pgTAP extension for local dev
+- `supabase/seed-assets/covers/` — cover images for articles and projects, one subfolder per slug (e.g. `articles/getting-started-with-supabase/cover.png`); uploaded via `pnpm run seed:assets`; image files are gitignored, folder structure is tracked
+- `scripts/` — one-off dev utility scripts (not part of the Nuxt app)
 - `supabase/tests/` — pgTAP database tests and Deno edge function tests; see `supabase/tests/CLAUDE.md`
 - `primevue-theme.ts` — custom PrimeVue theme imported by `nuxt.config.ts`
 
@@ -75,6 +78,8 @@ This is a **Nuxt 4** personal portfolio site (mschir.dev) backed by **Supabase**
 - `language="en-US"` — the library defaults to `zh-CN`; omitting this produces Chinese UI strings
 - `:theme="mdTheme"` — use the `useMdEditorTheme()` composable; do not hardcode `"dark"`
 - `scroll-element="html"` on `<md-catalog>` — the default scroll target is the non-scrollable preview wrapper; without this, TOC clicks do nothing
+
+**Removing the default black/white background** — wrap every read-only `<md-preview>` in `<div class="md-content-preview">`. The CSS in `app/assets/css/overrides/md-editor.css` targets `.md-content-preview > .md-editor` and makes the background transparent with correct token-based colors. Do not add per-page `#editor-id` selectors — the wrapper class handles all pages uniformly.
 
 See `docs/adr/0006-md-editor-v3-for-article-rendering.md` for the full rationale and CSS override patterns.
 

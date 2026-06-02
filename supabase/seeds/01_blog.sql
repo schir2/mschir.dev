@@ -1,58 +1,95 @@
 insert into public.article_tags (name, slug, icon)
-values ('Python', 'python', 'logos:python'),
-       ('Django', 'django', 'logos:django-icon'),
-       ('Algorithms', 'algorithms', null),
-       ('Data Structures', 'data-structures', null),
-       ('REST API', 'rest-api', null),
-       ('Design Patterns', 'design-patterns', null),
-       ('Code Optimization', 'code-optimization', null),
-       ('HTML', 'html', 'logos:html-5'),
-       ('CSS', 'css', 'logos:css-3'),
-       ('JavaScript', 'javascript', 'logos:javascript'),
-       ('React', 'react', 'logos:react'),
-       ('Vue.js', 'vue.js', 'logos:vue'),
-       ('Tailwind CSS', 'tailwind-css', 'logos:tailwindcss-icon'),
-       ('Responsive Design', 'responsive-design', null),
-       ('Machine Learning', 'machine-learning', null),
-       ('Data Visualization', 'data-visualization', null),
-       ('Pandas', 'pandas', 'logos:pandas-icon'),
-       ('NumPy', 'numpy', null),
-       ('Scikit-Learn', 'scikit-learn', null),
-       ('Matplotlib', 'matplotlib', null),
-       ('CI/CD', 'ci-cd', null),
-       ('Docker', 'docker', 'logos:docker-icon'),
-       ('Kubernetes', 'kubernetes', 'logos:kubernetes'),
-       ('Ansible', 'ansible', 'logos:ansible'),
-       ('Terraform', 'terraform', 'logos:terraform-icon'),
-       ('Cloud', 'cloud', null),
-       ('Jenkins', 'jenkins', 'logos:jenkins'),
-       ('Networking', 'networking', null),
-       ('Firewalls', 'firewalls', null),
-       ('VPN', 'vpn', null),
-       ('Security', 'security', null),
-       ('Linux', 'linux', 'logos:linux-tux'),
-       ('Windows Server', 'windows-server', 'logos:microsoft-windows-icon'),
-       ('Troubleshooting', 'troubleshooting', null),
-       ('IT Support', 'it-support', null),
-       ('Helpdesk', 'helpdesk', null),
-       ('SysAdmin', 'sysadmin', null),
-       ('Scripting', 'scripting', null),
-       ('Bouldering', 'bouldering', null),
-       ('Sport Climbing', 'sport-climbing', null),
-       ('Trad Climbing', 'trad-climbing', null),
-       ('Training', 'training', null),
-       ('Gear Reviews', 'gear-reviews', null),
-       ('Marathon', 'marathon', null),
-       ('5K', '5k', null),
-       ('10K', '10k', null),
-       ('Training Plans', 'training-plans', null),
-       ('Gear', 'gear', null),
-       ('Trail Running', 'trail-running', null),
-       ('Strength Training', 'strength-training', null),
-       ('Flexibility', 'flexibility', null),
-       ('Cardio', 'cardio', null),
-       ('HIIT', 'hiit', null),
-       ('Yoga', 'yoga', null);
+values
+-- Programming languages
+('Python', 'python', 'logos:python'),
+('JavaScript', 'javascript', 'logos:javascript'),
+('TypeScript', 'typescript', 'logos:typescript-icon'),
+('PHP', 'php', 'logos:php'),
+('Scripting', 'scripting', 'mdi:script-text'),
+
+-- Web frameworks & libraries
+('Django', 'django', 'logos:django-icon'),
+('React', 'react', 'logos:react'),
+('Vue.js', 'vue.js', 'logos:vue'),
+('Nuxt', 'nuxt', 'simple-icons:nuxtdotjs'),
+('Tailwind CSS', 'tailwind-css', 'logos:tailwindcss-icon'),
+('HTML', 'html', 'logos:html-5'),
+('CSS', 'css', 'logos:css-3'),
+('Responsive Design', 'responsive-design', 'mdi:responsive'),
+
+-- Databases & backend
+('PostgreSQL', 'postgresql', 'logos:postgresql'),
+('Supabase', 'supabase', 'logos:supabase-icon'),
+('REST API', 'rest-api', 'mdi:api'),
+
+-- AI & automation
+('AI', 'ai', 'mdi:robot'),
+('Machine Learning', 'machine-learning', 'mdi:robot'),
+('Claude Code', 'claude-code', 'simple-icons:anthropic'),
+('N8n', 'n8n', 'simple-icons:n8n'),
+('Zapier', 'zapier', 'simple-icons:zapier'),
+
+-- DevOps & infrastructure
+('Docker', 'docker', 'logos:docker-icon'),
+('Kubernetes', 'kubernetes', 'logos:kubernetes'),
+('Ansible', 'ansible', 'logos:ansible'),
+('Terraform', 'terraform', 'logos:terraform-icon'),
+('CI/CD', 'ci-cd', 'logos:github-actions'),
+('GitHub Actions', 'github-actions', 'logos:github-actions'),
+('Jenkins', 'jenkins', 'logos:jenkins'),
+('Cloud', 'cloud', 'mdi:cloud'),
+('Linux', 'linux', 'logos:linux-tux'),
+('Windows Server', 'windows-server', 'logos:microsoft-windows-icon'),
+('PowerShell', 'powershell', 'devicon:powershell'),
+
+-- Networking & security
+('Networking', 'networking', 'mdi:network'),
+('Firewalls', 'firewalls', 'mdi:wall-fire'),
+('VPN', 'vpn', 'mdi:shield-key'),
+('Security', 'security', 'mdi:shield-lock'),
+
+-- IT & support
+('Troubleshooting', 'troubleshooting', 'mdi:tools'),
+('IT Support', 'it-support', 'mdi:headset'),
+('Helpdesk', 'helpdesk', 'mdi:face-agent'),
+('SysAdmin', 'sysadmin', 'mdi:server'),
+
+-- CS fundamentals
+('Algorithms', 'algorithms', 'mdi:function-variant'),
+('Data Structures', 'data-structures', 'mdi:graph'),
+('Design Patterns', 'design-patterns', 'mdi:puzzle'),
+('Code Optimization', 'code-optimization', 'mdi:speedometer'),
+
+-- Data science
+('Data Visualization', 'data-visualization', 'mdi:chart-bar'),
+('Pandas', 'pandas', 'logos:pandas-icon'),
+('NumPy', 'numpy', 'simple-icons:numpy'),
+('Scikit-Learn', 'scikit-learn', 'simple-icons:scikitlearn'),
+('Matplotlib', 'matplotlib', null),
+
+-- Climbing
+('Bouldering', 'bouldering', null),
+('Sport Climbing', 'sport-climbing', null),
+('Trad Climbing', 'trad-climbing', null),
+
+-- Fitness
+('Training', 'training', 'mdi:dumbbell'),
+('Strength Training', 'strength-training', 'mdi:dumbbell'),
+('Cardio', 'cardio', 'mdi:heart-pulse'),
+('HIIT', 'hiit', 'mdi:timer'),
+('Yoga', 'yoga', 'mdi:meditation'),
+('Flexibility', 'flexibility', 'mdi:human-greeting-variant'),
+('Training Plans', 'training-plans', 'mdi:clipboard-list'),
+
+-- Running
+('Marathon', 'marathon', 'mdi:run'),
+('5K', '5k', 'mdi:run'),
+('10K', '10k', 'mdi:run'),
+('Trail Running', 'trail-running', 'mdi:run-fast'),
+
+-- Gear
+('Gear Reviews', 'gear-reviews', 'mdi:star-circle'),
+('Gear', 'gear', 'mdi:backpack');
 
 insert into public.article_categories (name, slug, description, color)
 values ('Software Development',

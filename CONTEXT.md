@@ -31,7 +31,17 @@ A reusable component (`ProjectCard`) that renders a single project preview from 
 **Hover/click**: same pattern as Article Card — `opacity-85` default → `opacity-100` on hover with shadow and border lighten. No translate-y. See ADR 0016.
 
 ### Projects Page
-The `/projects` route. A single-column vertical list of all projects, ordered by year descending. Uses `ProjectCard` for each row. Queries `projects` joined with `companies(name)` and `project_skills(skills(id, name, icon))`.
+The `/projects` route. A single-column vertical list of all projects, ordered by year descending. Uses `ProjectCard` for each row. Queries `projects` joined with `companies(name)` and `project_skills(skills(id, name, icon))`. Each card links to the Project Detail Page.
+
+### Project Detail Page
+The `/projects/[slug]` route. Public read-only view of a single project. Layout is responsive:
+- **Mobile**: hero image fills a tall block with the project title overlaid at the bottom behind a dark gradient scrim. Company · year and skills appear below.
+- **Desktop (md+)**: hero image renders as a shorter banner; title, company · year, and skills render below it as a structured header.
+- **No image**: title always renders in the header (no hero block).
+
+Content sections in order: breadcrumb → hero image (if set) → title + admin edit button → company · year → skills chips → markdown description via `<md-preview>`.
+
+Fetches via `useAsyncData` with `lazy: true`, filtering by `slug`. Returns 404 for unknown slugs. Description rendered via `MdPreview` (md-editor-v3) wrapped in `<div class="md-content-preview">` inside `<client-only>`. Admin edit button links to `/admin/projects/[id]`, shown only when `app_metadata.role === 'admin'`.
 
 ### Featured Article
 An article selected for editorial showcase. Stored in the `featured_articles` table (one-to-one with `articles`, `isOneToOne: true`). Fields: `article_id`, `featured_reason` (nullable string — e.g. "Staff pick", "Most shared"), `author`, timestamps. An article is considered featured if a `featured_articles` record exists for it — there is no boolean flag on the `articles` table; featured status is derived from the join. Appears on the Article Landing Page and signals "editor's pick" with an amber bar on the Article Card.
@@ -63,7 +73,7 @@ When an entity's image is replaced: (1) upload the new file to a new UUID path, 
 A first-class browse lane that classifies every article into one of a small, stable set of mutually exclusive buckets (e.g. *Software Development*, *Career*, *Finance*). Each article belongs to exactly one category. Stored in the `article_categories` table (`id`, `name`, `slug`, `description`, `color`, `image_url`); articles reference it via `category_id`. `color` is a nullable hex string used as the category chip background color and as the final image fallback in the Thumbnail Fallback Chain. `image_url` is a nullable StoragePath in the `images` bucket used as a thumbnail fallback before the color block. Distinct from Article Tags, which are cross-cutting labels that span multiple categories.
 
 ### Article Tag
-A cross-cutting label attached to an article. An article can have many tags; the same tag can appear on articles across different categories (e.g. *Python* might appear on both a Software Development article and a Finance article). Stored in `article_tags` with a many-to-many join via `article_tags_links`. Tags are used for drill-down filtering, not top-level navigation.
+A cross-cutting label attached to an article. An article can have many tags; the same tag can appear on articles across different categories (e.g. *Python* might appear on both a Software Development article and a Finance article). Stored in `article_tags` with a many-to-many join via `article_tags_links`. Tags are used for drill-down filtering, not top-level navigation. The `icon` column (nullable text) holds an Iconify icon name for tech-related tags (e.g. `logos:python`, `logos:docker-icon`); tags without a natural logo leave it null. Tags render as icon+name pill chips on the Article Detail Page, matching the skill chip style.
 
 ### Article Series
 A named sequence of related articles read in order. Stored in `article_series` (`id`, `title`, `slug`, `description`, `image_url`). `image_url` is a nullable StoragePath in the `images` bucket used as a thumbnail fallback (second in the Thumbnail Fallback Chain, after the article's own image and before the category image). Articles reference a series via `series_id` and `series_sequence_number`.
@@ -232,7 +242,7 @@ Two-font system loaded via Google Fonts `<link>` tags in `nuxt.config.ts` (no `@
 
 **Hero type scale**: h1 `text-6xl` (Fraunces) / subtitle `text-2xl` / headline `text-xl`.
 
-**md-editor-v3**: `app/assets/css/overrides/md-editor.css` overrides `h1, h2` inside `#article-detail .md-editor-preview` to use Fraunces. Body text inside the preview inherits Inter from the page-level font-family.
+**md-editor-v3**: `app/assets/css/overrides/md-editor.css` overrides `h1, h2` inside `.md-content-preview > .md-editor .md-editor-preview` to use Fraunces. Body text inside the preview inherits Inter from the page-level font-family.
 
 ### CSS Layering Rule
 Three layers, each with a defined responsibility:
@@ -261,7 +271,7 @@ Short descriptor used in the footer beneath the site name. Resolved copy: *"Soft
 ## Site Navigation Domain
 
 ### Breadcrumb
-A contextual navigation trail rendered at the top of deep content pages, inside the page's content container, immediately below the navbar. Hidden on mobile (`hidden md:block`). The last item (current page) is plain text — not a link. Scoped to the article section for now; project detail pages will follow the same pattern when built.
+A contextual navigation trail rendered at the top of deep content pages, inside the page's content container, immediately below the navbar. Hidden on mobile (`hidden md:block`). The last item (current page) is plain text — not a link. Used on article pages and the Project Detail Page.
 
 On browse and series pages, rendered via `article-page-header` (which wraps the breadcrumb + h1 + optional description). On the article detail page, rendered directly as `article-breadcrumb` since that page's header has a different structure (metadata bar, tags, admin edit button).
 

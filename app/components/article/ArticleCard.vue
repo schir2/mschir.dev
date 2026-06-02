@@ -126,8 +126,9 @@ function handleClick(event: MouseEvent) {
               v-for="tagLink in visibleTags"
               :key="tagLink.article_tags.slug"
               :to="`/articles/browse?tag=${tagLink.article_tags.slug}`"
-              class="text-xs px-2.5 py-1 rounded-full bg-surface-800 text-surface-300 leading-none hover:bg-surface-700 transition-colors"
+              class="flex items-center gap-1 text-xs px-2.5 py-1 rounded-full bg-surface-800 text-surface-300 leading-none hover:bg-surface-700 transition-colors"
             >
+              <icon v-if="tagLink.article_tags.icon" :name="tagLink.article_tags.icon" class="w-3.5 h-3.5 shrink-0" />
               {{ tagLink.article_tags.name }}
             </nuxt-link>
             <span
