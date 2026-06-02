@@ -159,3 +159,4 @@ Open `http://localhost:3000` in your Windows browser — it resolves through WSL
 | `supabase` command not found | Install globally via step 9 |
 | WebStorm uses Windows Node | Point interpreter to WSL path in Settings → Node.js |
 | `localhost:3000` not reachable | Run `wsl --shutdown` and restart WSL; Windows firewall occasionally blocks the port |
+| `ERR_PNPM_IGNORED_BUILDS` on install | Run `pnpm approve-builds`, approve `@parcel/watcher` and `esbuild`, then re-run `pnpm install` — one-time per machine |
