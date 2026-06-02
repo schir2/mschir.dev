@@ -1,9 +1,8 @@
 <script lang="ts" setup>
 import type {FeaturedProject} from "#shared/types/Project";
-import type {ArticleCardItem} from "#shared/types/Article";
 import type {SkillSnapshot} from "~/types/Skill";
 
-definePageMeta({ title: 'Portfolio', layout: 'page' })
+definePageMeta({title: 'Portfolio', layout: 'page'})
 
 const supabase = useSupabaseClient()
 
@@ -31,20 +30,6 @@ const {data: featuredProjects} = await useAsyncData<FeaturedProject[]>(
     },
     {lazy: true}
 )
-
-const articleCardSelect = 'id, title, slug, summary, published_at, image_url, series_id, series_sequence_number, article_categories(name, slug, color, image_url), article_tags_links(article_tags(name, slug)), article_series(title, slug, image_url)'
-
-const {data: featuredArticles} = await useAsyncData<ArticleCardItem[]>(
-    'portfolio-featured-articles',
-    async () => {
-      const {data} = await supabase
-          .from('featured_articles')
-          .select(`articles(${articleCardSelect})`)
-      const articles = data?.map((row: any) => row.articles).filter(Boolean) ?? []
-      return articles as unknown as ArticleCardItem[]
-    },
-    {lazy: true}
-)
 </script>
 <template>
   <section class="flex flex-col gap-16">
@@ -64,32 +49,6 @@ const {data: featuredArticles} = await useAsyncData<ArticleCardItem[]>(
             :key="featuredProject.id"
             :featured-project="featuredProject"
         />
-      </div>
-    </div>
-
-    <!-- Featured Articles -->
-    <div v-if="featuredArticles?.length">
-      <h2 class="text-2xl font-bold mb-6">Articles</h2>
-      <div class="flex flex-col gap-4">
-        <router-link
-            v-for="article in featuredArticles"
-            :key="article.id"
-            :to="`/articles/${article.slug}`"
-            class="block"
-        >
-          <p-card>
-            <template #title>{{ article.title }}</template>
-            <template #content>
-              <div class="flex flex-wrap gap-2 mt-1">
-                <p-tag
-                    v-if="article.article_categories"
-                    :value="article.article_categories.name"
-                    severity="secondary"
-                />
-              </div>
-            </template>
-          </p-card>
-        </router-link>
       </div>
     </div>
 
