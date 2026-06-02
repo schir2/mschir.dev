@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import type {FeaturedProject} from "#shared/types/Project";
+import type {FeaturedProject, ProjectCardItem} from "#shared/types/Project";
 import type {SkillSnapshot} from "~/types/Skill";
 
 definePageMeta({title: 'Portfolio', layout: 'page'})
@@ -24,11 +24,26 @@ const {data: featuredProjects} = await useAsyncData<FeaturedProject[]>(
     async () => {
       const {data} = await supabase
           .from('featured_projects')
-          .select('*, projects(name, description, image_url, year, project_skills(skills(id, name, icon)))')
+          .select('*, projects(id, name, slug, summary, description, image_url, year, companies(name), project_skills(skills(id, name, icon)))')
           .order('display_order')
       return (data as unknown as FeaturedProject[]) ?? []
     },
     {lazy: true}
+)
+
+const featuredProjectCards = computed<ProjectCardItem[]>(() =>
+  (featuredProjects.value ?? []).map(fp => ({
+    id: fp.projects.id,
+    name: fp.projects.name,
+    year: fp.projects.year,
+    summary: fp.projects.summary,
+    slug: fp.projects.slug,
+    image_url: fp.projects.image_url,
+    companies: fp.projects.companies,
+    project_skills: fp.projects.project_skills,
+    tagline: fp.tagline,
+    featured: true,
+  }))
 )
 </script>
 <template>
@@ -41,13 +56,13 @@ const {data: featuredProjects} = await useAsyncData<FeaturedProject[]>(
     </div>
 
     <!-- Featured Projects -->
-    <div v-if="featuredProjects?.length">
+    <div v-if="featuredProjectCards.length">
       <h2 class="text-2xl font-bold mb-6">Featured Projects</h2>
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        <portfolio-featured-project-card
-            v-for="featuredProject in featuredProjects"
-            :key="featuredProject.id"
-            :featured-project="featuredProject"
+      <div class="flex flex-col gap-3">
+        <project-card
+            v-for="project in featuredProjectCards"
+            :key="project.id"
+            :project="project"
         />
       </div>
     </div>

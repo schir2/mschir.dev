@@ -40,7 +40,6 @@ function formatDate(dateString: string) {
 
 <template>
   <div>
-
     <!-- Hero: indigo + amber animated gradient, entrance animation -->
     <section class="hero-gradient flex flex-col items-center justify-center text-center gap-6 px-6 min-h-nav-offset">
       <div class="flex flex-col items-center gap-2">

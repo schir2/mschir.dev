@@ -112,7 +112,7 @@ const {
       <p-progress-spinner v-if="seriesPending"/>
       <p v-else-if="seriesError">{{ seriesError.message }}</p>
       <div v-else class="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <series-card
+        <article-series-card
             v-for="series in seriesList"
             :key="series.id"
             :series="series"

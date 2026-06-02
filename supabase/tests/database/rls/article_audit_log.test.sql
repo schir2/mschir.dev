@@ -18,10 +18,8 @@ values ('INSERT', null, '{"test": true}'::jsonb);
 select tests.jwt_anon();
 set local role anon;
 
-select throws_ok(
+select is_empty(
     $$ select * from public.article_audit_log $$,
-    '42501',
-    NULL,
     'anon cannot select from article_audit_log'
 );
 
@@ -30,10 +28,8 @@ set local role postgres;
 select tests.jwt_authenticated('00000000-0000-0000-0000-000000000001');
 set local role authenticated;
 
-select throws_ok(
+select is_empty(
     $$ select * from public.article_audit_log $$,
-    '42501',
-    NULL,
     'non-admin authenticated user cannot select from article_audit_log'
 );
 

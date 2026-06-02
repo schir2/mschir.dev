@@ -9,13 +9,28 @@ export type ProjectInsert = Database['public']['Tables']['projects']['Insert']
 export type FeaturedProjectRow = Database['public']['Tables']['featured_projects']['Row']
 
 export type ProjectWithSkills = Project & {
+  companies: Pick<Company, 'name'> | null
   project_skills: { skills: Pick<Skill, 'id' | 'name' | 'icon'> }[]
 }
 
 export type FeaturedProject = FeaturedProjectRow & {
-  projects: Pick<Project, 'name' | 'description' | 'summary' | 'slug' | 'image_url' | 'year'> & {
+  projects: Pick<Project, 'id' | 'name' | 'description' | 'summary' | 'slug' | 'image_url' | 'year'> & {
+    companies: Pick<Company, 'name'> | null
     project_skills: { skills: Pick<Skill, 'id' | 'name' | 'icon'> }[]
   }
+}
+
+export type ProjectCardItem = {
+  id: string
+  name: string
+  year: number | null
+  summary: string | null
+  slug: string
+  image_url: string | null
+  companies: Pick<Company, 'name'> | null
+  project_skills: { skills: Pick<Skill, 'id' | 'name' | 'icon'> }[]
+  tagline: string | null
+  featured: boolean
 }
 
 export type ProjectAdminListItem = Pick<Project, 'id' | 'name' | 'year'> & {

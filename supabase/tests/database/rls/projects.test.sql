@@ -8,8 +8,8 @@ select ok(
   'RLS is active on projects'
 );
 
-insert into public.projects (id, name, description)
-  values ('00000000-0000-0000-bbbb-000000000001', 'RLS Test Project', 'Inserted by superuser for RLS verification');
+insert into public.projects (id, name, description, slug)
+  values ('00000000-0000-0000-bbbb-000000000001', 'RLS Test Project', 'Inserted by superuser for RLS verification', 'rls-test-project-bbbb');
 
 -- anon: can select, cannot insert
 select tests.jwt_anon();
@@ -45,7 +45,7 @@ select tests.jwt_admin();
 set local role authenticated;
 
 select lives_ok(
-  $$ insert into public.projects (id, name, description) values ('00000000-0000-0000-bbbb-000000000002', 'Admin Insert', 'inserted by admin') $$,
+  $$ insert into public.projects (id, name, description, slug) values ('00000000-0000-0000-bbbb-000000000002', 'Admin Insert', 'inserted by admin', 'rls-test-project-bbbb-admin') $$,
   'admin can insert into projects'
 );
 

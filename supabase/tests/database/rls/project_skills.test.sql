@@ -8,8 +8,8 @@ select ok(
   'RLS is active on project_skills'
 );
 
-insert into public.projects (id, name, description)
-  values ('00000000-0000-0000-dddd-000000000001', 'RLS Test Project', 'Inserted by superuser for RLS verification');
+insert into public.projects (id, name, description, slug)
+  values ('00000000-0000-0000-dddd-000000000001', 'RLS Test Project', 'Inserted by superuser for RLS verification', 'rls-test-project-dddd');
 
 insert into public.skill_categories (id, name)
   values ('00000000-0000-0000-dddd-000000000002', 'RLS Test Category');

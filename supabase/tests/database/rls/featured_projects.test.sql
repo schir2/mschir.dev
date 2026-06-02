@@ -8,8 +8,8 @@ select ok(
   'RLS is active on featured_projects'
 );
 
-insert into public.projects (id, name, description)
-  values ('00000000-0000-0000-cccc-000000000001', 'RLS Test Project', 'Inserted by superuser for RLS verification');
+insert into public.projects (id, name, description, slug)
+  values ('00000000-0000-0000-cccc-000000000001', 'RLS Test Project', 'Inserted by superuser for RLS verification', 'rls-test-project-cccc');
 
 insert into public.featured_projects (id, project_id, tagline)
   values ('00000000-0000-0000-cccc-000000000002', '00000000-0000-0000-cccc-000000000001', 'A tagline for RLS testing');
