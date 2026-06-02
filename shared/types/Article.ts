@@ -27,7 +27,7 @@ export type ArticleDetail = Pick<Article,
     'view_count' | 'series_id' | 'series_sequence_number'
 > & {
     article_categories: Pick<ArticleCategory, 'name' | 'slug'> | null
-    article_tags_links: Array<{ article_tags: Pick<ArticleTag, 'name' | 'slug'> }>
+    article_tags_links: Array<{ article_tags: Pick<ArticleTag, 'name' | 'slug' | 'icon'> }>
     article_series: Pick<ArticleSeries, 'title' | 'slug' | 'description'> | null
 }
 

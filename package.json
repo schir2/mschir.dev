@@ -17,7 +17,8 @@
     "supabase:types": "npx supabase gen types typescript --local > shared/types/database.types.ts",
     "supabase:types-linked": "npx supabase gen types typescript --project-id nunhhchnxyreoflgxxdd > shared/types/database.types.ts",
     "test:db": "npx supabase test db",
-    "test:edge": "deno test --allow-all supabase/functions/tests/"
+    "test:edge": "deno test --allow-all supabase/functions/tests/",
+    "seed:assets": "node --env-file=.env scripts/upload-covers.mjs"
   },
   "dependencies": {
     "@nuxt/icon": "^2.2.2",

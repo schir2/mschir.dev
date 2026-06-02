@@ -20,7 +20,7 @@ const {
       id, title, slug, content, image_url, published_at, archived_at,
       view_count, series_id, series_sequence_number,
       article_categories(name, slug),
-      article_tags_links(article_tags(name, slug)),
+      article_tags_links(article_tags(name, slug, icon)),
       article_series(title, slug, description)
     `)
       .eq('slug', slug)
@@ -129,8 +129,10 @@ const {previousArticle, nextArticle, allArticles} = useSeriesNavigation(
               v-for="tagLink in article.article_tags_links"
               :key="tagLink.article_tags.slug"
               :to="`/articles/browse?tag=${tagLink.article_tags.slug}`"
+              class="flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-full bg-surface-800 text-surface-300 leading-none hover:bg-surface-700 hover:text-surface-100 transition-colors"
           >
-            <p-tag :value="tagLink.article_tags.name"/>
+            <icon v-if="tagLink.article_tags.icon" :name="tagLink.article_tags.icon" class="w-4 h-4 shrink-0"/>
+            {{ tagLink.article_tags.name }}
           </nuxt-link>
         </div>
       </header>
@@ -145,12 +147,14 @@ const {previousArticle, nextArticle, allArticles} = useSeriesNavigation(
       <div class="max-w-4xl mx-auto">
         <client-only>
           <!-- editorId "article-detail" is referenced by ArticleTocSidebar (MdCatalog) -->
-          <md-preview
-              editor-id="article-detail"
-              language="en-US"
-              :theme="mdTheme"
-              :model-value="article.content"
-          />
+          <div class="md-content-preview">
+            <md-preview
+                editor-id="article-detail"
+                language="en-US"
+                :theme="mdTheme"
+                :model-value="article.content"
+            />
+          </div>
         </client-only>
       </div>
 

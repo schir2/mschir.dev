@@ -77,7 +77,7 @@ const thumbnailStyle = computed(() => ({
             :key="skillLink.skills.id"
             class="flex items-center gap-1 text-xs px-2.5 py-1 rounded-full bg-surface-800 text-surface-300 leading-none"
           >
-            <icon v-if="skillLink.skills.icon" :name="skillLink.skills.icon" class="text-sm shrink-0" />
+            <icon v-if="skillLink.skills.icon" :name="skillLink.skills.icon" class="w-4 h-4 shrink-0" />
             {{ skillLink.skills.name }}
           </span>
           <span

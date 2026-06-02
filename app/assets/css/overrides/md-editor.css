@@ -3,8 +3,10 @@
  * Base styles are imported in app/plugins/md-editor-v3.client.ts.
  */
 
-/* Article detail preview: remove editor chrome */
-#article-detail {
+/* Content preview: remove editor chrome.
+ * Wrap any <md-preview> in <div class="md-content-preview"> to apply these overrides.
+ */
+.md-content-preview > .md-editor {
   background: transparent;
   border: none;
   box-shadow: none;
@@ -12,18 +14,18 @@
   --md-color: var(--p-text-color);
 }
 
-#article-detail .md-editor-preview-wrapper {
+.md-content-preview > .md-editor .md-editor-preview-wrapper {
   padding: 0;
 }
 
-#article-detail .md-editor-preview {
+.md-content-preview > .md-editor .md-editor-preview {
   --md-theme-bg-color: transparent;
   --md-theme-link-color: var(--p-primary-color);
   --md-theme-link-hover-color: var(--p-primary-hover-color);
   --md-theme-border-color: var(--p-content-border-color);
 }
 
-#article-detail .md-editor-preview h1,
-#article-detail .md-editor-preview h2 {
+.md-content-preview > .md-editor .md-editor-preview h1,
+.md-content-preview > .md-editor .md-editor-preview h2 {
   font-family: 'Fraunces', serif;
 }
