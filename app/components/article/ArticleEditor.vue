@@ -28,6 +28,28 @@ function togglePublished(value: boolean) {
   publishedAt.value = value ? new Date().toISOString() : null
 }
 
+function confirmPublish() {
+  confirm.require({
+    header: 'Publish article',
+    message: 'This will make the article visible to all visitors and lock the slug so existing links stay valid. You can unpublish it at any time.',
+    icon: 'pi pi-send',
+    acceptLabel: 'Publish',
+    rejectLabel: 'Cancel',
+    accept: () => togglePublished(true),
+  })
+}
+
+function confirmUnpublish() {
+  confirm.require({
+    header: 'Unpublish article',
+    message: 'This will hide the article from all visitors. It will no longer appear in any article listings. You can re-publish it at any time.',
+    icon: 'pi pi-eye-slash',
+    acceptLabel: 'Unpublish',
+    rejectLabel: 'Cancel',
+    accept: () => togglePublished(false),
+  })
+}
+
 function toggleArchived(value: boolean) {
   archivedAt.value = value ? new Date().toISOString() : null
 }
@@ -40,7 +62,7 @@ const selectedTagIds = ref<string[]>([])
 const seriesId = ref<string | null>(null)
 const seriesSequenceNumber = ref<number | null>(null)
 const imageUrl = ref<string | null>(null)
-const slugLocked = ref(false)
+const slugLocked = computed(() => publishedAt.value !== null)
 const slugAutoMode = ref(true)
 
 const heroImagePublicUrl = computed(() =>
@@ -140,7 +162,6 @@ async function loadArticle(articleId: string) {
   imageUrl.value = data.image_url
 
   slugAutoMode.value = false
-  if (data.published_at) slugLocked.value = true
 
   const { data: featuredData } = await supabase
     .from('featured_articles')
@@ -255,8 +276,6 @@ async function save() {
     }
 
     await syncFeatured(savedId)
-
-    if (publishedAt.value) slugLocked.value = true
 
     toast.add({ severity: 'success', summary: 'Article saved', life: 3000 })
   } catch (error: unknown) {
@@ -384,6 +403,7 @@ async function createSeries() {
 
 <template>
   <div class="flex flex-col" :style="{ height: '100dvh' }">
+    <p-confirm-dialog />
 
     <!-- Toolbar -->
     <div class="flex items-center gap-3 px-4 py-3 border-b shrink-0">
@@ -400,6 +420,18 @@ async function createSeries() {
         :value="articleStatus.label"
         :severity="articleStatus.severity"
       />
+      <nuxt-link
+        v-if="isPublished && slug"
+        :to="`/articles/${slug}`"
+        target="_blank"
+      >
+        <p-button
+          icon="pi pi-external-link"
+          label="View"
+          text
+          size="small"
+        />
+      </nuxt-link>
       <p-button
         label="Save"
         icon="pi pi-save"
@@ -469,7 +501,7 @@ async function createSeries() {
         </div>
 
         <!-- Row 3: Category, Tags, Series, Published -->
-        <div class="flex gap-3 items-end flex-wrap">
+        <div class="flex gap-3 items-center flex-wrap">
 
           <!-- Category -->
           <div class="flex flex-col gap-1 w-44">
@@ -493,7 +525,7 @@ async function createSeries() {
           </div>
 
           <!-- Tags -->
-          <div class="flex flex-col gap-1 w-52">
+          <div class="flex flex-col gap-1 w-72">
             <label class="text-xs text-color-secondary">Tags</label>
             <p-multi-select
               v-model="selectedTagIds"
@@ -542,34 +574,50 @@ async function createSeries() {
           </div>
 
           <!-- Writing stage -->
-          <p-select-button
-            v-model="writingStage"
-            :options="writingStageOptions"
-            :disabled="isPublished"
-          />
-
-          <!-- Published toggle -->
-          <div class="flex items-center gap-2 ml-auto">
-            <label class="text-sm">Published</label>
-            <p-toggle-switch
-              :model-value="isPublished"
-              @update:model-value="togglePublished"
+          <div class="flex flex-col gap-1">
+            <label class="text-xs text-color-secondary">Stage</label>
+            <p-select-button
+              v-model="writingStage"
+              :options="writingStageOptions"
+              :disabled="isPublished"
             />
           </div>
 
-          <!-- Archived toggle -->
-          <div v-if="isPublished" class="flex items-center gap-2">
-            <label class="text-sm">Archived</label>
+          <!-- Featured toggle -->
+          <div class="flex flex-col gap-1">
+            <label class="text-xs text-color-secondary">Featured</label>
+            <p-toggle-switch v-model="isFeatured" />
+          </div>
+
+          <!-- Archived toggle (only when published) -->
+          <div v-if="isPublished" class="flex flex-col gap-1">
+            <label class="text-xs text-color-secondary">Archived</label>
             <p-toggle-switch
               :model-value="isArchived"
               @update:model-value="toggleArchived"
             />
           </div>
 
-          <!-- Featured toggle -->
-          <div class="flex items-center gap-2">
-            <label class="text-sm">Featured</label>
-            <p-toggle-switch v-model="isFeatured" />
+          <!-- Publish / Unpublish (last action) -->
+          <div class="flex flex-col gap-1 ml-auto">
+            <label class="text-xs text-color-secondary opacity-0">.</label>
+            <p-button
+              v-if="!isPublished"
+              label="Publish"
+              icon="pi pi-send"
+              severity="success"
+              size="small"
+              @click="confirmPublish"
+            />
+            <p-button
+              v-else
+              label="Unpublish"
+              icon="pi pi-eye-slash"
+              severity="secondary"
+              outlined
+              size="small"
+              @click="confirmUnpublish"
+            />
           </div>
 
         </div>

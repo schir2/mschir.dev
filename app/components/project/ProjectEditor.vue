@@ -366,7 +366,7 @@ async function deleteProject() {
         </div>
 
         <!-- Row 3: Company + Year + Skills + Featured -->
-        <div class="flex gap-3 items-end flex-wrap">
+        <div class="flex gap-3 items-center flex-wrap">
           <div class="flex flex-col gap-1 w-44">
             <label class="text-xs text-color-secondary">Company</label>
             <p-select v-model="companyId" :options="companies" option-label="name" option-value="id" show-clear filter class="w-full" />
@@ -379,8 +379,8 @@ async function deleteProject() {
             <label class="text-xs text-color-secondary">Skills</label>
             <p-multi-select v-model="selectedSkillIds" :options="skillGroups" option-group-label="label" option-group-children="items" option-label="label" option-value="value" filter display="chip" class="w-full" />
           </div>
-          <div class="flex items-center gap-2 ml-auto">
-            <label class="text-sm">Featured</label>
+          <div class="flex flex-col gap-1 ml-auto">
+            <label class="text-xs text-color-secondary">Featured</label>
             <p-toggle-switch v-model="isFeatured" />
           </div>
         </div>
