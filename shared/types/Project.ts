@@ -13,7 +13,7 @@ export type ProjectWithSkills = Project & {
 }
 
 export type FeaturedProject = FeaturedProjectRow & {
-  projects: Pick<Project, 'name' | 'description' | 'image_url' | 'year'> & {
+  projects: Pick<Project, 'name' | 'description' | 'summary' | 'slug' | 'image_url' | 'year'> & {
     project_skills: { skills: Pick<Skill, 'id' | 'name' | 'icon'> }[]
   }
 }

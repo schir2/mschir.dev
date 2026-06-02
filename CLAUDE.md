@@ -32,9 +32,9 @@ nuxi typecheck            # TypeScript type check — requires pnpm approve-buil
 
 > **pnpm non-TTY note**: Claude Code runs without a TTY, so any pnpm command that triggers interactive prompts will fail with `ERR_PNPM_ABORTED_REMOVE_MODULES_DIR_NO_TTY` or `ERR_PNPM_IGNORED_BUILDS`. If `nuxi typecheck` or other pnpm commands fail with those errors, the user must run `pnpm approve-builds` once in their own terminal to approve build scripts for `@parcel/watcher` and `esbuild`. The `.npmrc` setting `confirm-module-purge=false` suppresses the purge prompt; the builds approval is a one-time manual step.
 
-> **supabase:types non-TTY workaround**: `pnpm run supabase:types` also fails in non-TTY environments. Use this PowerShell command instead to regenerate `shared/types/database.types.ts` cleanly:
+> **supabase:types non-TTY workaround**: `pnpm run supabase:types` also fails in non-TTY environments. Use this command instead to regenerate `shared/types/database.types.ts`:
 > ```powershell
-> npx supabase gen types typescript --local 2>$null | Where-Object { $_ -notmatch "^(WARN:|Connecting to)" } | Out-File -FilePath shared/types/database.types.ts -Encoding utf8NoBOM
+> npx supabase gen types typescript --local > shared/types/database.types.ts
 > ```
 > Similarly, `pnpm run db:reset` fails via pnpm in non-TTY but succeeds with `npx supabase db reset` directly.
 
@@ -131,6 +131,22 @@ For any task that involves redesigning a visual component's layout — especiall
 **Signal words that mean "prototype first":** "play around with", "experiment", "try out", "see what it looks like", "not sure if I like", "explore options", any layout redesign where the user has not pre-approved a specific design.
 
 ## Code Style
+
+### PrimeVue token Tailwind utilities
+
+PrimeVue exposes its design tokens as Tailwind utilities — always use those instead of inline `style` attributes with `var(--p-*)` CSS variables:
+
+```html
+<!-- ✅ Tailwind utility -->
+<span class="text-muted-color">...</span>
+<icon class="text-primary" />
+
+<!-- ❌ inline style — bypasses the theme system and triggers linting errors -->
+<span style="color: var(--p-text-muted-color)">...</span>
+<icon style="color: var(--p-primary-color)" />
+```
+
+The one accepted exception is dynamic `:style` bindings where a color value comes from data (e.g. a category color from the database), which may use a token as a fallback: `:style="{ backgroundColor: item.color ?? 'var(--p-surface-500)' }"`.
 
 ### Component naming in templates
 

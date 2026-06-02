@@ -12,7 +12,9 @@ The top section of the Portfolio Page. Displays only Highlighted Skills as an ic
 A skill marked `is_highlighted = true` on the `skills` table. Controls which skills appear in the Skills Snapshot. Distinct from `proficiency`, which measures expertise level — a skill can be `expert` but not highlighted (e.g. outdated tech), or `advanced` but highlighted because it is currently in demand. The `is_highlighted` flag is a portfolio presentation decision; `proficiency` is a factual self-assessment.
 
 ### Featured Project
-A project selected for portfolio showcase. Stored in the `featured_projects` table (separate from `projects`). Carries a portfolio-specific `tagline` — a short punchy hook written for the portfolio context, distinct from the canonical `description` on `projects`. Also carries `display_order` to control sequence on the page. Follows the same pattern as `featured_articles`.
+A project selected for portfolio showcase. Stored in the `featured_projects` table (separate from `projects`). Carries a portfolio-specific `tagline` — a quick identity label ("what IS this thing", e.g. *"Job scheduling app for field service companies"*), written for the portfolio context where visitors need instant recognition. Distinct from `projects.summary`, which is a descriptive blurb covering what the project does. Also carries `display_order` to control sequence on the page. Follows the same pattern as `featured_articles`.
+
+**Decided:** `tagline` lives only on `featured_projects`, not on `projects` itself. `projects.summary` (a short plain-text blurb for cards and SEO) covers the general short-description use case. Adding a `tagline` to `projects` would blur the distinction and is not needed outside the portfolio context.
 
 ### Featured Article
 An article selected for editorial showcase. Stored in the `featured_articles` table (one-to-one with `articles`, `isOneToOne: true`). Fields: `article_id`, `featured_reason` (nullable string — e.g. "Staff pick", "Most shared"), `author`, timestamps. An article is considered featured if a `featured_articles` record exists for it — there is no boolean flag on the `articles` table; featured status is derived from the join. Appears on the Article Landing Page and signals "editor's pick" with an amber bar on the Article Card.
@@ -57,11 +59,17 @@ The admin UI for creating and editing articles. `/admin/articles/new` creates a 
 
 Keyboard shortcuts in the editor: **Ctrl+Alt+1–6** apply heading levels 1–6 (wraps selected text or inserts the prefix at the cursor). Standard shortcuts (Ctrl+B, Ctrl+I, etc.) are handled natively by the editor's CodeMirror layer.
 
+### Project Slug
+Auto-generated from the project name on creation (e.g. "Customer Quoting Application" → "customer-quoting-application"). Manually overridable at any time — no lock policy applies (portfolio site, low traffic, project detail page not yet built). Stored as `slug` (text, NOT NULL UNIQUE) on `projects`. Used for routing to the project detail page once that page is built.
+
+### Project Summary
+A short optional plain-text blurb (1–3 sentences) for a project. Stored as the nullable `summary` column on `projects`. Displayed in project list contexts (e.g. Timeline). Not derived from content — authored manually. Distinct from `featured_projects.tagline`, which is a quick identity label written for the portfolio page context.
+
 ### Project List (Admin)
 The `/admin/projects` page. A PrimeVue DataTable showing all projects with columns: name, company, year, featured (boolean), and edit/delete actions. Entry point to the Project Editor. Includes a "Manage Companies" shortcut link to `/admin/companies`.
 
 ### Project Editor
-The admin UI for creating and editing projects. `/admin/projects/new` creates a new project; `/admin/projects/[id]` edits an existing one. Fields: name, description, company (dropdown with inline company creation via `/admin/companies`), year, image (uploaded to `project-images/{uuid}.ext` in the `images` bucket), and skills (grouped MultiSelect by `skill_categories`). Also includes a **Featured** section: a toggle to mark the project as featured, with tagline and display_order fields shown when toggled on. Managing the featured state writes to/from the `featured_projects` table inline.
+The admin UI for creating and editing projects. `/admin/projects/new` creates a new project; `/admin/projects/[id]` edits an existing one. Full-height split layout matching the Article Editor: a compact metadata bar across the top (name, slug, summary, hero image, company, year, skills) and a full-width split Markdown editor + live preview below. Also includes a **Featured** section: a toggle to mark the project as featured, with tagline and display_order fields shown when toggled on. Managing the featured state writes to/from the `featured_projects` table inline. The description field is rendered via `<md-editor>` (md-editor-v3).
 
 ### Company List (Admin)
 The `/admin/companies` page. A PrimeVue DataTable with inline row editing for all companies. Columns: logo (uploaded to the `icons` bucket), name, URL. Companies are few and simple — no separate create/edit pages; all editing happens inline in the table.

@@ -7,10 +7,14 @@ const supabase = useSupabaseClient()
 const toast = useToast()
 const router = useRouter()
 const confirm = useConfirm()
+const mdTheme = useMdEditorTheme()
 
 // --- Form state ---
 const projectName = ref('')
+const slug = ref('')
+const slugAutoMode = ref(true)
 const description = ref('')
+const summary = ref<string | null>(null)
 const companyId = ref<string | null>(null)
 const year = ref<number>(new Date().getFullYear())
 const selectedSkillIds = ref<string[]>([])
@@ -35,6 +39,14 @@ const skillGroups = ref<SkillGroupOption[]>([])
 const saving = ref(false)
 const loading = ref(true)
 const currentProjectId = ref<string | null>(props.projectId ?? null)
+const heroImageInput = ref<HTMLInputElement | null>(null)
+
+// --- Editor height ---
+const editorHeight = ref('600px')
+
+function recalculateEditorHeight() {
+  editorHeight.value = `${Math.max(400, window.innerHeight - 320)}px`
+}
 
 const imagePreviewUrl = computed<string | null>(() => {
   if (stagedImageFile.value) {
@@ -45,6 +57,16 @@ const imagePreviewUrl = computed<string | null>(() => {
   }
   return null
 })
+
+watch(projectName, (newName) => {
+  if (slugAutoMode.value) {
+    slug.value = generateSlug(newName)
+  }
+})
+
+function onSlugInput() {
+  slugAutoMode.value = false
+}
 
 async function loadReferenceData() {
   const [companiesResult, skillsResult] = await Promise.all([
@@ -74,7 +96,7 @@ async function loadReferenceData() {
 async function loadProject(projectId: string) {
   const { data, error } = await supabase
     .from('projects')
-    .select('id, name, description, company_id, year, image_url, project_skills(skill_id)')
+    .select('id, name, slug, description, summary, company_id, year, image_url, project_skills(skill_id)')
     .eq('id', projectId)
     .single()
 
@@ -84,11 +106,14 @@ async function loadProject(projectId: string) {
   }
 
   projectName.value = data.name
+  slug.value = data.slug
   description.value = data.description
+  summary.value = data.summary
   companyId.value = data.company_id
   year.value = data.year
   imageUrl.value = data.image_url
   selectedSkillIds.value = data.project_skills.map((link: { skill_id: string }) => link.skill_id)
+  slugAutoMode.value = false
 
   const { data: featuredData } = await supabase
     .from('featured_projects')
@@ -105,11 +130,18 @@ async function loadProject(projectId: string) {
 }
 
 onMounted(async () => {
+  recalculateEditorHeight()
+  window.addEventListener('resize', recalculateEditorHeight)
+
   await loadReferenceData()
   if (currentProjectId.value) {
     await loadProject(currentProjectId.value)
   }
   loading.value = false
+})
+
+onUnmounted(() => {
+  window.removeEventListener('resize', recalculateEditorHeight)
 })
 
 function onImageFilePicked(event: Event) {
@@ -121,6 +153,7 @@ function onImageFilePicked(event: Event) {
 function clearImage() {
   stagedImageFile.value = null
   imageUrl.value = null
+  if (heroImageInput.value) heroImageInput.value.value = ''
 }
 
 async function syncProjectSkills(projectId: string) {
@@ -171,7 +204,9 @@ async function save() {
 
     const projectData = {
       name: projectName.value,
+      slug: slug.value,
       description: description.value,
+      summary: summary.value?.trim() || null,
       company_id: companyId.value,
       year: year.value,
       image_url: newImagePath,
@@ -244,20 +279,20 @@ async function deleteProject() {
 </script>
 
 <template>
-  <div class="p-6 max-w-2xl mx-auto">
+  <div class="flex flex-col" :style="{ height: '100dvh' }">
     <p-confirm-popup />
 
     <!-- Toolbar -->
-    <div class="flex items-center gap-3 mb-6">
+    <div class="flex items-center gap-3 px-4 py-3 border-b shrink-0">
       <p-button
         icon="pi pi-arrow-left"
         text
         size="small"
         @click="router.push('/admin/projects')"
       />
-      <h1 class="text-2xl font-bold flex-1">
+      <span class="font-semibold text-lg flex-1">
         {{ currentProjectId ? 'Edit Project' : 'New Project' }}
-      </h1>
+      </span>
       <p-button
         v-if="currentProjectId"
         icon="pi pi-trash"
@@ -276,107 +311,108 @@ async function deleteProject() {
       />
     </div>
 
-    <p-progress-spinner v-if="loading" class="block mx-auto" />
+    <p-progress-spinner v-if="loading" class="m-auto" />
 
-    <div v-else class="flex flex-col gap-5">
+    <template v-else>
+      <!-- Metadata bar -->
+      <div class="px-4 py-3 border-b shrink-0 flex flex-col gap-3">
 
-      <!-- Name -->
-      <div class="flex flex-col gap-2">
-        <label class="font-medium">Name <span class="text-red-500">*</span></label>
-        <p-input-text v-model="projectName" placeholder="Project name" class="w-full" />
-      </div>
-
-      <!-- Description -->
-      <div class="flex flex-col gap-2">
-        <label class="font-medium">Description <span class="text-red-500">*</span></label>
-        <p-textarea v-model="description" placeholder="Project description" rows="4" auto-resize class="w-full" />
-      </div>
-
-      <!-- Year -->
-      <div class="flex flex-col gap-2">
-        <label class="font-medium">Year <span class="text-red-500">*</span></label>
-        <p-input-number v-model="year" :min="1900" :max="2100" :use-grouping="false" class="w-36" />
-      </div>
-
-      <!-- Hero Image -->
-      <div class="flex flex-col gap-2">
-        <label class="font-medium">Hero Image</label>
-        <img
-          v-if="imagePreviewUrl"
-          :src="imagePreviewUrl"
-          alt="Hero image preview"
-          class="project-image-preview"
-        />
-        <input type="file" accept="image/png,image/jpeg,image/webp" @change="onImageFilePicked" />
-        <p-button
-          v-if="imageUrl || stagedImageFile"
-          label="Remove image"
-          text
-          severity="danger"
-          size="small"
-          @click="clearImage"
-        />
-      </div>
-
-      <!-- Company -->
-      <div class="flex flex-col gap-2">
-        <label class="font-medium">Company</label>
-        <p-select
-          v-model="companyId"
-          :options="companies"
-          option-label="name"
-          option-value="id"
-          show-clear
-          filter
-          placeholder="None"
-          class="w-full"
-        />
-      </div>
-
-      <!-- Skills -->
-      <div class="flex flex-col gap-2">
-        <label class="font-medium">Skills</label>
-        <p-multi-select
-          v-model="selectedSkillIds"
-          :options="skillGroups"
-          option-group-label="label"
-          option-group-children="items"
-          option-label="label"
-          option-value="value"
-          filter
-          display="chip"
-          placeholder="Select skills"
-          class="w-full"
-        />
-      </div>
-
-      <!-- Featured -->
-      <div class="flex flex-col gap-3">
-        <div class="flex items-center gap-2">
-          <p-toggle-switch v-model="isFeatured" input-id="featured-toggle" />
-          <label for="featured-toggle" class="font-medium cursor-pointer">Featured on Portfolio</label>
-        </div>
-        <template v-if="isFeatured">
-          <div class="flex flex-col gap-2">
-            <label class="font-medium">Tagline <span class="text-red-500">*</span></label>
-            <p-textarea v-model="featuredTagline" placeholder="Short hook for the portfolio page" rows="2" auto-resize class="w-full" />
+        <!-- Row 1: Name + Slug + Hero image -->
+        <div class="flex gap-3 items-end">
+          <div class="flex flex-col gap-1 flex-1">
+            <label class="text-xs text-color-secondary">Name</label>
+            <p-input-text v-model="projectName" class="w-full font-medium" />
           </div>
-          <div class="flex flex-col gap-2">
-            <label class="font-medium">Display Order</label>
-            <p-input-number v-model="featuredDisplayOrder" :min="1" :use-grouping="false" class="w-24" />
+          <div class="flex flex-col gap-1">
+            <label class="text-xs text-color-secondary">Slug</label>
+            <p-input-text v-model="slug" class="w-56 font-mono text-sm" @input="onSlugInput" />
+          </div>
+          <input
+            ref="heroImageInput"
+            type="file"
+            accept="image/png,image/jpeg,image/webp"
+            class="hidden"
+            @change="onImageFilePicked"
+          />
+          <div class="flex items-center gap-2 shrink-0">
+            <img
+              v-if="imagePreviewUrl"
+              :src="imagePreviewUrl"
+              alt="Hero image preview"
+              class="h-9 w-14 object-cover rounded border"
+            />
+            <p-button
+              v-if="imagePreviewUrl"
+              icon="pi pi-times"
+              size="small"
+              text
+              severity="danger"
+              @click="clearImage"
+            />
+            <p-button
+              :icon="imagePreviewUrl ? 'pi pi-refresh' : 'pi pi-image'"
+              :label="imagePreviewUrl ? 'Replace' : 'Hero Image'"
+              size="small"
+              text
+              @click="heroImageInput?.click()"
+            />
+          </div>
+        </div>
+
+        <!-- Row 2: Summary -->
+        <div class="flex flex-col gap-1">
+          <label class="text-xs text-color-secondary">Summary</label>
+          <p-textarea v-model="summary" :rows="2" class="w-full" auto-resize />
+        </div>
+
+        <!-- Row 3: Company + Year + Skills + Featured -->
+        <div class="flex gap-3 items-end flex-wrap">
+          <div class="flex flex-col gap-1 w-44">
+            <label class="text-xs text-color-secondary">Company</label>
+            <p-select v-model="companyId" :options="companies" option-label="name" option-value="id" show-clear filter class="w-full" />
+          </div>
+          <div class="flex flex-col gap-1 w-28">
+            <label class="text-xs text-color-secondary">Year</label>
+            <p-input-number v-model="year" :min="1900" :max="2100" :use-grouping="false" class="w-full" />
+          </div>
+          <div class="flex flex-col gap-1 w-64">
+            <label class="text-xs text-color-secondary">Skills</label>
+            <p-multi-select v-model="selectedSkillIds" :options="skillGroups" option-group-label="label" option-group-children="items" option-label="label" option-value="value" filter display="chip" class="w-full" />
+          </div>
+          <div class="flex items-center gap-2 ml-auto">
+            <label class="text-sm">Featured</label>
+            <p-toggle-switch v-model="isFeatured" />
+          </div>
+        </div>
+
+        <!-- Row 4: Featured fields (when toggled on) -->
+        <template v-if="isFeatured">
+          <div class="flex gap-3 items-end">
+            <div class="flex flex-col gap-1 flex-1">
+              <label class="text-xs text-color-secondary">Portfolio tagline</label>
+              <p-textarea v-model="featuredTagline" :rows="2" auto-resize class="w-full" />
+            </div>
+            <div class="flex flex-col gap-1 w-20 shrink-0">
+              <label class="text-xs text-color-secondary">Order</label>
+              <p-input-number v-model="featuredDisplayOrder" :min="1" :use-grouping="false" class="w-full" />
+            </div>
           </div>
         </template>
+
       </div>
 
-    </div>
+      <!-- Markdown editor -->
+      <div class="flex-1 overflow-hidden">
+        <client-only>
+          <md-editor
+            v-model="description"
+            language="en-US"
+            :theme="mdTheme"
+            :style="{ height: editorHeight }"
+          />
+        </client-only>
+      </div>
+
+    </template>
   </div>
 </template>
-
-<style scoped>
-.project-image-preview {
-  max-width: 100%;
-  max-height: 200px;
-  object-fit: cover;
-  border-radius: var(--p-border-radius-md, 6px);
-}
-</style>

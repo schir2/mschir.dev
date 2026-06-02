@@ -9,6 +9,7 @@ const props = defineProps<{
 const supabase = useSupabaseClient()
 const toast = useToast()
 const router = useRouter()
+const confirm = useConfirm()
 
 // --- Form state ---
 const title = ref('')
@@ -89,16 +90,6 @@ function onEditorKeydown(event: KeyboardEvent) {
   if (isNaN(level) || level < 1 || level > 6) return
   event.preventDefault()
   applyHeading(level)
-}
-
-function generateSlug(text: string): string {
-  return text
-    .toLowerCase()
-    .replace(/[^\w\s-]/g, '')
-    .replace(/\s+/g, '-')
-    .replace(/-+/g, '-')
-    .trim()
-    .substring(0, 200)
 }
 
 watch(title, (newTitle) => {
@@ -425,22 +416,17 @@ async function createSeries() {
       <div class="px-4 py-3 border-b shrink-0 flex flex-col gap-3">
 
         <!-- Row 1: Title + Slug + Hero image -->
-        <div class="flex gap-3 items-center">
-          <p-input-text
-            v-model="title"
-            placeholder="Article title"
-            class="flex-1 font-medium"
-          />
-          <div class="flex items-center gap-2">
-            <span class="text-sm text-color-secondary shrink-0">Slug:</span>
-            <p-input-text
-              v-model="slug"
-              placeholder="article-slug"
-              :disabled="slugLocked"
-              class="w-56 font-mono text-sm"
-              @input="onSlugInput"
-            />
-            <icon v-if="slugLocked" name="pi pi-lock" class="text-color-secondary text-sm" />
+        <div class="flex gap-3 items-end">
+          <div class="flex flex-col gap-1 flex-1">
+            <label class="text-xs text-color-secondary">Title</label>
+            <p-input-text v-model="title" class="w-full font-medium" />
+          </div>
+          <div class="flex flex-col gap-1">
+            <label class="text-xs text-color-secondary">Slug</label>
+            <div class="flex items-center gap-2">
+              <p-input-text v-model="slug" :disabled="slugLocked" class="w-56 font-mono text-sm" @input="onSlugInput" />
+              <icon v-if="slugLocked" name="pi pi-lock" class="text-color-secondary text-sm" />
+            </div>
           </div>
 
           <!-- Hero image -->
@@ -477,102 +463,82 @@ async function createSeries() {
         </div>
 
         <!-- Row 2: Summary -->
-        <p-textarea
-          v-model="summary"
-          :rows="2"
-          placeholder="Short teaser (1–3 sentences)"
-          class="w-full"
-          auto-resize
-        />
+        <div class="flex flex-col gap-1">
+          <label class="text-xs text-color-secondary">Summary</label>
+          <p-textarea v-model="summary" :rows="2" class="w-full" auto-resize />
+        </div>
 
         <!-- Row 3: Category, Tags, Series, Published -->
-        <div class="flex gap-3 items-start flex-wrap">
+        <div class="flex gap-3 items-end flex-wrap">
 
           <!-- Category -->
-          <p-select
-            v-model="categoryId"
-            :options="categories"
-            option-label="name"
-            option-value="id"
-            filter
-            show-clear
-            placeholder="Category"
-            class="w-44"
-          >
-            <template #footer>
-              <div class="p-2 border-t flex gap-2">
-                <p-input-text
-                  v-model="newCategoryName"
-                  placeholder="New category…"
-                  size="small"
-                  class="flex-1"
-                  @keydown.enter.prevent="createCategory"
-                />
-                <p-button size="small" label="Add" :disabled="!newCategoryName.trim()" @click="createCategory" />
-              </div>
-            </template>
-          </p-select>
+          <div class="flex flex-col gap-1 w-44">
+            <label class="text-xs text-color-secondary">Category</label>
+            <p-select
+              v-model="categoryId"
+              :options="categories"
+              option-label="name"
+              option-value="id"
+              filter
+              show-clear
+              class="w-full"
+            >
+              <template #footer>
+                <div class="p-2 border-t flex gap-2">
+                  <p-input-text v-model="newCategoryName" placeholder="New category…" size="small" class="flex-1" @keydown.enter.prevent="createCategory" />
+                  <p-button size="small" label="Add" :disabled="!newCategoryName.trim()" @click="createCategory" />
+                </div>
+              </template>
+            </p-select>
+          </div>
 
           <!-- Tags -->
-          <p-multi-select
-            v-model="selectedTagIds"
-            :options="tags"
-            option-label="name"
-            option-value="id"
-            filter
-            placeholder="Tags"
-            class="w-52"
-            display="chip"
-          >
-            <template #footer>
-              <div class="p-2 border-t flex gap-2">
-                <p-input-text
-                  v-model="newTagName"
-                  placeholder="New tag…"
-                  size="small"
-                  class="flex-1"
-                  @keydown.enter.prevent="createTag"
-                />
-                <p-button size="small" label="Add" :disabled="!newTagName.trim()" @click="createTag" />
-              </div>
-            </template>
-          </p-multi-select>
+          <div class="flex flex-col gap-1 w-52">
+            <label class="text-xs text-color-secondary">Tags</label>
+            <p-multi-select
+              v-model="selectedTagIds"
+              :options="tags"
+              option-label="name"
+              option-value="id"
+              filter
+              display="chip"
+              class="w-full"
+            >
+              <template #footer>
+                <div class="p-2 border-t flex gap-2">
+                  <p-input-text v-model="newTagName" placeholder="New tag…" size="small" class="flex-1" @keydown.enter.prevent="createTag" />
+                  <p-button size="small" label="Add" :disabled="!newTagName.trim()" @click="createTag" />
+                </div>
+              </template>
+            </p-multi-select>
+          </div>
 
           <!-- Series -->
-          <p-select
-            v-model="seriesId"
-            :options="seriesList"
-            option-label="title"
-            option-value="id"
-            filter
-            show-clear
-            placeholder="Series"
-            class="w-44"
-            @change="onSeriesChange"
-          >
-            <template #footer>
-              <div class="p-2 border-t flex gap-2">
-                <p-input-text
-                  v-model="newSeriesTitle"
-                  placeholder="New series…"
-                  size="small"
-                  class="flex-1"
-                  @keydown.enter.prevent="createSeries"
-                />
-                <p-button size="small" label="Add" :disabled="!newSeriesTitle.trim()" @click="createSeries" />
-              </div>
-            </template>
-          </p-select>
+          <div class="flex flex-col gap-1 w-44">
+            <label class="text-xs text-color-secondary">Series</label>
+            <p-select
+              v-model="seriesId"
+              :options="seriesList"
+              option-label="title"
+              option-value="id"
+              filter
+              show-clear
+              class="w-full"
+              @change="onSeriesChange"
+            >
+              <template #footer>
+                <div class="p-2 border-t flex gap-2">
+                  <p-input-text v-model="newSeriesTitle" placeholder="New series…" size="small" class="flex-1" @keydown.enter.prevent="createSeries" />
+                  <p-button size="small" label="Add" :disabled="!newSeriesTitle.trim()" @click="createSeries" />
+                </div>
+              </template>
+            </p-select>
+          </div>
 
           <!-- Sequence number (visible only when series is selected) -->
-          <div v-if="seriesId" class="flex items-center gap-2">
-            <span class="text-sm text-color-secondary shrink-0">#</span>
-            <p-input-number
-              v-model="seriesSequenceNumber"
-              :min="1"
-              show-buttons
-              class="w-24"
-            />
+          <div v-if="seriesId" class="flex flex-col gap-1 w-24">
+            <label class="text-xs text-color-secondary">#</label>
+            <p-input-number v-model="seriesSequenceNumber" :min="1" show-buttons class="w-full" />
           </div>
 
           <!-- Writing stage -->
@@ -609,12 +575,10 @@ async function createSeries() {
         </div>
 
         <!-- Featured reason (visible only when featured) -->
-        <p-input-text
-          v-if="isFeatured"
-          v-model="featuredReason"
-          placeholder="Featured reason (optional, e.g. Editor's pick)"
-          class="w-full"
-        />
+        <div v-if="isFeatured" class="flex flex-col gap-1">
+          <label class="text-xs text-color-secondary">Featured reason (optional)</label>
+          <p-input-text v-model="featuredReason" placeholder="e.g. Editor's pick" class="w-full" />
+        </div>
 
       </div>
 

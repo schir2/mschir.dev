@@ -18,6 +18,9 @@
 
 #article-detail .md-editor-preview {
   --md-theme-bg-color: transparent;
+  --md-theme-link-color: var(--p-primary-color);
+  --md-theme-link-hover-color: var(--p-primary-hover-color);
+  --md-theme-border-color: var(--p-content-border-color);
 }
 
 #article-detail .md-editor-preview h1,

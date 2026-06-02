@@ -22,7 +22,7 @@ defineProps<{
           <template #content>
             <img v-if="slotProps.item.image_url" :src="slotProps.item.image_url" :alt="slotProps.item.name" width="200"
                  class="shadow-sm mb-2"/>
-            <p>{{ slotProps.item.description }}</p>
+            <p v-if="slotProps.item.summary">{{ slotProps.item.summary }}</p>
             <div v-if="slotProps.item.project_skills?.length" class="flex flex-wrap gap-1 mt-2">
               <template v-for="{ skills : skill } in slotProps.item.project_skills"
                         :key="skill.id">
