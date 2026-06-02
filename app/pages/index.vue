@@ -65,17 +65,17 @@ function formatDate(dateString: string) {
 
       <!-- Service Pillars -->
       <div class="flex flex-col gap-6">
-        <span class="text-xs uppercase tracking-widest font-medium" style="color: var(--p-text-muted-color)">What I Build</span>
+        <span class="text-xs uppercase tracking-widest font-medium text-muted-color">What I Build</span>
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
           <p-card v-for="pillar in pillars" :key="pillar.title">
             <template #title>
               <div class="flex flex-col items-start gap-2">
-                <icon :name="pillar.icon" class="text-2xl" style="color: var(--p-primary-color)" />
+                <icon :name="pillar.icon" class="text-2xl text-primary" />
                 <span class="text-sm font-semibold leading-tight">{{ pillar.title }}</span>
               </div>
             </template>
             <template #content>
-              <p class="text-sm leading-relaxed" style="color: var(--p-text-muted-color)">{{ pillar.description }}</p>
+              <p class="text-sm leading-relaxed text-muted-color">{{ pillar.description }}</p>
             </template>
           </p-card>
         </div>
@@ -83,7 +83,7 @@ function formatDate(dateString: string) {
 
       <!-- Recent Articles -->
       <div class="flex flex-col gap-4">
-        <span class="text-xs uppercase tracking-widest font-medium" style="color: var(--p-text-muted-color)">Recent Articles</span>
+        <span class="text-xs uppercase tracking-widest font-medium text-muted-color">Recent Articles</span>
         <ul class="article-list">
           <li
             v-for="article in recentArticles"
@@ -94,11 +94,11 @@ function formatDate(dateString: string) {
               <nuxt-link :to="`/articles/${article.slug}`" class="font-medium hover:text-primary transition-colors">
                 {{ article.title }}
               </nuxt-link>
-              <span v-if="article.article_categories" class="text-sm" style="color: var(--p-text-muted-color)">
+              <span v-if="article.article_categories" class="text-sm text-muted-color">
                 {{ article.article_categories.name }}
               </span>
             </div>
-            <span class="text-sm shrink-0 pt-1" style="color: var(--p-text-muted-color)">
+            <span class="text-sm shrink-0 pt-1 text-muted-color">
               {{ formatDate(article.published_at) }}
             </span>
           </li>

@@ -31,7 +31,7 @@ const { data: recentArticles } = await useAsyncData<ArticleCardItem[]>(
       <div class="md:col-span-2 flex flex-col gap-4">
         <div>
           <h1 class="text-4xl font-bold">Marek Schir</h1>
-          <p class="text-lg mt-1" style="color: var(--p-text-muted-color)">Software Developer & Systems Architect</p>
+          <p class="text-lg mt-1 text-muted-color">Software Developer & Systems Architect</p>
         </div>
         <p class="leading-relaxed">
           I didn't take the straight path here. I started out in 3D graphics and design, moved into networking
@@ -67,7 +67,7 @@ const { data: recentArticles } = await useAsyncData<ArticleCardItem[]>(
 
     <!-- Recent Articles -->
     <div class="flex flex-col gap-4">
-      <span class="text-xs uppercase tracking-widest font-medium" style="color: var(--p-text-muted-color)">Recent Articles</span>
+      <span class="text-xs uppercase tracking-widest font-medium text-muted-color">Recent Articles</span>
       <div class="flex flex-col gap-3">
         <article-card
           v-for="article in recentArticles"
