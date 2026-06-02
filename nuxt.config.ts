@@ -93,7 +93,6 @@ export default defineNuxtConfig({
                 'Panel',
                 'Card',
                 'Toolbar',
-                'Toast',
                 'AutoComplete',
                 'DataView',
                 'DataTable',
@@ -106,7 +105,6 @@ export default defineNuxtConfig({
                 'TabPanels',
                 'TabPanel',
                 'FileUpload',
-                'Editor',
                 'Knob',
                 'ConfirmPopup',
                 'ConfirmDialog',
@@ -120,7 +118,6 @@ export default defineNuxtConfig({
                 'MenuItem',
                 'TieredMenu',
                 'ProgressSpinner',
-                'TextArea',
                 'Breadcrumb',
             ]
         },
