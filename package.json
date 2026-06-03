@@ -45,6 +45,7 @@
     "@iconify-json/logos": "^1.2.11",
     "@iconify-json/mdi": "^1.2.3",
     "@nuxt/test-utils": "^4.0.3",
+    "@primevue/core": "^4.5.5",
     "@primevue/nuxt-module": "^4.5.5",
     "@tailwindcss/typography": "^0.5.19",
     "@vue/test-utils": "^2.4.10",
