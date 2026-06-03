@@ -1,8 +1,8 @@
 <script lang="ts" setup>
-definePageMeta({ layout: 'admin-list', title: 'Companies' })
+definePageMeta({ layout: 'admin-list', title: 'Categories' })
 
 import { FilterMatchMode } from '@primevue/core/api'
-import type { Company } from '#shared/types/Company'
+import type { ArticleCategory } from '#shared/types/ArticleCategory'
 
 const supabase = useSupabaseClient()
 const confirm = useConfirm()
@@ -11,49 +11,49 @@ const toast = useToast()
 const filters = ref({ global: { value: null as string | null, matchMode: FilterMatchMode.CONTAINS } })
 
 const {
-  data: companies,
-  pending: companiesLoading,
-  refresh: refreshCompanies,
-} = await useAsyncData<Company[]>('admin-companies', async () => {
+  data: categories,
+  pending: categoriesLoading,
+  refresh: refreshCategories,
+} = await useAsyncData<ArticleCategory[]>('admin-categories', async () => {
   const { data, error } = await supabase
-    .from('companies')
-    .select('id, name, url, logo_url')
+    .from('article_categories')
+    .select('id, name, slug, color, description, image_url')
     .order('name', { ascending: true })
 
   if (error) throw error
-  return data as Company[]
+  return data as ArticleCategory[]
 }, { lazy: true })
 
-function getLogoPublicUrl(logoPath: string | null): string | null {
-  if (!logoPath) return null
-  return supabase.storage.from('icons').getPublicUrl(logoPath).data.publicUrl
+function getCategoryImageUrl(imagePath: string | null): string | null {
+  if (!imagePath) return null
+  return supabase.storage.from('images').getPublicUrl(imagePath).data.publicUrl
 }
 
-function confirmDelete(companyId: string) {
+function confirmDelete(categoryId: string) {
   confirm.require({
-    header: 'Delete Company',
+    header: 'Delete Category',
     message: 'This cannot be undone.',
     icon: 'material-symbols:warning-outline',
     rejectLabel: 'Cancel',
     acceptLabel: 'Delete',
     acceptClass: 'p-button-danger',
-    accept: () => deleteCompany(companyId),
+    accept: () => deleteCategory(categoryId),
   })
 }
 
-async function deleteCompany(companyId: string) {
+async function deleteCategory(categoryId: string) {
   const { error } = await supabase
-    .from('companies')
+    .from('article_categories')
     .delete()
-    .eq('id', companyId)
+    .eq('id', categoryId)
 
   if (error) {
     toast.add({ severity: 'error', summary: 'Delete failed', detail: error.message, life: 4000 })
     return
   }
 
-  toast.add({ severity: 'success', summary: 'Company deleted', life: 3000 })
-  await refreshCompanies()
+  toast.add({ severity: 'success', summary: 'Category deleted', life: 3000 })
+  await refreshCategories()
 }
 </script>
 
@@ -63,7 +63,7 @@ async function deleteCompany(companyId: string) {
 
     <admin-page-header>
       <template #actions>
-        <p-button label="New Company" rounded severity="secondary" @click="navigateTo('/admin/companies/new')">
+        <p-button label="New Category" rounded severity="secondary" @click="navigateTo('/admin/categories/new')">
           <template #icon>
             <icon name="material-symbols:add-circle" />
           </template>
@@ -71,7 +71,7 @@ async function deleteCompany(companyId: string) {
       </template>
     </admin-page-header>
 
-    <p-progress-spinner v-if="companiesLoading" />
+    <p-progress-spinner v-if="categoriesLoading" />
 
     <template v-else>
       <div class="flex justify-end mb-3">
@@ -79,22 +79,22 @@ async function deleteCompany(companyId: string) {
       </div>
 
       <p-data-table
-        :value="companies ?? []"
+        :value="categories ?? []"
         v-model:filters="filters"
-        :global-filter-fields="['name', 'url']"
+        :global-filter-fields="['name', 'slug', 'description']"
         :rows="20"
         paginator
         size="small"
         striped-rows
-        empty-message="No companies found."
+        empty-message="No categories found."
       >
-        <p-column header="Logo" style="width: 4rem">
+        <p-column header="Image" style="width: 4rem">
           <template #body="{ data: row }">
             <img
-              v-if="getLogoPublicUrl(row.logo_url)"
-              :src="getLogoPublicUrl(row.logo_url)!"
+              v-if="getCategoryImageUrl(row.image_url)"
+              :src="getCategoryImageUrl(row.image_url)!"
               :alt="row.name"
-              class="w-10 h-10 object-contain rounded bg-surface-800"
+              class="w-10 h-10 object-cover rounded"
             >
             <span v-else class="text-muted-color">—</span>
           </template>
@@ -103,21 +103,34 @@ async function deleteCompany(companyId: string) {
         <p-column field="name" header="Name" :sortable="true">
           <template #body="{ data: row }">
             <nuxt-link
-              :to="`/admin/companies/${row.id}`"
+              :to="`/admin/categories/${row.id}`"
               class="hover:text-primary hover:underline cursor-pointer"
             >{{ row.name }}</nuxt-link>
           </template>
         </p-column>
 
-        <p-column field="url" header="URL">
+        <p-column field="slug" header="Slug" :sortable="true">
           <template #body="{ data: row }">
-            <a
-              v-if="row.url"
-              :href="row.url"
-              target="_blank"
-              rel="noopener noreferrer"
-              class="text-primary underline"
-            >{{ row.url }}</a>
+            <span class="text-muted-color font-mono text-xs">{{ row.slug || '—' }}</span>
+          </template>
+        </p-column>
+
+        <p-column header="Color" style="width: 8rem">
+          <template #body="{ data: row }">
+            <div v-if="row.color" class="flex items-center gap-2">
+              <span
+                class="inline-block w-4 h-4 rounded-full border border-surface-400 flex-shrink-0"
+                :style="{ backgroundColor: row.color }"
+              />
+              <span class="text-muted-color font-mono text-xs">{{ row.color }}</span>
+            </div>
+            <span v-else class="text-muted-color">—</span>
+          </template>
+        </p-column>
+
+        <p-column field="description" header="Description">
+          <template #body="{ data: row }">
+            <span v-if="row.description" class="text-sm line-clamp-1">{{ row.description }}</span>
             <span v-else class="text-muted-color">—</span>
           </template>
         </p-column>
@@ -129,7 +142,7 @@ async function deleteCompany(companyId: string) {
                 text
                 size="small"
                 severity="danger"
-                aria-label="Delete company"
+                aria-label="Delete category"
                 @click="confirmDelete(row.id)"
               >
                 <template #icon>

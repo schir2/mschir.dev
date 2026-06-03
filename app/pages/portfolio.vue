@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import type {FeaturedProject, ProjectCardItem} from "#shared/types/Project";
+import type {ArticleCardItem} from "#shared/types/Article";
 import type {SkillSnapshot} from "~/types/Skill";
 
 definePageMeta({title: 'Portfolio', layout: 'page'})
@@ -45,6 +46,24 @@ const featuredProjectCards = computed<ProjectCardItem[]>(() =>
     featured: true,
   }))
 )
+
+const {data: featuredArticles} = await useAsyncData<ArticleCardItem[]>(
+    'portfolio-featured-articles',
+    async () => {
+      const {data} = await supabase
+          .from('articles')
+          .select(`
+            id, title, slug, summary, published_at, image_url, series_id, series_sequence_number,
+            article_categories(name, slug, color, image_url),
+            article_tags_links(article_tags(name, slug, icon)),
+            article_series(title, slug, image_url),
+            featured_articles!inner(id, featured_reason)
+          `)
+          .order('published_at', {ascending: false})
+      return (data as unknown as ArticleCardItem[]) ?? []
+    },
+    {lazy: true}
+)
 </script>
 <template>
   <section class="flex flex-col gap-16">
@@ -67,6 +86,18 @@ const featuredProjectCards = computed<ProjectCardItem[]>(() =>
         >
           <project-card :project="project"/>
         </nuxt-link>
+      </div>
+    </div>
+
+    <!-- Featured Articles -->
+    <div v-if="featuredArticles?.length">
+      <h2 class="text-2xl font-bold mb-6">Featured Articles</h2>
+      <div class="flex flex-col gap-3">
+        <article-card
+            v-for="article in featuredArticles"
+            :key="article.id"
+            :article="article"
+        />
       </div>
     </div>
 

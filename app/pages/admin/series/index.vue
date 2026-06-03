@@ -1,8 +1,8 @@
 <script lang="ts" setup>
-definePageMeta({ layout: 'admin-list', title: 'Companies' })
+definePageMeta({ layout: 'admin-list', title: 'Series' })
 
 import { FilterMatchMode } from '@primevue/core/api'
-import type { Company } from '#shared/types/Company'
+import type { ArticleSeries } from '#shared/types/ArticleSeries'
 
 const supabase = useSupabaseClient()
 const confirm = useConfirm()
@@ -11,49 +11,49 @@ const toast = useToast()
 const filters = ref({ global: { value: null as string | null, matchMode: FilterMatchMode.CONTAINS } })
 
 const {
-  data: companies,
-  pending: companiesLoading,
-  refresh: refreshCompanies,
-} = await useAsyncData<Company[]>('admin-companies', async () => {
+  data: seriesList,
+  pending: seriesLoading,
+  refresh: refreshSeries,
+} = await useAsyncData<ArticleSeries[]>('admin-series', async () => {
   const { data, error } = await supabase
-    .from('companies')
-    .select('id, name, url, logo_url')
-    .order('name', { ascending: true })
+    .from('article_series')
+    .select('id, title, slug, description, author, image_url, created_at, updated_at')
+    .order('title', { ascending: true })
 
   if (error) throw error
-  return data as Company[]
+  return data as ArticleSeries[]
 }, { lazy: true })
 
-function getLogoPublicUrl(logoPath: string | null): string | null {
-  if (!logoPath) return null
-  return supabase.storage.from('icons').getPublicUrl(logoPath).data.publicUrl
+function getSeriesImageUrl(imagePath: string | null): string | null {
+  if (!imagePath) return null
+  return supabase.storage.from('images').getPublicUrl(imagePath).data.publicUrl
 }
 
-function confirmDelete(companyId: string) {
+function confirmDelete(seriesId: string) {
   confirm.require({
-    header: 'Delete Company',
+    header: 'Delete Series',
     message: 'This cannot be undone.',
     icon: 'material-symbols:warning-outline',
     rejectLabel: 'Cancel',
     acceptLabel: 'Delete',
     acceptClass: 'p-button-danger',
-    accept: () => deleteCompany(companyId),
+    accept: () => deleteSeries(seriesId),
   })
 }
 
-async function deleteCompany(companyId: string) {
+async function deleteSeries(seriesId: string) {
   const { error } = await supabase
-    .from('companies')
+    .from('article_series')
     .delete()
-    .eq('id', companyId)
+    .eq('id', seriesId)
 
   if (error) {
     toast.add({ severity: 'error', summary: 'Delete failed', detail: error.message, life: 4000 })
     return
   }
 
-  toast.add({ severity: 'success', summary: 'Company deleted', life: 3000 })
-  await refreshCompanies()
+  toast.add({ severity: 'success', summary: 'Series deleted', life: 3000 })
+  await refreshSeries()
 }
 </script>
 
@@ -63,7 +63,7 @@ async function deleteCompany(companyId: string) {
 
     <admin-page-header>
       <template #actions>
-        <p-button label="New Company" rounded severity="secondary" @click="navigateTo('/admin/companies/new')">
+        <p-button label="New Series" rounded severity="secondary" @click="navigateTo('/admin/series/new')">
           <template #icon>
             <icon name="material-symbols:add-circle" />
           </template>
@@ -71,7 +71,7 @@ async function deleteCompany(companyId: string) {
       </template>
     </admin-page-header>
 
-    <p-progress-spinner v-if="companiesLoading" />
+    <p-progress-spinner v-if="seriesLoading" />
 
     <template v-else>
       <div class="flex justify-end mb-3">
@@ -79,45 +79,45 @@ async function deleteCompany(companyId: string) {
       </div>
 
       <p-data-table
-        :value="companies ?? []"
+        :value="seriesList ?? []"
         v-model:filters="filters"
-        :global-filter-fields="['name', 'url']"
+        :global-filter-fields="['title', 'slug', 'description']"
         :rows="20"
         paginator
         size="small"
         striped-rows
-        empty-message="No companies found."
+        empty-message="No series found."
       >
-        <p-column header="Logo" style="width: 4rem">
+        <p-column header="Image" style="width: 4rem">
           <template #body="{ data: row }">
             <img
-              v-if="getLogoPublicUrl(row.logo_url)"
-              :src="getLogoPublicUrl(row.logo_url)!"
-              :alt="row.name"
-              class="w-10 h-10 object-contain rounded bg-surface-800"
+              v-if="getSeriesImageUrl(row.image_url)"
+              :src="getSeriesImageUrl(row.image_url)!"
+              :alt="row.title"
+              class="w-10 h-10 object-cover rounded"
             >
             <span v-else class="text-muted-color">—</span>
           </template>
         </p-column>
 
-        <p-column field="name" header="Name" :sortable="true">
+        <p-column field="title" header="Title" :sortable="true">
           <template #body="{ data: row }">
             <nuxt-link
-              :to="`/admin/companies/${row.id}`"
+              :to="`/admin/series/${row.id}`"
               class="hover:text-primary hover:underline cursor-pointer"
-            >{{ row.name }}</nuxt-link>
+            >{{ row.title }}</nuxt-link>
           </template>
         </p-column>
 
-        <p-column field="url" header="URL">
+        <p-column field="slug" header="Slug" :sortable="true">
           <template #body="{ data: row }">
-            <a
-              v-if="row.url"
-              :href="row.url"
-              target="_blank"
-              rel="noopener noreferrer"
-              class="text-primary underline"
-            >{{ row.url }}</a>
+            <span class="text-muted-color font-mono text-xs">{{ row.slug || '—' }}</span>
+          </template>
+        </p-column>
+
+        <p-column field="description" header="Description">
+          <template #body="{ data: row }">
+            <span v-if="row.description" class="text-sm line-clamp-1">{{ row.description }}</span>
             <span v-else class="text-muted-color">—</span>
           </template>
         </p-column>
@@ -129,7 +129,7 @@ async function deleteCompany(companyId: string) {
                 text
                 size="small"
                 severity="danger"
-                aria-label="Delete company"
+                aria-label="Delete series"
                 @click="confirmDelete(row.id)"
               >
                 <template #icon>

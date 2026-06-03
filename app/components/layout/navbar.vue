@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { MenuItem } from "primevue/menuitem";
+import { toMenuItems } from '~/config/adminSections'
 
 const user = useSupabaseUser()
 const router = useRouter()
@@ -8,10 +9,10 @@ const supabase = useSupabaseClient()
 const isAdmin = computed(() => user.value?.app_metadata?.role === 'admin')
 
 const navItems = ref<MenuItem[]>([
-  { label: 'Portfolio', route: '/portfolio' },
-  { label: 'Articles', route: '/articles' },
-  { label: 'About', route: '/about' },
-  { label: 'Contact', route: '/contact' },
+  { label: 'Portfolio', to: '/portfolio' },
+  { label: 'Articles', to: '/articles' },
+  { label: 'About', to: '/about' },
+  { label: 'Contact', to: '/contact' },
 ])
 
 const userMenuRef = ref()
@@ -22,16 +23,12 @@ const userMenuItems = computed<MenuItem[]>(() => {
   if (isAdmin.value) {
     items.push({
       label: 'Admin',
-      icon: 'pi pi-shield',
-      items: [
-        { label: 'Articles', route: '/admin/articles', icon: 'pi pi-file-edit' },
-        { label: 'Projects', route: '/admin/projects', icon: 'pi pi-briefcase' },
-        { label: 'Companies', route: '/admin/companies', icon: 'pi pi-building' },
-      ],
+      icon: 'material-symbols:shield',
+      items: toMenuItems(),
     })
   }
 
-  items.push({ label: 'Logout', icon: 'pi pi-sign-out', command: onLogout })
+  items.push({ label: 'Logout', icon: 'material-symbols:logout', command: onLogout })
 
   return items
 })
@@ -67,13 +64,13 @@ onUnmounted(() => window.removeEventListener('scroll', handleScroll))
         </router-link>
       </template>
       <template #item="{ item, props }">
-        <router-link v-if="item.route" v-slot="{ href, navigate }" :to="item.route" custom>
+        <router-link v-if="item.to" v-slot="{ href, navigate }" :to="item.to" custom>
           <a v-ripple :href="href" v-bind="props.action" @click="navigate">
             <span>{{ item.label }}</span>
           </a>
         </router-link>
         <a v-else v-ripple :href="item.url" :target="item.target" v-bind="props.action">
-          <span :class="item.icon"/>
+          <icon v-if="item.icon" :name="item.icon"/>
           <span>{{ item.label }}</span>
         </a>
       </template>
@@ -99,15 +96,15 @@ onUnmounted(() => window.removeEventListener('scroll', handleScroll))
             <template v-if="user">
               <p-tiered-menu ref="userMenuRef" :model="userMenuItems" popup>
                 <template #item="{ item, props: menuProps }">
-                  <router-link v-if="item.route" v-slot="{ href, navigate }" :to="item.route" custom>
+                  <router-link v-if="item.to" v-slot="{ href, navigate }" :to="item.to" custom>
                     <a v-ripple :href="href" v-bind="menuProps.action" @click="navigate">
-                      <span :class="item.icon"/>
-                      <span class="ml-2">{{ item.label }}</span>
+                      <icon v-if="item.icon" :name="item.icon" class="mr-2"/>
+                      <span>{{ item.label }}</span>
                     </a>
                   </router-link>
                   <a v-else v-ripple v-bind="menuProps.action">
-                    <span :class="item.icon"/>
-                    <span class="ml-2">{{ item.label }}</span>
+                    <icon v-if="item.icon" :name="item.icon" class="mr-2"/>
+                    <span>{{ item.label }}</span>
                   </a>
                 </template>
               </p-tiered-menu>

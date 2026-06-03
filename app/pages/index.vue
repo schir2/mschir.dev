@@ -1,27 +1,27 @@
 <script lang="ts" setup>
-definePageMeta({title: 'Home'})
+import type {ArticleCardItem} from '#shared/types/Article'
 
-type RecentArticle = {
-  id: string
-  title: string
-  slug: string
-  published_at: string
-  article_categories: { name: string; slug: string } | null
-}
+definePageMeta({title: 'Home'})
 
 const supabase = useSupabaseClient()
 
-const {data: recentArticles} = await useAsyncData<RecentArticle[]>(
+const {data: recentArticles} = await useAsyncData<ArticleCardItem[]>(
     'home-recent-articles',
     async () => {
       const {data} = await supabase
           .from('articles')
-          .select('id, title, slug, published_at, article_categories(name, slug)')
+          .select(`
+            id, title, slug, summary, published_at, image_url, series_id, series_sequence_number,
+            article_categories(name, slug, color, image_url),
+            article_tags_links(article_tags(name, slug, icon)),
+            article_series(title, slug, image_url),
+            featured_articles(id, featured_reason)
+          `)
           .not('published_at', 'is', null)
           .is('archived_at', null)
           .order('published_at', {ascending: false})
           .limit(3)
-      return (data as unknown as RecentArticle[]) ?? []
+      return (data as unknown as ArticleCardItem[]) ?? []
     },
     {lazy: true}
 )
@@ -48,10 +48,6 @@ const pillars = [
     description: 'Cloud architecture, networking, and security across AWS, Azure, Cloudflare, and more.'
   },
 ]
-
-function formatDate(dateString: string) {
-  return new Date(dateString).toLocaleDateString('en-US', {year: 'numeric', month: 'short', day: 'numeric'})
-}
 </script>
 
 <template>
@@ -97,27 +93,15 @@ function formatDate(dateString: string) {
       </div>
 
       <!-- Recent Articles -->
-      <div class="flex flex-col gap-4">
+      <div v-if="recentArticles?.length" class="flex flex-col gap-4">
         <span class="text-xs uppercase tracking-widest font-medium text-muted-color">Recent Articles</span>
-        <ul class="article-list">
-          <li
+        <div class="flex flex-col gap-3">
+          <article-card
               v-for="article in recentArticles"
               :key="article.id"
-              class="py-4 flex items-start justify-between gap-4"
-          >
-            <div class="flex flex-col gap-1">
-              <nuxt-link :to="`/articles/${article.slug}`" class="font-medium hover:text-primary transition-colors">
-                {{ article.title }}
-              </nuxt-link>
-              <span v-if="article.article_categories" class="text-sm text-muted-color">
-                {{ article.article_categories.name }}
-              </span>
-            </div>
-            <span class="text-sm shrink-0 pt-1 text-muted-color">
-              {{ formatDate(article.published_at) }}
-            </span>
-          </li>
-        </ul>
+              :article="article"
+          />
+        </div>
       </div>
 
       <!-- Bottom CTA -->
@@ -200,7 +184,4 @@ function formatDate(dateString: string) {
   color: rgba(255, 255, 255, 0.85);
 }
 
-.article-list li + li {
-  border-top: 1px solid var(--p-surface-border);
-}
 </style>

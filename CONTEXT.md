@@ -103,7 +103,7 @@ The `/admin/projects` page. A PrimeVue DataTable showing all projects with colum
 The admin UI for creating and editing projects. `/admin/projects/new` creates a new project; `/admin/projects/[id]` edits an existing one. Full-height split layout matching the Article Editor: a compact metadata bar across the top (name, slug, summary, hero image, company, year, skills) and a full-width split Markdown editor + live preview below. Also includes a **Featured** section: a toggle to mark the project as featured, with tagline and display_order fields shown when toggled on. Managing the featured state writes to/from the `featured_projects` table inline. The description field is rendered via `<md-editor>` (md-editor-v3).
 
 ### Company List (Admin)
-The `/admin/companies` page. A PrimeVue DataTable with inline row editing for all companies. Columns: logo (uploaded to the `icons` bucket), name, URL. Companies are few and simple — no separate create/edit pages; all editing happens inline in the table.
+The `/admin/companies` page. A PrimeVue DataTable listing all companies. Columns: logo (uploaded to the `icons` bucket), name, URL, and actions (edit, delete). Clicking a company name navigates to the Company Editor. No inline row editing — all editing happens on a dedicated editor page, consistent with all other admin list pages.
 
 ### Article List (Admin)
 The `/admin/articles` page. A PrimeVue DataTable showing all articles including drafts, with metadata columns: title, category, series, status, created date, and edit/delete actions. Modelled after Django's changelist — every relevant property visible at a glance without opening the record.
@@ -333,7 +333,7 @@ The 2–3 paragraph personal section of the About Page. Covers: origin (started 
 ## Admin Shell Domain
 
 ### Admin Section Registry
-The single source of truth for all admin pages. Defined as `ADMIN_SECTIONS` in `app/config/adminSections.ts` — a typed `as const` array of `AdminGroup` objects, each containing `AdminSection` entries. Each section carries: `label`, `to` (route path), `icon` (Iconify name), `description` (shown on the admin index page), and an optional `getPublicUrl` function that derives the public-facing URL for a given record. Consumed by the Navbar User Menu, the `/admin` index page, and the future admin sidebar. A `toMenuItems()` utility in the same file converts the registry into PrimeVue `MenuItem[]`. Every new admin page must add an entry — there is no other registration step.
+The single source of truth for all admin pages. Defined as `ADMIN_SECTIONS` in `app/config/adminSections.ts` — a typed `as const` array of `AdminGroup` objects, each containing `AdminSection` entries. Each section carries: `label` (plural display name, e.g. "Articles"), `singular` (singular form, e.g. "Article" — used to construct "New Article" labels), `to` (route path), `icon` (Iconify name), `description` (shown on the admin index page), and an optional `getPublicUrl` function that derives the public-facing URL for a given record. Consumed by the Navbar User Menu, the `/admin` index page, and the future admin sidebar. A `toMenuItems()` utility in the same file converts the registry into PrimeVue `MenuItem[]`. Every new admin page must add an entry — there is no other registration step.
 
 Current groups: **Content** (Articles, Categories, Series) · **Portfolio** (Projects, Companies, Skills) · **Inbox** (Contact Messages).
 

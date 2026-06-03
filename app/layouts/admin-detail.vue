@@ -18,9 +18,7 @@ useHead(() => ({
     <p-toast position="top-center" />
     <layout-navbar />
     <dynamic-dialog />
-    <div class="max-w-4xl mx-auto p-6">
-      <slot />
-    </div>
+    <slot />
   </main>
   <layout-footer />
 </template>

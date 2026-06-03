@@ -288,21 +288,12 @@ async function save() {
 }
 
 async function uploadHeroImage(file: File) {
-  const extension = file.name.split('.').pop() ?? 'jpg'
-  const newPath = `article-heroes/${crypto.randomUUID()}.${extension}`
-
-  if (imageUrl.value) {
-    await supabase.storage.from('images').remove([imageUrl.value])
+  try {
+    imageUrl.value = await useImageUpload('images', 'article-heroes', file, imageUrl.value ?? undefined)
+  } catch (error: unknown) {
+    const message = error instanceof Error ? error.message : 'Unknown error'
+    toast.add({ severity: 'error', summary: 'Hero image upload failed', detail: message, life: 4000 })
   }
-
-  const { error } = await supabase.storage.from('images').upload(newPath, file)
-
-  if (error) {
-    toast.add({ severity: 'error', summary: 'Hero image upload failed', detail: error.message, life: 4000 })
-    return
-  }
-
-  imageUrl.value = newPath
 }
 
 async function onHeroImageChange(event: Event) {
@@ -319,22 +310,19 @@ async function clearHeroImage() {
   }
 }
 
+// Uses useImageUpload for the upload step; getPublicUrl is still called directly because the composable returns a path, not a URL.
 async function handleEditorImageUpload(files: File[], callback: (urls: string[]) => void) {
   const urls: string[] = []
 
   for (const file of files) {
-    const extension = file.name.split('.').pop() ?? 'jpg'
-    const path = `article-content/${crypto.randomUUID()}.${extension}`
-
-    const { error } = await supabase.storage.from('images').upload(path, file)
-
-    if (error) {
-      toast.add({ severity: 'error', summary: 'Image upload failed', detail: error.message, life: 4000 })
-      continue
+    try {
+      const uploadedPath = await useImageUpload('images', 'article-content', file)
+      const { data: { publicUrl } } = supabase.storage.from('images').getPublicUrl(uploadedPath)
+      urls.push(publicUrl)
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : 'Unknown error'
+      toast.add({ severity: 'error', summary: 'Image upload failed', detail: message, life: 4000 })
     }
-
-    const { data: { publicUrl } } = supabase.storage.from('images').getPublicUrl(path)
-    urls.push(publicUrl)
   }
 
   callback(urls)

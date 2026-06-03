@@ -38,7 +38,7 @@ export type ProjectDetail = Pick<Project, 'id' | 'name' | 'slug' | 'description'
   project_skills: { skills: Pick<Skill, 'id' | 'name' | 'icon'> }[]
 }
 
-export type ProjectAdminListItem = Pick<Project, 'id' | 'name' | 'year'> & {
+export type ProjectAdminListItem = Pick<Project, 'id' | 'name' | 'slug' | 'year'> & {
   companies: Pick<Company, 'name'> | null
   featured_projects: Pick<FeaturedProjectRow, 'id'> | null
 }

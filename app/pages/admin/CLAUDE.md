@@ -23,11 +23,17 @@ definePageMeta({ layout: 'admin-detail', title: 'Edit Article' })
 
 Every admin page must use `<admin-page-header>` as its first child. It reads the title from `route.meta.title` automatically and exposes a `#actions` slot for right-side buttons.
 
+Action buttons use `severity="secondary"` and `rounded`. Icons must be passed via the `#icon` slot (the `icon` prop only works with PrimeIcons — see `app/components/CLAUDE.md`).
+
 ```vue
 <template>
   <admin-page-header>
     <template #actions>
-      <p-button label="New Article" @click="navigateTo('/admin/articles/new')" />
+      <p-button label="New Article" rounded severity="secondary" @click="navigateTo('/admin/articles/new')">
+        <template #icon>
+          <icon name="material-symbols:add-circle" />
+        </template>
+      </p-button>
     </template>
   </admin-page-header>
 
@@ -36,6 +42,28 @@ Every admin page must use `<admin-page-header>` as its first child. It reads the
 ```
 
 Never invent a bespoke page header. Component: `app/components/admin/AdminPageHeader.vue`.
+
+## Page padding
+
+The `admin-list` layout already provides horizontal padding (`px-6`) and the `<admin-page-header>` component provides top padding (`pt-6`). Do not add redundant padding in page wrapper divs.
+
+```vue
+<!-- ✅ correct — layout handles px, header handles pt -->
+<template>
+  <admin-page-header>...</admin-page-header>
+  <div class="pb-8">
+    <!-- page content -->
+  </div>
+</template>
+
+<!-- ❌ wrong — p-6 double-pads horizontally and overwrites header top spacing -->
+<template>
+  <div class="p-6">
+    <div class="flex justify-between ...">...</div>
+    <!-- page content -->
+  </div>
+</template>
+```
 
 ## Admin sections registry
 
@@ -68,11 +96,14 @@ List pages where `getPublicUrl` is defined must render an eye icon button in the
 
 ## Inline editing vs. separate editor pages
 
+All admin entities use dedicated editor pages — no inline DataTable row editing. This applies even to simple entities with only a few plain-text fields.
+
 | Situation | Pattern |
 |---|---|
-| ≤ 3 plain-text / select fields | Inline DataTable row-edit mode (companies pattern) |
-| Any image upload, markdown content, or relation management | Separate editor page (`[id].vue` + `new.vue`) |
+| Any editable entity | Separate editor page (`[id].vue` + `new.vue`) |
 | Read-only with delete | Inline DataTable, no row-edit mode (contact messages pattern) |
+
+Inline row editing (`edit-mode="row"`) is not used anywhere in the admin. It was tried for Companies but produced a broken, jarring UX (rows expand unexpectedly, file inputs inside editor slots are awkward). A simple editor page is cleaner and consistent with the rest of the admin.
 
 ## Zod validation
 
@@ -101,6 +132,52 @@ const newPath = await useImageUpload('images', 'category-images', file, existing
 Reference implementation: `app/components/project/ProjectEditor.vue`.
 
 > Note: `ArticleEditor.vue` still uses inline storage calls — that is a known deviation tracked for cleanup.
+
+## DataTable conventions
+
+### Sorting
+
+All admin DataTables use a fixed server-side default sort (via `.order()` in the Supabase query) **and** enable client-side column sorting on the primary columns. Add `:sortable="true"` on each sortable column; PrimeVue handles the rest client-side without re-fetching.
+
+Default sort by entity:
+- Articles: `created_at DESC`
+- Projects: `year DESC`
+- Companies: `name ASC`
+
+### Size and striped rows
+
+All DataTables declare `size="small"` for a compact admin aesthetic. `striped-rows` is enabled on all tables.
+
+### Global filter
+
+All admin DataTables include a global text filter input rendered above the table (right-aligned, `placeholder="Search…"`). Wire it up with a `v-model:filters` binding and pass `:global-filter-fields` listing the string columns that should be searched.
+
+```vue
+<script setup>
+import { FilterMatchMode } from '@primevue/core/api'
+
+const filters = ref({ global: { value: null, matchMode: FilterMatchMode.CONTAINS } })
+</script>
+
+<template>
+  <div class="flex justify-end mb-3">
+    <p-input-text v-model="filters['global'].value" placeholder="Search…" size="small" />
+  </div>
+  <p-data-table v-model:filters="filters" :global-filter-fields="['title', 'status']" ...>
+```
+
+### Empty state
+
+All DataTables set an `empty-message` prop: `"No <entities> found."` (e.g. `"No articles found."`).
+
+### Actions column
+
+The actions column is always the last column. Buttons are icon-only, `text` variant, `size="small"`. Use `<icon name="material-symbols:...">` via the `#icon` slot — never the `icon` prop (which only works with PrimeIcons).
+
+- **Preview** (eye): `severity="secondary"` — opens the public page in a new tab. Only rendered when `getPublicUrl` is defined for this entity in the Admin Section Registry.
+- **Delete** (trash): `severity="danger"` — opens a `<p-confirm-dialog>`.
+
+There is no edit button in the actions column. Clicking the entity name navigates to the edit page.
 
 ## Data fetching
 
