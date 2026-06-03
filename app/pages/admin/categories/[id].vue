@@ -76,7 +76,8 @@ function confirmDelete() {
     icon: 'material-symbols:warning-outline',
     rejectLabel: 'Cancel',
     acceptLabel: 'Delete',
-    acceptClass: 'p-button-danger',
+    acceptProps: { severity: 'danger' },
+    rejectProps: { severity: 'secondary', outlined: true },
     accept: async () => {
       const { error } = await supabase.from('article_categories').delete().eq('id', categoryId)
       if (error) {
@@ -143,9 +144,9 @@ function confirmDelete() {
       </div>
 
       <div class="flex justify-between pt-2">
-        <p-button type="submit" label="Save" rounded severity="secondary">
+        <p-button type="submit" label="Save" rounded severity="success">
           <template #icon>
-            <icon name="material-symbols:save" />
+            <icon name="material-symbols:save" class="text-lg" />
           </template>
         </p-button>
         <p-button label="Delete" rounded severity="danger" text @click="confirmDelete">

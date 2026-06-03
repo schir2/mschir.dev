@@ -253,9 +253,13 @@ async function save() {
 function confirmDelete(event: MouseEvent) {
   confirm.require({
     target: event.currentTarget as HTMLElement,
+    header: 'Delete Project',
     message: 'Delete this project? This cannot be undone.',
-    icon: 'pi pi-exclamation-triangle',
-    acceptClass: 'p-button-danger',
+    icon: 'material-symbols:warning-outline',
+    acceptLabel: 'Delete',
+    rejectLabel: 'Cancel',
+    acceptProps: { severity: 'danger' },
+    rejectProps: { severity: 'secondary', outlined: true },
     accept: () => deleteProject(),
   })
 }
@@ -314,11 +318,15 @@ async function deleteProject() {
       />
       <p-button
         label="Save"
-        icon="pi pi-save"
+        severity="success"
         :loading="saving"
         :disabled="saving || loading"
         @click="save"
-      />
+      >
+        <template #icon>
+          <icon name="material-symbols:save" class="text-lg"/>
+        </template>
+      </p-button>
     </div>
 
     <p-progress-spinner v-if="loading" class="m-auto" />

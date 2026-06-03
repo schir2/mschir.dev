@@ -36,7 +36,8 @@ function confirmDelete(companyId: string) {
     icon: 'material-symbols:warning-outline',
     rejectLabel: 'Cancel',
     acceptLabel: 'Delete',
-    acceptClass: 'p-button-danger',
+    acceptProps: { severity: 'danger' },
+    rejectProps: { severity: 'secondary', outlined: true },
     accept: () => deleteCompany(companyId),
   })
 }
@@ -63,7 +64,7 @@ async function deleteCompany(companyId: string) {
       <template #actions>
         <p-button label="New Company" rounded severity="secondary" @click="navigateTo('/admin/companies/new')">
           <template #icon>
-            <icon name="material-symbols:add-circle" />
+            <icon name="material-symbols:add-circle" class="text-lg" />
           </template>
         </p-button>
       </template>
@@ -73,7 +74,7 @@ async function deleteCompany(companyId: string) {
 
     <template v-else>
       <div class="flex justify-end mb-3">
-        <p-input-text v-model="filters.global.value" placeholder="Search…" size="small" />
+        <p-input-text v-model="filters.global.value" placeholder="Search…" />
       </div>
 
       <p-data-table
@@ -82,7 +83,7 @@ async function deleteCompany(companyId: string) {
         :global-filter-fields="['name', 'url']"
         :rows="20"
         paginator
-        size="small"
+
         striped-rows
         empty-message="No companies found."
       >
@@ -125,13 +126,13 @@ async function deleteCompany(companyId: string) {
             <div class="flex gap-1 justify-end">
               <p-button
                 text
-                size="small"
+
                 severity="danger"
                 aria-label="Delete company"
                 @click="confirmDelete(row.id)"
               >
                 <template #icon>
-                  <icon name="material-symbols:delete-outline" />
+                  <icon name="material-symbols:delete-outline" class="text-lg" />
                 </template>
               </p-button>
             </div>

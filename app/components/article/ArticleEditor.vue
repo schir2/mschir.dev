@@ -33,9 +33,11 @@ function confirmPublish() {
   confirm.require({
     header: 'Publish article',
     message: 'This will make the article visible to all visitors and lock the slug so existing links stay valid. You can unpublish it at any time.',
-    icon: 'pi pi-send',
+    icon: 'material-symbols:send',
     acceptLabel: 'Publish',
     rejectLabel: 'Cancel',
+    acceptProps: { severity: 'success' },
+    rejectProps: { severity: 'secondary', outlined: true },
     accept: () => togglePublished(true),
   })
 }
@@ -44,9 +46,11 @@ function confirmUnpublish() {
   confirm.require({
     header: 'Unpublish article',
     message: 'This will hide the article from all visitors. It will no longer appear in any article listings. You can re-publish it at any time.',
-    icon: 'pi pi-eye-slash',
+    icon: 'material-symbols:visibility-off',
     acceptLabel: 'Unpublish',
     rejectLabel: 'Cancel',
+    acceptProps: { severity: 'danger' },
+    rejectProps: { severity: 'secondary', outlined: true },
     accept: () => togglePublished(false),
   })
 }
@@ -423,11 +427,15 @@ async function createSeries() {
       </nuxt-link>
       <p-button
         label="Save"
-        icon="pi pi-save"
+        severity="success"
         :loading="saving"
         :disabled="saving || loading"
         @click="save"
-      />
+      >
+        <template #icon>
+          <icon name="material-symbols:save" class="text-lg"/>
+        </template>
+      </p-button>
     </div>
 
     <p-progress-spinner v-if="loading" class="m-auto" />

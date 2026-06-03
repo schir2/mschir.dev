@@ -66,22 +66,26 @@ async function onFormSubmit(event: FormSubmitEvent) {
         <div>
           <h1 class="text-4xl font-bold mb-4">Get in Touch</h1>
           <p class="text-surface-300 text-lg leading-relaxed">
-            Whether you're looking to hire, explore a contracting opportunity, or have a
-            question about one of my articles — I'd love to hear from you.
+            Got a project in mind? Whether it's connecting systems you already have, building
+            something new, or exploring what AI can do for your workflow — I'd love to hear from you.
           </p>
         </div>
-        <ul class="flex flex-col gap-3">
-          <li class="flex items-center gap-3 text-surface-300">
-            <icon name="material-symbols:work" class="text-primary"/>
-            Full-time engineering roles
+        <ul class="flex flex-col gap-4">
+          <li class="flex items-center gap-3">
+            <icon name="material-symbols:hub" class="pillar-icon text-2xl flex-shrink-0"/>
+            <span class="text-surface-300">Integrations &amp; APIs</span>
           </li>
-          <li class="flex items-center gap-3 text-surface-300">
-            <icon name="material-symbols:code" class="text-primary"/>
-            Contract &amp; freelance projects
+          <li class="flex items-center gap-3">
+            <icon name="material-symbols:code-blocks" class="pillar-icon text-2xl flex-shrink-0"/>
+            <span class="text-surface-300">Application Development</span>
           </li>
-          <li class="flex items-center gap-3 text-surface-300">
-            <icon name="material-symbols:menu-book" class="text-primary"/>
-            Questions about my articles
+          <li class="flex items-center gap-3">
+            <icon name="material-symbols:smart-toy" class="pillar-icon text-2xl flex-shrink-0"/>
+            <span class="text-surface-300">AI &amp; Automation</span>
+          </li>
+          <li class="flex items-center gap-3">
+            <icon name="material-symbols:cloud" class="pillar-icon text-2xl flex-shrink-0"/>
+            <span class="text-surface-300">Infrastructure &amp; Cloud</span>
           </li>
         </ul>
       </div>
@@ -135,7 +139,7 @@ async function onFormSubmit(event: FormSubmitEvent) {
 
         <auth-turnstile-placeholder v-model="turnstileToken"/>
 
-        <p-button type="submit" label="Send Message" :loading="pending" fluid>
+        <p-button type="submit" label="Send Message" :loading="pending" fluid class="btn-accent">
           <template #icon>
             <icon name="material-symbols:send"/>
           </template>
@@ -144,3 +148,9 @@ async function onFormSubmit(event: FormSubmitEvent) {
     </div>
   </section>
 </template>
+
+<style scoped>
+.pillar-icon {
+  color: var(--p-accent-400);
+}
+</style>

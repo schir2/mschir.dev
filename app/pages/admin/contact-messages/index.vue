@@ -12,6 +12,12 @@ const supabase = useSupabaseClient()
 const confirm = useConfirm()
 const toast = useToast()
 
+const viewingMessage = ref<ContactMessageWithReason | null>(null)
+const viewDialogVisible = computed({
+  get: () => viewingMessage.value !== null,
+  set: (visible) => { if (!visible) viewingMessage.value = null },
+})
+
 const filters = ref({ global: { value: null as string | null, matchMode: FilterMatchMode.CONTAINS } })
 
 const {
@@ -38,7 +44,8 @@ function confirmDelete(messageId: string) {
     icon: 'material-symbols:warning-outline',
     rejectLabel: 'Cancel',
     acceptLabel: 'Delete',
-    acceptClass: 'p-button-danger',
+    acceptProps: { severity: 'danger' },
+    rejectProps: { severity: 'secondary', outlined: true },
     accept: () => deleteMessage(messageId),
   })
 }
@@ -63,13 +70,39 @@ async function deleteMessage(messageId: string) {
   <div class="pb-8">
     <p-confirm-dialog />
 
+    <p-dialog
+      v-model:visible="viewDialogVisible"
+      :header="viewingMessage ? `Message from ${viewingMessage.name}` : ''"
+      modal
+      :style="{ width: '36rem' }"
+    >
+      <div v-if="viewingMessage" class="flex flex-col gap-4">
+        <div class="flex flex-col gap-1">
+          <span class="text-xs font-semibold uppercase tracking-widest text-muted-color">From</span>
+          <span>{{ viewingMessage.name }} — <a :href="`mailto:${viewingMessage.email}`" class="text-primary underline">{{ viewingMessage.email }}</a></span>
+        </div>
+        <div v-if="viewingMessage.contact_reasons" class="flex flex-col gap-1">
+          <span class="text-xs font-semibold uppercase tracking-widest text-muted-color">Reason</span>
+          <span>{{ viewingMessage.contact_reasons.label }}</span>
+        </div>
+        <div class="flex flex-col gap-1">
+          <span class="text-xs font-semibold uppercase tracking-widest text-muted-color">Message</span>
+          <p class="whitespace-pre-wrap leading-relaxed">{{ viewingMessage.message }}</p>
+        </div>
+        <div class="flex flex-col gap-1">
+          <span class="text-xs font-semibold uppercase tracking-widest text-muted-color">Received</span>
+          <span>{{ formatDate(viewingMessage.created_at) }}</span>
+        </div>
+      </div>
+    </p-dialog>
+
     <admin-page-header />
 
     <p-progress-spinner v-if="messagesLoading" />
 
     <template v-else>
       <div class="flex justify-end mb-3">
-        <p-input-text v-model="filters.global.value" placeholder="Search…" size="small" />
+        <p-input-text v-model="filters.global.value" placeholder="Search…" />
       </div>
 
       <p-data-table
@@ -78,7 +111,7 @@ async function deleteMessage(messageId: string) {
         :global-filter-fields="['name', 'email', 'message']"
         :rows="20"
         paginator
-        size="small"
+
         striped-rows
         empty-message="No contact messages found."
       >
@@ -99,9 +132,7 @@ async function deleteMessage(messageId: string) {
 
         <p-column field="message" header="Message">
           <template #body="{ data: row }">
-            <p-tooltip :value="row.message">
-              <span class="line-clamp-1 cursor-default max-w-xs block">{{ row.message }}</span>
-            </p-tooltip>
+            <span class="line-clamp-1 max-w-xs block text-muted-color">{{ row.message }}</span>
           </template>
         </p-column>
 
@@ -111,18 +142,29 @@ async function deleteMessage(messageId: string) {
           </template>
         </p-column>
 
-        <p-column header="" style="width: 4rem">
+        <p-column header="" style="width: 6rem">
           <template #body="{ data: row }">
             <div class="flex gap-1 justify-end">
               <p-button
                 text
-                size="small"
+
+                severity="secondary"
+                aria-label="View message"
+                @click="viewingMessage = row"
+              >
+                <template #icon>
+                  <icon name="material-symbols:open-in-new" class="text-lg" />
+                </template>
+              </p-button>
+              <p-button
+                text
+
                 severity="danger"
                 aria-label="Delete message"
                 @click="confirmDelete(row.id)"
               >
                 <template #icon>
-                  <icon name="material-symbols:delete-outline" />
+                  <icon name="material-symbols:delete-outline" class="text-lg" />
                 </template>
               </p-button>
             </div>

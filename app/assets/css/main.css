@@ -1,5 +1,15 @@
 @import './overrides/md-editor.css';
 
+.btn-accent {
+  background: var(--p-accent-500) !important;
+  border-color: var(--p-accent-500) !important;
+  color: var(--p-surface-950) !important;
+}
+.btn-accent:hover:not(:disabled) {
+  background: var(--p-accent-400) !important;
+  border-color: var(--p-accent-400) !important;
+}
+
 h1, h2 {
   font-family: 'Fraunces', serif;
 }

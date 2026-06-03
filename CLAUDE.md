@@ -136,6 +136,136 @@ For any task that involves redesigning a visual component's layout — especiall
 
 ## Code Style
 
+### Color roles — primary vs accent
+
+Two semantic colors serve distinct purposes. Never swap them:
+
+- **Primary (violet)** — structural UI chrome: nav active states, focus rings, links, default button fills, form control highlights. Anything that says "this is interactive."
+- **Accent (amber)** — anything that needs to *stand out*: CTAs the user should act on, featured-content markers (the amber left bar on article/project cards), icon highlights on feature sections (service pillars).
+
+```html
+<!-- ✅ CTA that should grab attention -->
+<p-button label="Get in Touch" class="btn-accent"/>
+
+<!-- ✅ Featured content marker — amber means featured, site-wide -->
+<div class="w-1.5 bg-amber-500 self-stretch"/>
+
+<!-- ❌ Don't use primary for a primary CTA — it reads as chrome, not action -->
+<p-button label="Get in Touch"/>
+```
+
+**`btn-accent` class** is defined globally in `app/assets/css/main.css`. It sets amber background, amber border, and dark text (`--p-surface-950`) so the label is readable on the warm background. Use it on any `<p-button>` that is a primary call-to-action.
+
+### Feature card hover pattern
+
+Feature sections (service pillars, etc.) use a consistent interactive card style. Key elements:
+
+- **Border**: `border-surface-700` at rest → `color-mix(in srgb, var(--p-accent-500) 50%, transparent)` on hover
+- **Glow shadow**: `box-shadow: 0 0 48px -8px color-mix(in srgb, var(--p-accent-500) 30%, transparent)` on hover
+- **Top accent bar**: `position: absolute; inset-x: 0; top: 0; height: 2px` with a `linear-gradient(to right, transparent, var(--p-accent-500), transparent)` — opacity 0 at rest, 1 on hover
+- **Icon**: `color: var(--p-accent-400)`, scales to 110% on hover
+
+Use scoped CSS with `var(--p-accent-*)` tokens for all hover color values — do not hardcode hex values for the glow.
+
+### Service pillar layout (C3)
+
+The canonical layout for service pillar cards is a horizontal strip:
+
+```html
+<div class="pillar-card group relative flex items-center gap-5 p-7 rounded-xl border border-surface-700 bg-surface-900 overflow-hidden">
+  <div class="pillar-top-bar absolute inset-x-0 top-0 h-0.5"/>
+  <div class="flex flex-col gap-2 flex-1">
+    <h3 class="font-display text-2xl font-semibold leading-tight">{{ title }}</h3>
+    <p class="text-base leading-relaxed text-muted-color">{{ description }}</p>
+  </div>
+  <icon :name="icon" class="pillar-icon flex-shrink-0 text-6xl"/>
+</div>
+```
+
+Icon sits on the **right**, vertically centered with the text block. Title uses `font-display` (Fraunces). Hover effects via the feature card pattern above.
+
+### Confirm dialog severity
+
+All `confirm.require()` calls must set `acceptProps` and `rejectProps` using PrimeVue 4's props API — never `acceptClass`/`rejectClass` (PrimeVue 3 style).
+
+| Dialog type | `acceptProps` severity | `rejectProps` severity |
+|---|---|---|
+| Destructive (delete, archive, unpublish) | `danger` | `secondary` + `outlined: true` |
+| Confirming a save / positive action (publish, submit) | `success` | `secondary` + `outlined: true` |
+
+Cancel/reject buttons are always `secondary` + `outlined: true` — this keeps them visually recessive so the primary action has full attention.
+
+```typescript
+// ✅ Destructive action
+confirm.require({
+  header: 'Delete Project',
+  message: 'This cannot be undone.',
+  acceptLabel: 'Delete',
+  rejectLabel: 'Cancel',
+  acceptProps: { severity: 'danger' },
+  rejectProps: { severity: 'secondary', outlined: true },
+  accept: () => deleteProject(id),
+})
+
+// ✅ Positive / save action
+confirm.require({
+  header: 'Publish article',
+  message: 'This will make the article visible to all visitors.',
+  acceptLabel: 'Publish',
+  rejectLabel: 'Cancel',
+  acceptProps: { severity: 'success' },
+  rejectProps: { severity: 'secondary', outlined: true },
+  accept: () => togglePublished(true),
+})
+
+// ❌ Old PrimeVue 3 API — do not use
+confirm.require({
+  acceptClass: 'p-button-danger',
+  ...
+})
+```
+
+### Button conventions
+
+Every `<p-button>` should have an intentional severity. The full matrix:
+
+| Use case | Severity / class | Notes |
+|---|---|---|
+| Primary CTA ("Get in Touch", "Send Message") | `class="btn-accent"` | Amber; defined in `main.css` |
+| Save / submit / publish | `severity="success"` | Any button that persists or confirms a positive action |
+| Delete / archive / unpublish | `severity="danger"` | Any irreversible or destructive action |
+| Cancel / back / reject | `severity="secondary"` + `outlined` | Always recessive — never competes with the primary action |
+| Secondary/neutral actions | `severity="secondary"` | No `outlined` when it's a peer action, not a cancel |
+| Table icon-only actions | `text` + appropriate severity | No `size="small"` — it shrinks the icon; see below |
+
+**Cancel and back buttons** always use `severity="secondary"` with `outlined`:
+
+```html
+<!-- ✅ Cancel in a form toolbar -->
+<nuxt-link to="/admin/skills">
+  <p-button label="Cancel" severity="secondary" outlined/>
+</nuxt-link>
+
+<!-- ✅ Reject in a confirm dialog -->
+rejectProps: { severity: 'secondary', outlined: true }
+```
+
+**Table action buttons** use `text` variant with no `size="small"` (it reduces font-size and shrinks the icon). Use `text-lg` on the icon inside the `#icon` slot:
+
+```html
+<p-button text severity="danger" aria-label="Delete">
+  <template #icon>
+    <icon name="material-symbols:delete-outline" class="text-lg"/>
+  </template>
+</p-button>
+
+<p-button text severity="secondary" aria-label="View">
+  <template #icon>
+    <icon name="material-symbols:visibility-outline" class="text-lg"/>
+  </template>
+</p-button>
+```
+
 ### PrimeVue token Tailwind utilities
 
 PrimeVue exposes its design tokens as Tailwind utilities — always use those instead of inline `style` attributes with `var(--p-*)` CSS variables:

@@ -36,7 +36,8 @@ function confirmDelete(seriesId: string) {
     icon: 'material-symbols:warning-outline',
     rejectLabel: 'Cancel',
     acceptLabel: 'Delete',
-    acceptClass: 'p-button-danger',
+    acceptProps: { severity: 'danger' },
+    rejectProps: { severity: 'secondary', outlined: true },
     accept: () => deleteSeries(seriesId),
   })
 }
@@ -63,7 +64,7 @@ async function deleteSeries(seriesId: string) {
       <template #actions>
         <p-button label="New Series" rounded severity="secondary" @click="navigateTo('/admin/series/new')">
           <template #icon>
-            <icon name="material-symbols:add-circle" />
+            <icon name="material-symbols:add-circle" class="text-lg" />
           </template>
         </p-button>
       </template>
@@ -73,7 +74,7 @@ async function deleteSeries(seriesId: string) {
 
     <template v-else>
       <div class="flex justify-end mb-3">
-        <p-input-text v-model="filters.global.value" placeholder="Search…" size="small" />
+        <p-input-text v-model="filters.global.value" placeholder="Search…" />
       </div>
 
       <p-data-table
@@ -82,7 +83,7 @@ async function deleteSeries(seriesId: string) {
         :global-filter-fields="['title', 'slug', 'description']"
         :rows="20"
         paginator
-        size="small"
+
         striped-rows
         empty-message="No series found."
       >
@@ -125,13 +126,13 @@ async function deleteSeries(seriesId: string) {
             <div class="flex gap-1 justify-end">
               <p-button
                 text
-                size="small"
+
                 severity="danger"
                 aria-label="Delete series"
                 @click="confirmDelete(row.id)"
               >
                 <template #icon>
-                  <icon name="material-symbols:delete-outline" />
+                  <icon name="material-symbols:delete-outline" class="text-lg" />
                 </template>
               </p-button>
             </div>

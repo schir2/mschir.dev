@@ -31,7 +31,8 @@ function confirmDelete(articleId: string) {
     icon: 'material-symbols:warning-outline',
     rejectLabel: 'Cancel',
     acceptLabel: 'Delete',
-    acceptClass: 'p-button-danger',
+    acceptProps: { severity: 'danger' },
+    rejectProps: { severity: 'secondary', outlined: true },
     accept: () => deleteArticle(articleId),
   })
 }
@@ -58,7 +59,7 @@ async function deleteArticle(articleId: string) {
       <template #actions>
         <p-button label="New Article" rounded severity="secondary" @click="navigateTo('/admin/articles/new')">
           <template #icon>
-            <icon name="material-symbols:add-circle" />
+            <icon name="material-symbols:add-circle" class="text-lg" />
           </template>
         </p-button>
       </template>
@@ -68,7 +69,7 @@ async function deleteArticle(articleId: string) {
 
     <template v-else>
       <div class="flex justify-end mb-3">
-        <p-input-text v-model="filters.global.value" placeholder="Search…" size="small" />
+        <p-input-text v-model="filters.global.value" placeholder="Search…" />
       </div>
 
       <p-data-table
@@ -77,7 +78,7 @@ async function deleteArticle(articleId: string) {
         :global-filter-fields="['title']"
         :rows="20"
         paginator
-        size="small"
+
         striped-rows
         empty-message="No articles found."
       >
@@ -130,24 +131,24 @@ async function deleteArticle(articleId: string) {
               <p-button
                 v-if="row.published_at"
                 text
-                size="small"
+
                 severity="secondary"
                 aria-label="View article"
                 @click="() => window.open(`/articles/${row.slug}`, '_blank', 'noopener,noreferrer')"
               >
                 <template #icon>
-                  <icon name="material-symbols:visibility-outline" />
+                  <icon name="material-symbols:visibility-outline" class="text-lg" />
                 </template>
               </p-button>
               <p-button
                 text
-                size="small"
+
                 severity="danger"
                 aria-label="Delete article"
                 @click="confirmDelete(row.id)"
               >
                 <template #icon>
-                  <icon name="material-symbols:delete-outline" />
+                  <icon name="material-symbols:delete-outline" class="text-lg" />
                 </template>
               </p-button>
             </div>

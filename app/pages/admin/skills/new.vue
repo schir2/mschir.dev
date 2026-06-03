@@ -9,7 +9,6 @@ const supabase = useSupabaseClient()
 const toast = useToast()
 
 const resolver = zodResolver(SkillInsertSchema)
-
 const proficiencyOptions = ['beginner', 'intermediate', 'advanced', 'expert'] as const
 
 const { data: categories } = await useAsyncData<SkillCategory[]>('skill-categories', async () => {
@@ -67,12 +66,7 @@ async function onSubmit({ valid, values }: { valid: boolean; values: Record<stri
 
       <p-form-field v-slot="$field" name="proficiency" class="flex flex-col gap-1">
         <label class="text-sm font-medium text-muted-color">Proficiency</label>
-        <p-select
-          v-bind="$field"
-          :options="proficiencyOptions"
-          fluid
-          class="capitalize"
-        />
+        <p-select v-bind="$field" :options="proficiencyOptions" fluid class="capitalize" />
         <small v-if="$field.invalid" class="text-red-400">{{ $field.error?.message }}</small>
       </p-form-field>
 
@@ -83,6 +77,7 @@ async function onSubmit({ valid, values }: { valid: boolean; values: Record<stri
           :options="categories ?? []"
           option-label="name"
           option-value="id"
+          filter
           show-clear
           fluid
           placeholder="None"

@@ -30,7 +30,8 @@ function confirmDelete(skillId: string) {
     icon: 'material-symbols:warning-outline',
     rejectLabel: 'Cancel',
     acceptLabel: 'Delete',
-    acceptClass: 'p-button-danger',
+    acceptProps: { severity: 'danger' },
+    rejectProps: { severity: 'secondary', outlined: true },
     accept: () => deleteSkill(skillId),
   })
 }
@@ -59,7 +60,7 @@ async function deleteSkill(skillId: string) {
       <template #actions>
         <p-button label="New Skill" rounded severity="secondary" @click="navigateTo('/admin/skills/new')">
           <template #icon>
-            <icon name="material-symbols:add-circle" />
+            <icon name="material-symbols:add-circle" class="text-lg" />
           </template>
         </p-button>
       </template>
@@ -69,7 +70,7 @@ async function deleteSkill(skillId: string) {
 
     <template v-else>
       <div class="flex justify-end mb-3">
-        <p-input-text v-model="filters.global.value" placeholder="Search…" size="small" />
+        <p-input-text v-model="filters.global.value" placeholder="Search…" />
       </div>
 
       <p-data-table
@@ -78,7 +79,7 @@ async function deleteSkill(skillId: string) {
         :global-filter-fields="['name', 'proficiency', 'icon']"
         :rows="20"
         paginator
-        size="small"
+
         striped-rows
         empty-message="No skills found."
       >
@@ -130,13 +131,13 @@ async function deleteSkill(skillId: string) {
             <div class="flex gap-1 justify-end">
               <p-button
                 text
-                size="small"
+
                 severity="danger"
                 aria-label="Delete skill"
                 @click="confirmDelete(row.id)"
               >
                 <template #icon>
-                  <icon name="material-symbols:delete-outline" />
+                  <icon name="material-symbols:delete-outline" class="text-lg" />
                 </template>
               </p-button>
             </div>

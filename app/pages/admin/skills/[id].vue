@@ -11,7 +11,6 @@ const toast = useToast()
 const confirm = useConfirm()
 
 const skillId = route.params.id as string
-
 const proficiencyOptions = ['beginner', 'intermediate', 'advanced', 'expert'] as const
 
 const { data: skill, refresh } = await useAsyncData<Skill>(`skill-${skillId}`, async () => {
@@ -77,7 +76,8 @@ function confirmDelete() {
     icon: 'material-symbols:warning-outline',
     rejectLabel: 'Cancel',
     acceptLabel: 'Delete',
-    acceptClass: 'p-button-danger',
+    acceptProps: { severity: 'danger' },
+    rejectProps: { severity: 'secondary', outlined: true },
     accept: async () => {
       const { error } = await supabase.from('skills').delete().eq('id', skillId)
       if (error) {
@@ -113,12 +113,7 @@ function confirmDelete() {
 
       <p-form-field v-slot="$field" name="proficiency" class="flex flex-col gap-1">
         <label class="text-sm font-medium text-muted-color">Proficiency</label>
-        <p-select
-          v-bind="$field"
-          :options="proficiencyOptions"
-          fluid
-          class="capitalize"
-        />
+        <p-select v-bind="$field" :options="proficiencyOptions" fluid class="capitalize" />
         <small v-if="$field.invalid" class="text-red-400">{{ $field.error?.message }}</small>
       </p-form-field>
 
@@ -129,6 +124,7 @@ function confirmDelete() {
           :options="categories ?? []"
           option-label="name"
           option-value="id"
+          filter
           show-clear
           fluid
           placeholder="None"
@@ -150,9 +146,9 @@ function confirmDelete() {
       </p-form-field>
 
       <div class="flex justify-between pt-2">
-        <p-button type="submit" label="Save" rounded severity="secondary">
+        <p-button type="submit" label="Save" rounded severity="success">
           <template #icon>
-            <icon name="material-symbols:save" />
+            <icon name="material-symbols:save" class="text-lg" />
           </template>
         </p-button>
         <p-button label="Delete" rounded severity="danger" text @click="confirmDelete">

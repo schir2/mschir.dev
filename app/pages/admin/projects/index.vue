@@ -31,7 +31,8 @@ function confirmDelete(projectId: string) {
     icon: 'material-symbols:warning-outline',
     rejectLabel: 'Cancel',
     acceptLabel: 'Delete',
-    acceptClass: 'p-button-danger',
+    acceptProps: { severity: 'danger' },
+    rejectProps: { severity: 'secondary', outlined: true },
     accept: () => deleteProject(projectId),
   })
 }
@@ -59,7 +60,7 @@ async function deleteProject(projectId: string) {
         <nuxt-link to="/admin/companies" class="text-sm text-muted-color hover:text-color underline">Manage Companies</nuxt-link>
         <p-button label="New Project" rounded severity="secondary" @click="navigateTo('/admin/projects/new')">
           <template #icon>
-            <icon name="material-symbols:add-circle" />
+            <icon name="material-symbols:add-circle" class="text-lg" />
           </template>
         </p-button>
       </template>
@@ -69,7 +70,7 @@ async function deleteProject(projectId: string) {
 
     <template v-else>
       <div class="flex justify-end mb-3">
-        <p-input-text v-model="filters.global.value" placeholder="Search…" size="small" />
+        <p-input-text v-model="filters.global.value" placeholder="Search…" />
       </div>
 
       <p-data-table
@@ -78,7 +79,7 @@ async function deleteProject(projectId: string) {
         :global-filter-fields="['name']"
         :rows="20"
         paginator
-        size="small"
+
         striped-rows
         empty-message="No projects found."
       >
@@ -115,24 +116,24 @@ async function deleteProject(projectId: string) {
             <div class="flex gap-1 justify-end">
               <p-button
                 text
-                size="small"
+
                 severity="secondary"
                 aria-label="View project"
                 @click="() => window.open(`/projects/${row.slug}`, '_blank', 'noopener,noreferrer')"
               >
                 <template #icon>
-                  <icon name="material-symbols:visibility-outline" />
+                  <icon name="material-symbols:visibility-outline" class="text-lg" />
                 </template>
               </p-button>
               <p-button
                 text
-                size="small"
+
                 severity="danger"
                 aria-label="Delete project"
                 @click="confirmDelete(row.id)"
               >
                 <template #icon>
-                  <icon name="material-symbols:delete-outline" />
+                  <icon name="material-symbols:delete-outline" class="text-lg" />
                 </template>
               </p-button>
             </div>

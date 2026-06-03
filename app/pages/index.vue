@@ -45,14 +45,14 @@ const pillars = [
   {
     icon: 'material-symbols:cloud',
     title: 'Infrastructure & Cloud',
-    description: 'Cloud architecture, networking, and security across AWS, Azure, Cloudflare, and more.'
+    description: 'Cloud architecture, networking, and security across AWS, Azure, DigitalOcean, and more.'
   },
 ]
 </script>
 
 <template>
   <div>
-    <!-- Hero: indigo + amber animated gradient, entrance animation -->
+    <!-- Hero: violet + amber animated gradient, entrance animation -->
     <section class="hero-gradient flex flex-col items-center justify-center text-center gap-6 px-6 min-h-nav-offset">
       <div class="flex flex-col items-center gap-2">
         <h1 class="text-6xl font-bold text-white fade-up-1">Marek Schir</h1>
@@ -66,7 +66,7 @@ const pillars = [
           <p-button label="See My Work" class="hero-outlined-btn" outlined/>
         </nuxt-link>
         <nuxt-link to="/contact">
-          <p-button label="Get in Touch" class="hero-solid-btn"/>
+          <p-button label="Get in Touch" class="btn-accent"/>
         </nuxt-link>
       </div>
     </section>
@@ -78,17 +78,18 @@ const pillars = [
       <div class="flex flex-col gap-6">
         <span class="text-xs uppercase tracking-widest font-medium text-muted-color">What I Build</span>
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
-          <p-card v-for="pillar in pillars" :key="pillar.title">
-            <template #title>
-              <div class="flex flex-col items-start gap-2">
-                <icon :name="pillar.icon" class="text-2xl text-primary"/>
-                <span class="text-sm font-semibold leading-tight">{{ pillar.title }}</span>
-              </div>
-            </template>
-            <template #content>
-              <p class="text-sm leading-relaxed text-muted-color">{{ pillar.description }}</p>
-            </template>
-          </p-card>
+          <div
+            v-for="pillar in pillars"
+            :key="pillar.title"
+            class="pillar-card group relative flex items-center gap-5 p-7 rounded-xl border border-surface-700 bg-surface-900 cursor-default overflow-hidden"
+          >
+            <div class="pillar-top-bar absolute inset-x-0 top-0 h-0.5"/>
+            <div class="flex flex-col gap-2 flex-1">
+              <h3 class="font-display text-2xl font-semibold leading-tight">{{ pillar.title }}</h3>
+              <p class="text-base leading-relaxed text-muted-color">{{ pillar.description }}</p>
+            </div>
+            <icon :name="pillar.icon" class="pillar-icon flex-shrink-0 text-6xl"/>
+          </div>
         </div>
       </div>
 
@@ -110,7 +111,7 @@ const pillars = [
           Got a system, workflow, or idea that needs the right technology behind it? Let's talk.
         </p>
         <nuxt-link to="/contact">
-          <p-button label="Get in Touch"/>
+          <p-button label="Get in Touch" class="btn-accent"/>
         </nuxt-link>
       </div>
 
@@ -170,10 +171,34 @@ const pillars = [
   border-color: rgba(255, 255, 255, 0.6) !important;
 }
 
-.hero-solid-btn {
-  background: #fff !important;
-  color: var(--p-primary-700) !important;
-  border-color: #fff !important;
+
+.pillar-icon {
+  color: var(--p-accent-400);
+  transition: transform 0.3s, filter 0.3s;
+}
+
+.pillar-card {
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.pillar-card:hover {
+  border-color: color-mix(in srgb, var(--p-accent-500) 50%, transparent);
+  box-shadow: 0 0 48px -8px color-mix(in srgb, var(--p-accent-500) 30%, transparent);
+}
+
+.pillar-card:hover .pillar-icon {
+  transform: scale(1.1);
+  filter: brightness(1.2);
+}
+
+.pillar-top-bar {
+  background: linear-gradient(to right, transparent, var(--p-accent-500), transparent);
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.pillar-card:hover .pillar-top-bar {
+  opacity: 1;
 }
 
 .hero-subtitle {

@@ -36,7 +36,8 @@ function confirmDelete(categoryId: string) {
     icon: 'material-symbols:warning-outline',
     rejectLabel: 'Cancel',
     acceptLabel: 'Delete',
-    acceptClass: 'p-button-danger',
+    acceptProps: { severity: 'danger' },
+    rejectProps: { severity: 'secondary', outlined: true },
     accept: () => deleteCategory(categoryId),
   })
 }
@@ -63,7 +64,7 @@ async function deleteCategory(categoryId: string) {
       <template #actions>
         <p-button label="New Category" rounded severity="secondary" @click="navigateTo('/admin/categories/new')">
           <template #icon>
-            <icon name="material-symbols:add-circle" />
+            <icon name="material-symbols:add-circle" class="text-lg" />
           </template>
         </p-button>
       </template>
@@ -73,7 +74,7 @@ async function deleteCategory(categoryId: string) {
 
     <template v-else>
       <div class="flex justify-end mb-3">
-        <p-input-text v-model="filters.global.value" placeholder="Search…" size="small" />
+        <p-input-text v-model="filters.global.value" placeholder="Search…" />
       </div>
 
       <p-data-table
@@ -82,7 +83,7 @@ async function deleteCategory(categoryId: string) {
         :global-filter-fields="['name', 'slug', 'description']"
         :rows="20"
         paginator
-        size="small"
+
         striped-rows
         empty-message="No categories found."
       >
@@ -138,13 +139,13 @@ async function deleteCategory(categoryId: string) {
             <div class="flex gap-1 justify-end">
               <p-button
                 text
-                size="small"
+
                 severity="danger"
                 aria-label="Delete category"
                 @click="confirmDelete(row.id)"
               >
                 <template #icon>
-                  <icon name="material-symbols:delete-outline" />
+                  <icon name="material-symbols:delete-outline" class="text-lg" />
                 </template>
               </p-button>
             </div>
