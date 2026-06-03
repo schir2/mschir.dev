@@ -330,6 +330,22 @@ The process that precedes all implementation work. Involves working directly wit
 ### About Page Personal Narrative
 The 2–3 paragraph personal section of the About Page. Covers: origin (started in graphics/design, shifted to software and IT via computer engineering education and Cisco certifications, grew into full-lifecycle ownership), scope (14 years spanning networking, infrastructure, software development, integrations, and automation across SMBs and field service companies), and motivation (enjoys building and creating, finds satisfaction in making people's work faster and easier). Copy is conversational and first-person, not resume-style. Tone reflects the site owner's methodical personality — does not oversell or rush.
 
+## Admin Shell Domain
+
+### Admin Section Registry
+The single source of truth for all admin pages. Defined as `ADMIN_SECTIONS` in `app/config/adminSections.ts` — a typed `as const` array of `AdminGroup` objects, each containing `AdminSection` entries. Each section carries: `label`, `to` (route path), `icon` (Iconify name), `description` (shown on the admin index page), and an optional `getPublicUrl` function that derives the public-facing URL for a given record. Consumed by the Navbar User Menu, the `/admin` index page, and the future admin sidebar. A `toMenuItems()` utility in the same file converts the registry into PrimeVue `MenuItem[]`. Every new admin page must add an entry — there is no other registration step.
+
+Current groups: **Content** (Articles, Categories, Series) · **Portfolio** (Projects, Companies, Skills) · **Inbox** (Contact Messages).
+
+### Admin List Layout
+`app/layouts/admin-list.vue`. The shell for all admin list and index pages. Provides navbar, footer, toast, dynamic-dialog, and a `max-w-6xl mx-auto px-6` page container. Pages declare `definePageMeta({ layout: 'admin-list', title: '...' })`. The title is consumed by the layout for `<head>` and by `<admin-page-header>` for display.
+
+### Admin Detail Layout
+`app/layouts/admin-detail.vue`. The shell for admin editor, create, and edit pages. Provides navbar, footer, toast, and dynamic-dialog but **no container constraint** — full-width to accommodate the split markdown editor. Pages declare `definePageMeta({ layout: 'admin-detail', title: '...' })`.
+
+### Admin Page Header
+A component (`app/components/admin/AdminPageHeader.vue`) that every admin page renders as its first child. Reads the page title from `route.meta.title` automatically and renders it on the left. Exposes a `#actions` slot for right-side buttons (e.g. "New Article"). Provides the consistent Django admin-style page header across all admin surfaces.
+
 ## Auth Domain
 
 ### Zod Schema Location

@@ -4,6 +4,7 @@
 
 Components are organized by domain subfolder. Every component belongs in the folder that matches its domain:
 
+- `admin/` — admin shell components: `AdminPageHeader`, future admin sidebar
 - `article/` — article display, editing, navigation
 - `auth/` — login, register, Turnstile, auth-related UI
 - `layout/` — navbar, header, footer, page shell
