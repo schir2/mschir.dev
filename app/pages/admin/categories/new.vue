@@ -3,25 +3,13 @@ definePageMeta({ layout: 'admin-detail', title: 'New Category' })
 
 import { zodResolver } from '@primevue/forms/resolvers/zod'
 import { ArticleCategoryInsertSchema } from '~/schemas/ArticleCategoryInsertSchema'
+import { normalizeColor } from '~/utils/normalizeColor'
 
 const supabase = useSupabaseClient()
 const toast = useToast()
+const { previewUrl: imagePreviewUrl, onFilePicked: onImageFilePicked, uploadAndGet } = useAdminImageField('images', 'category-images')
 
 const colorValue = ref<string>('')
-const stagedImageFile = ref<File | null>(null)
-const imagePreviewUrl = ref<string | null>(null)
-
-function onImageFilePicked(event: Event) {
-  const input = event.target as HTMLInputElement
-  const file = input.files?.[0] ?? null
-  stagedImageFile.value = file
-  if (file) imagePreviewUrl.value = URL.createObjectURL(file)
-}
-
-function normalizeColor(raw: string): string | null {
-  if (!raw || raw.trim() === '') return null
-  return raw.startsWith('#') ? raw : `#${raw}`
-}
 
 const resolver = zodResolver(ArticleCategoryInsertSchema)
 
@@ -29,18 +17,11 @@ async function onSubmit({ valid, values }: { valid: boolean; values: Record<stri
   if (!valid) return
 
   let imagePath: string | null = null
-  if (stagedImageFile.value) {
-    try {
-      imagePath = await useImageUpload('images', 'category-images', stagedImageFile.value, undefined)
-    }
-    catch (uploadError: unknown) {
-      const message = uploadError instanceof Error ? uploadError.message : String(uploadError)
-      toast.add({ severity: 'error', summary: 'Image upload failed', detail: message, life: 4000 })
-      return
-    }
-    finally {
-      stagedImageFile.value = null
-    }
+  try {
+    imagePath = await uploadAndGet(null)
+  }
+  catch {
+    return
   }
 
   const { data, error } = await supabase

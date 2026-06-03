@@ -47,17 +47,21 @@ export default defineNuxtConfig({
             siteUrl: process.env.SITE_URL || 'http://localhost:3000',
             port: parseInt(process.env.PORT || '3000'),
             turnstileSiteKey: '', // NUXT_PUBLIC_TURNSTILE_SITE_KEY,
-            gtagId: process.env.NUXT_PUBLIC_GTAG_ID
         }
     },
 
     gtag: {
         id: 'G-TBFLGWRP7Y',
-        enabled: true,
-        config: {
-            debug_mode: true,
-            page_title: 'My Custom Page Title'
-        }
+        enabled: process.env.NODE_ENV === 'production',
+        initCommands: [
+            ['consent', 'default', {
+                ad_storage: 'denied',
+                ad_user_data: 'denied',
+                ad_personalization: 'denied',
+                analytics_storage: 'denied',
+                wait_for_update: 500,
+            }]
+        ]
     },
 
     primevue: {

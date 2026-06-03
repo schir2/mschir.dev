@@ -59,8 +59,6 @@ async function deleteSeries(seriesId: string) {
 
 <template>
   <div class="pb-8">
-    <p-confirm-dialog />
-
     <admin-page-header>
       <template #actions>
         <p-button label="New Series" rounded severity="secondary" @click="navigateTo('/admin/series/new')">

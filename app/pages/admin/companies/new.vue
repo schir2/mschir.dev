@@ -6,16 +6,7 @@ import { CompanyInsertSchema } from '~/schemas/CompanyInsertSchema'
 
 const supabase = useSupabaseClient()
 const toast = useToast()
-
-const stagedLogoFile = ref<File | null>(null)
-const logoPreviewUrl = ref<string | null>(null)
-
-function onLogoFilePicked(event: Event) {
-  const input = event.target as HTMLInputElement
-  const file = input.files?.[0] ?? null
-  stagedLogoFile.value = file
-  if (file) logoPreviewUrl.value = URL.createObjectURL(file)
-}
+const { previewUrl: logoPreviewUrl, onFilePicked: onLogoFilePicked, uploadAndGet } = useAdminImageField('icons', 'company-logos')
 
 const resolver = zodResolver(CompanyInsertSchema)
 
@@ -23,18 +14,11 @@ async function onSubmit({ valid, values }: { valid: boolean; values: Record<stri
   if (!valid) return
 
   let logoPath: string | null = null
-  if (stagedLogoFile.value) {
-    try {
-      logoPath = await useImageUpload('icons', 'company-logos', stagedLogoFile.value, undefined)
-    }
-    catch (uploadError: unknown) {
-      const message = uploadError instanceof Error ? uploadError.message : String(uploadError)
-      toast.add({ severity: 'error', summary: 'Logo upload failed', detail: message, life: 4000 })
-      return
-    }
-    finally {
-      stagedLogoFile.value = null
-    }
+  try {
+    logoPath = await uploadAndGet(null)
+  }
+  catch {
+    return
   }
 
   const { data, error } = await supabase

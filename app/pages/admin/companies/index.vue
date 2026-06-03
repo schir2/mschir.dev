@@ -59,8 +59,6 @@ async function deleteCompany(companyId: string) {
 
 <template>
   <div class="pb-8">
-    <p-confirm-dialog />
-
     <admin-page-header>
       <template #actions>
         <p-button label="New Company" rounded severity="secondary" @click="navigateTo('/admin/companies/new')">

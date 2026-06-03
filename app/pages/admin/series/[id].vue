@@ -33,39 +33,19 @@ const initialValues = {
   author: series.value.author ?? '',
 }
 
-const imagePath = ref<string | null>(series.value.image_url)
-const stagedImageFile = ref<File | null>(null)
-const imagePreviewUrl = ref<string | null>(
-  series.value.image_url
-    ? supabase.storage.from('images').getPublicUrl(series.value.image_url).data.publicUrl
-    : null
-)
-
-function onImageFilePicked(event: Event) {
-  const input = event.target as HTMLInputElement
-  const file = input.files?.[0] ?? null
-  stagedImageFile.value = file
-  if (file) imagePreviewUrl.value = URL.createObjectURL(file)
-}
+const { previewUrl: imagePreviewUrl, onFilePicked: onImageFilePicked, uploadAndGet } = useAdminImageField('images', 'series-images', series.value.image_url)
 
 const resolver = zodResolver(ArticleSeriesUpdateSchema)
 
 async function onSubmit({ valid, values }: { valid: boolean; values: Record<string, unknown> }) {
   if (!valid) return
 
-  let newImagePath = imagePath.value
-  if (stagedImageFile.value) {
-    try {
-      newImagePath = await useImageUpload('images', 'series-images', stagedImageFile.value, imagePath.value ?? undefined)
-    }
-    catch (uploadError: unknown) {
-      const message = uploadError instanceof Error ? uploadError.message : String(uploadError)
-      toast.add({ severity: 'error', summary: 'Image upload failed', detail: message, life: 4000 })
-      return
-    }
-    finally {
-      stagedImageFile.value = null
-    }
+  let newImagePath: string | null
+  try {
+    newImagePath = await uploadAndGet(series.value?.image_url ?? null)
+  }
+  catch {
+    return
   }
 
   const { error } = await supabase
@@ -84,7 +64,6 @@ async function onSubmit({ valid, values }: { valid: boolean; values: Record<stri
     return
   }
 
-  imagePath.value = newImagePath
   toast.add({ severity: 'success', summary: 'Series saved', life: 3000 })
   await refresh()
 }
@@ -111,8 +90,6 @@ function confirmDelete() {
 
 <template>
   <div class="max-w-2xl mx-auto px-6 pt-6 pb-8">
-    <p-confirm-dialog />
-
     <admin-page-header>
       <template #actions>
         <p-button label="All Series" rounded severity="secondary" @click="navigateTo('/admin/series')">

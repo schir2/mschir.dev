@@ -31,39 +31,19 @@ const initialValues = {
   url: company.value.url ?? '',
 }
 
-const logoPath = ref<string | null>(company.value.logo_url)
-const stagedLogoFile = ref<File | null>(null)
-const logoPreviewUrl = ref<string | null>(
-  company.value.logo_url
-    ? supabase.storage.from('icons').getPublicUrl(company.value.logo_url).data.publicUrl
-    : null
-)
-
-function onLogoFilePicked(event: Event) {
-  const input = event.target as HTMLInputElement
-  const file = input.files?.[0] ?? null
-  stagedLogoFile.value = file
-  if (file) logoPreviewUrl.value = URL.createObjectURL(file)
-}
+const { previewUrl: logoPreviewUrl, onFilePicked: onLogoFilePicked, uploadAndGet } = useAdminImageField('icons', 'company-logos', company.value.logo_url)
 
 const resolver = zodResolver(CompanyUpdateSchema)
 
 async function onSubmit({ valid, values }: { valid: boolean; values: Record<string, unknown> }) {
   if (!valid) return
 
-  let newLogoPath = logoPath.value
-  if (stagedLogoFile.value) {
-    try {
-      newLogoPath = await useImageUpload('icons', 'company-logos', stagedLogoFile.value, logoPath.value ?? undefined)
-    }
-    catch (uploadError: unknown) {
-      const message = uploadError instanceof Error ? uploadError.message : String(uploadError)
-      toast.add({ severity: 'error', summary: 'Logo upload failed', detail: message, life: 4000 })
-      return
-    }
-    finally {
-      stagedLogoFile.value = null
-    }
+  let newLogoPath: string | null
+  try {
+    newLogoPath = await uploadAndGet(company.value?.logo_url ?? null)
+  }
+  catch {
+    return
   }
 
   const { error } = await supabase
@@ -80,7 +60,6 @@ async function onSubmit({ valid, values }: { valid: boolean; values: Record<stri
     return
   }
 
-  logoPath.value = newLogoPath
   toast.add({ severity: 'success', summary: 'Company saved', life: 3000 })
   await refresh()
 }
@@ -107,8 +86,6 @@ function confirmDelete() {
 
 <template>
   <div class="max-w-2xl mx-auto px-6 pt-6 pb-8">
-    <p-confirm-dialog />
-
     <admin-page-header>
       <template #actions>
         <p-button label="All Companies" rounded severity="secondary" @click="navigateTo('/admin/companies')">

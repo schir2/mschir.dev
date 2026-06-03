@@ -1,8 +1,8 @@
 <script lang="ts" setup>
-definePageMeta({ layout: 'admin-list', title: 'Categories' })
+definePageMeta({ layout: 'admin-list', title: 'Skills' })
 
 import { FilterMatchMode } from '@primevue/core/api'
-import type { ArticleCategory } from '#shared/types/ArticleCategory'
+import type { SkillWithCategory } from '#shared/types/Skill'
 
 const supabase = useSupabaseClient()
 const confirm = useConfirm()
@@ -11,57 +11,53 @@ const toast = useToast()
 const filters = ref({ global: { value: null as string | null, matchMode: FilterMatchMode.CONTAINS } })
 
 const {
-  data: categories,
-  pending: categoriesLoading,
-  refresh: refreshCategories,
-} = await useAsyncData<ArticleCategory[]>('admin-categories', async () => {
+  data: skills,
+  pending: skillsLoading,
+  refresh: refreshSkills,
+} = await useAsyncData<SkillWithCategory[]>('admin-skills', async () => {
   const { data, error } = await supabase
-    .from('article_categories')
-    .select('id, name, slug, color, description, image_url')
+    .from('skills')
+    .select('id, name, proficiency, category_id, icon, is_highlighted, skill_categories(id, name)')
     .order('name', { ascending: true })
-
   if (error) throw error
-  return data as ArticleCategory[]
+  return data as SkillWithCategory[]
 }, { lazy: true })
 
-function getCategoryImageUrl(imagePath: string | null): string | null {
-  if (!imagePath) return null
-  return supabase.storage.from('images').getPublicUrl(imagePath).data.publicUrl
-}
-
-function confirmDelete(categoryId: string) {
+function confirmDelete(skillId: string) {
   confirm.require({
-    header: 'Delete Category',
+    header: 'Delete Skill',
     message: 'This cannot be undone.',
     icon: 'material-symbols:warning-outline',
     rejectLabel: 'Cancel',
     acceptLabel: 'Delete',
     acceptClass: 'p-button-danger',
-    accept: () => deleteCategory(categoryId),
+    accept: () => deleteSkill(skillId),
   })
 }
 
-async function deleteCategory(categoryId: string) {
+async function deleteSkill(skillId: string) {
   const { error } = await supabase
-    .from('article_categories')
+    .from('skills')
     .delete()
-    .eq('id', categoryId)
+    .eq('id', skillId)
 
   if (error) {
     toast.add({ severity: 'error', summary: 'Delete failed', detail: error.message, life: 4000 })
     return
   }
 
-  toast.add({ severity: 'success', summary: 'Category deleted', life: 3000 })
-  await refreshCategories()
+  toast.add({ severity: 'success', summary: 'Skill deleted', life: 3000 })
+  await refreshSkills()
 }
 </script>
 
 <template>
   <div class="pb-8">
+    <p-confirm-dialog />
+
     <admin-page-header>
       <template #actions>
-        <p-button label="New Category" rounded severity="secondary" @click="navigateTo('/admin/categories/new')">
+        <p-button label="New Skill" rounded severity="secondary" @click="navigateTo('/admin/skills/new')">
           <template #icon>
             <icon name="material-symbols:add-circle" />
           </template>
@@ -69,7 +65,7 @@ async function deleteCategory(categoryId: string) {
       </template>
     </admin-page-header>
 
-    <p-progress-spinner v-if="categoriesLoading" />
+    <p-progress-spinner v-if="skillsLoading" />
 
     <template v-else>
       <div class="flex justify-end mb-3">
@@ -77,58 +73,54 @@ async function deleteCategory(categoryId: string) {
       </div>
 
       <p-data-table
-        :value="categories ?? []"
+        :value="skills ?? []"
         v-model:filters="filters"
-        :global-filter-fields="['name', 'slug', 'description']"
+        :global-filter-fields="['name', 'proficiency', 'icon']"
         :rows="20"
         paginator
         size="small"
         striped-rows
-        empty-message="No categories found."
+        empty-message="No skills found."
       >
-        <p-column header="Image" style="width: 4rem">
-          <template #body="{ data: row }">
-            <img
-              v-if="getCategoryImageUrl(row.image_url)"
-              :src="getCategoryImageUrl(row.image_url)!"
-              :alt="row.name"
-              class="w-10 h-10 object-cover rounded"
-            >
-            <span v-else class="text-muted-color">—</span>
-          </template>
-        </p-column>
-
         <p-column field="name" header="Name" :sortable="true">
           <template #body="{ data: row }">
             <nuxt-link
-              :to="`/admin/categories/${row.id}`"
+              :to="`/admin/skills/${row.id}`"
               class="hover:text-primary hover:underline cursor-pointer"
             >{{ row.name }}</nuxt-link>
           </template>
         </p-column>
 
-        <p-column field="slug" header="Slug" :sortable="true">
+        <p-column field="proficiency" header="Proficiency" :sortable="true">
           <template #body="{ data: row }">
-            <span class="text-muted-color font-mono text-xs">{{ row.slug || '—' }}</span>
+            <span class="capitalize">{{ row.proficiency }}</span>
           </template>
         </p-column>
 
-        <p-column header="Color" style="width: 8rem">
+        <p-column header="Category" :sortable="false">
           <template #body="{ data: row }">
-            <div v-if="row.color" class="flex items-center gap-2">
-              <span
-                class="inline-block w-4 h-4 rounded-full border border-surface-400 flex-shrink-0"
-                :style="{ backgroundColor: row.color }"
-              />
-              <span class="text-muted-color font-mono text-xs">{{ row.color }}</span>
+            <span v-if="row.skill_categories">{{ row.skill_categories.name }}</span>
+            <span v-else class="text-muted-color">—</span>
+          </template>
+        </p-column>
+
+        <p-column field="icon" header="Icon">
+          <template #body="{ data: row }">
+            <div v-if="row.icon" class="flex items-center gap-2">
+              <icon :name="row.icon" class="text-lg" />
+              <span class="text-muted-color font-mono text-xs">{{ row.icon }}</span>
             </div>
             <span v-else class="text-muted-color">—</span>
           </template>
         </p-column>
 
-        <p-column field="description" header="Description">
+        <p-column header="Highlighted" style="width: 7rem">
           <template #body="{ data: row }">
-            <span v-if="row.description" class="text-sm line-clamp-1">{{ row.description }}</span>
+            <icon
+              v-if="row.is_highlighted"
+              name="material-symbols:star"
+              class="text-primary text-lg"
+            />
             <span v-else class="text-muted-color">—</span>
           </template>
         </p-column>
@@ -140,7 +132,7 @@ async function deleteCategory(categoryId: string) {
                 text
                 size="small"
                 severity="danger"
-                aria-label="Delete category"
+                aria-label="Delete skill"
                 @click="confirmDelete(row.id)"
               >
                 <template #icon>

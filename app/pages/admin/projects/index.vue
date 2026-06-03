@@ -54,8 +54,6 @@ async function deleteProject(projectId: string) {
 
 <template>
   <div class="pb-8">
-    <p-confirm-dialog />
-
     <admin-page-header>
       <template #actions>
         <nuxt-link to="/admin/companies" class="text-sm text-muted-color hover:text-color underline">Manage Companies</nuxt-link>

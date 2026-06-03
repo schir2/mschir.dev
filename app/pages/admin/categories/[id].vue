@@ -4,6 +4,7 @@ definePageMeta({ layout: 'admin-detail', title: 'Edit Category' })
 import { zodResolver } from '@primevue/forms/resolvers/zod'
 import { ArticleCategoryUpdateSchema } from '~/schemas/ArticleCategoryUpdateSchema'
 import type { ArticleCategory } from '#shared/types/ArticleCategory'
+import { normalizeColor } from '~/utils/normalizeColor'
 
 const route = useRoute()
 const supabase = useSupabaseClient()
@@ -33,44 +34,19 @@ const initialValues = {
 }
 
 const colorValue = ref<string>(category.value.color ?? '')
-const imagePath = ref<string | null>(category.value.image_url)
-const stagedImageFile = ref<File | null>(null)
-const imagePreviewUrl = ref<string | null>(
-  category.value.image_url
-    ? supabase.storage.from('images').getPublicUrl(category.value.image_url).data.publicUrl
-    : null
-)
-
-function onImageFilePicked(event: Event) {
-  const input = event.target as HTMLInputElement
-  const file = input.files?.[0] ?? null
-  stagedImageFile.value = file
-  if (file) imagePreviewUrl.value = URL.createObjectURL(file)
-}
-
-function normalizeColor(raw: string): string | null {
-  if (!raw || raw.trim() === '') return null
-  return raw.startsWith('#') ? raw : `#${raw}`
-}
+const { previewUrl: imagePreviewUrl, onFilePicked: onImageFilePicked, uploadAndGet } = useAdminImageField('images', 'category-images', category.value.image_url)
 
 const resolver = zodResolver(ArticleCategoryUpdateSchema)
 
 async function onSubmit({ valid, values }: { valid: boolean; values: Record<string, unknown> }) {
   if (!valid) return
 
-  let newImagePath = imagePath.value
-  if (stagedImageFile.value) {
-    try {
-      newImagePath = await useImageUpload('images', 'category-images', stagedImageFile.value, imagePath.value ?? undefined)
-    }
-    catch (uploadError: unknown) {
-      const message = uploadError instanceof Error ? uploadError.message : String(uploadError)
-      toast.add({ severity: 'error', summary: 'Image upload failed', detail: message, life: 4000 })
-      return
-    }
-    finally {
-      stagedImageFile.value = null
-    }
+  let newImagePath: string | null
+  try {
+    newImagePath = await uploadAndGet(category.value?.image_url ?? null)
+  }
+  catch {
+    return
   }
 
   const { error } = await supabase
@@ -89,7 +65,6 @@ async function onSubmit({ valid, values }: { valid: boolean; values: Record<stri
     return
   }
 
-  imagePath.value = newImagePath
   toast.add({ severity: 'success', summary: 'Category saved', life: 3000 })
   await refresh()
 }
@@ -116,8 +91,6 @@ function confirmDelete() {
 
 <template>
   <div class="max-w-2xl mx-auto px-6 pt-6 pb-8">
-    <p-confirm-dialog />
-
     <admin-page-header>
       <template #actions>
         <p-button label="All Categories" rounded severity="secondary" @click="navigateTo('/admin/categories')">

@@ -6,16 +6,7 @@ import { ArticleSeriesInsertSchema } from '~/schemas/ArticleSeriesInsertSchema'
 
 const supabase = useSupabaseClient()
 const toast = useToast()
-
-const stagedImageFile = ref<File | null>(null)
-const imagePreviewUrl = ref<string | null>(null)
-
-function onImageFilePicked(event: Event) {
-  const input = event.target as HTMLInputElement
-  const file = input.files?.[0] ?? null
-  stagedImageFile.value = file
-  if (file) imagePreviewUrl.value = URL.createObjectURL(file)
-}
+const { previewUrl: imagePreviewUrl, onFilePicked: onImageFilePicked, uploadAndGet } = useAdminImageField('images', 'series-images')
 
 const resolver = zodResolver(ArticleSeriesInsertSchema)
 
@@ -23,18 +14,11 @@ async function onSubmit({ valid, values }: { valid: boolean; values: Record<stri
   if (!valid) return
 
   let imagePath: string | null = null
-  if (stagedImageFile.value) {
-    try {
-      imagePath = await useImageUpload('images', 'series-images', stagedImageFile.value, undefined)
-    }
-    catch (uploadError: unknown) {
-      const message = uploadError instanceof Error ? uploadError.message : String(uploadError)
-      toast.add({ severity: 'error', summary: 'Image upload failed', detail: message, life: 4000 })
-      return
-    }
-    finally {
-      stagedImageFile.value = null
-    }
+  try {
+    imagePath = await uploadAndGet(null)
+  }
+  catch {
+    return
   }
 
   const { data, error } = await supabase

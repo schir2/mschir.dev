@@ -123,15 +123,51 @@ const resolver = zodResolver(ArticleCategoryInsertSchema)
 
 ## Image upload
 
-Always use the `useImageUpload()` composable. Never call `supabase.storage` directly for uploads.
+Use `useAdminImageField()` for any admin form that includes an image or file upload. It encapsulates the staged-file state, preview URL, and upload error handling in one composable.
 
 ```ts
-const newPath = await useImageUpload('images', 'category-images', file, existingPath ?? undefined)
+// new.vue (no existing image)
+const { previewUrl, onFilePicked, uploadAndGet } = useAdminImageField('images', 'category-images')
+
+// [id].vue (with existing image from DB)
+const { previewUrl, onFilePicked, uploadAndGet } = useAdminImageField('images', 'category-images', entity.image_url)
 ```
 
-Reference implementation: `app/components/project/ProjectEditor.vue`.
+In `onSubmit`, call `uploadAndGet(currentPath)`:
+- Returns `currentPath` unchanged when no file was staged (no-op).
+- Uploads the staged file and returns the new path when a file was staged.
+- Toasts an error and re-throws on upload failure — catch and return early, no additional toast needed.
+
+```ts
+let newImagePath: string | null
+try {
+  newImagePath = await uploadAndGet(entity.image_url ?? null)
+} catch {
+  return  // composable already toasted the error
+}
+```
+
+Bind `previewUrl` and `onFilePicked` directly to the image input in the template:
+
+```html
+<img v-if="previewUrl" :src="previewUrl" class="w-16 h-16 object-cover rounded" />
+<input type="file" accept="image/*" @change="onFilePicked" />
+```
+
+**Do not** call `useImageUpload()` directly in page files. `useAdminImageField()` wraps it.
 
 > Note: `ArticleEditor.vue` still uses inline storage calls — that is a known deviation tracked for cleanup.
+
+## Color normalization
+
+Use `normalizeColor()` from `~/utils/normalizeColor` to convert raw color picker values before writing to the DB. It returns `null` for empty strings and prepends `#` if missing.
+
+```ts
+import { normalizeColor } from '~/utils/normalizeColor'
+// normalizeColor('ff0000') → '#ff0000'
+// normalizeColor('#ff0000') → '#ff0000'
+// normalizeColor('') → null
+```
 
 ## DataTable conventions
 
@@ -220,7 +256,7 @@ function confirmDelete(id: string) {
 }
 ```
 
-`<p-confirm-dialog>` must be present in the template (or provided by the layout).
+`<p-confirm-dialog>` is provided by both admin layouts — **do not add it to individual page templates**.
 
 ## Toast durations
 

@@ -16,6 +16,7 @@ useHead(() => ({
 <template>
   <main class="min-h-nav-offset">
     <p-toast position="top-center" />
+    <p-confirm-dialog />
     <layout-navbar />
     <dynamic-dialog />
     <div class="max-w-6xl mx-auto px-6">
