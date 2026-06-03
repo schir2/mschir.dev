@@ -84,6 +84,7 @@ export default defineNuxtConfig({
                 'RadioButton',
                 'RadioGroup',
                 'Form',
+                'FormField',
                 'Password',
                 'Button',
                 'Toast',
