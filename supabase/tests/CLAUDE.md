@@ -24,7 +24,7 @@ supabase/functions/tests/               ← Deno edge function tests (pnpm run t
 
 The local Supabase stack must be running first:
 
-```powershell
+```bash
 pnpm run supabase:start
 pnpm run test:db      # all pgTAP database tests
 pnpm run test:edge    # all Deno edge function tests

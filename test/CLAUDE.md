@@ -6,7 +6,7 @@ This file covers Vitest tests for the Nuxt application layer only. For database-
 
 Use `npx vitest run [path]` to run specific test files:
 
-```powershell
+```bash
 npx vitest run test/unit/utils/articleFilterUtils.test.ts   # single file
 npx vitest run test/nuxt/components/article/               # whole folder
 npx vitest run                                              # all tests

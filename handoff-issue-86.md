@@ -1,6 +1,6 @@
 # Handoff: mschir.dev — Issue #86 Google Analytics Integration
 
-**Project:** `C:\Users\schir\Desktop\dev\mschir.dev`
+**Project:** `/apps/mschir.dev`
 **Issue:** https://github.com/schir2/mschir.dev/issues/86
 **Status:** Implementation done, verification in progress — user restarted computer to clear stuck port 3000
 
@@ -21,7 +21,7 @@
 - `docs/adr/0014-analytics-ga4-nuxt-gtag.md` — ADR written and saved
 
 ### Package installed
-```powershell
+```bash
 pnpm add nuxt-gtag  # installed as nuxt-gtag@^4.1.0
 ```
 
@@ -98,7 +98,7 @@ DEBUG=true
 ## Known pre-existing warnings (unrelated — ignore)
 - "Plugin has already been applied" from `confirm-service.ts` and `toast-service.ts`
 - "Missing required prop: breadcrumbs" on article `[slug]` page
-- `/_nuxt/builds/meta/dev.json 404` — stale `.nuxt` cache; fix with `Remove-Item -Recurse -Force .nuxt` before `pnpm run dev`
+- `/_nuxt/builds/meta/dev.json 404` — stale `.nuxt` cache; fix with `rm -rf .nuxt` before `pnpm run dev`
 
 ---
 

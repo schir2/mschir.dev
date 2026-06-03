@@ -4,16 +4,15 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Development Environment
 
-- **OS**: Windows 10 Pro
-- **Shell**: PowerShell 7 (`pwsh`) — all commands use PowerShell syntax
-- **Path separators**: Use backslashes (`\`) in paths. In Python string literals passed to `shell -c`, backslashes must be doubled (e.g., `"C:\\Users\\schir\\..."`).
-- **Environment variables**: Read with `$env:VAR_NAME`, set with `$env:VAR_NAME = "value"` — not bash `export` syntax.
-- **Chaining commands**: Use `&&` to chain (PowerShell 7 supports this). Use `;` when you don't care if the prior step fails.
-- **No Unix-only tools**: `grep` → `Select-String`, `find` → `Get-ChildItem -Recurse`, `touch` → `New-Item`, `which` → `(Get-Command name).Source`.
+- **OS**: WSL2 (Ubuntu/Linux) on Windows 10 Pro
+- **Shell**: bash — all commands use standard bash syntax
+- **Path separators**: Use forward slashes (`/`) in paths.
+- **Environment variables**: Read with `$VAR_NAME`, set with `export VAR_NAME=value`.
+- **Chaining commands**: Use `&&` to chain. Use `;` when you don't care if the prior step fails.
 
 ## Commands
 
-```powershell
+```bash
 pnpm install          # Install dependencies
 pnpm run dev          # Start dev server at http://localhost:3000
 pnpm run build        # Build for production
@@ -34,7 +33,7 @@ nuxi typecheck            # TypeScript type check — requires pnpm approve-buil
 > **pnpm non-TTY note**: Claude Code runs without a TTY, so any pnpm command that triggers interactive prompts will fail with `ERR_PNPM_ABORTED_REMOVE_MODULES_DIR_NO_TTY` or `ERR_PNPM_IGNORED_BUILDS`. If `nuxi typecheck` or other pnpm commands fail with those errors, the user must run `pnpm approve-builds` once in their own terminal to approve build scripts for `@parcel/watcher` and `esbuild`. The `.npmrc` setting `confirm-module-purge=false` suppresses the purge prompt; the builds approval is a one-time manual step.
 
 > **supabase:types non-TTY workaround**: `pnpm run supabase:types` also fails in non-TTY environments. Use this command instead to regenerate `shared/types/database.types.ts`:
-> ```powershell
+> ```bash
 > npx supabase gen types typescript --local > shared/types/database.types.ts
 > ```
 > Similarly, `pnpm run db:reset` fails via pnpm in non-TTY but succeeds with `npx supabase db reset` directly.

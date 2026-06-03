@@ -11,7 +11,7 @@ Personal portfolio site for Marek Schir. Built with Nuxt 4, Supabase (PostgreSQL
 
 ## Development
 
-```powershell
+```bash
 pnpm install              # Install dependencies
 pnpm run supabase:start   # Start local Supabase stack (required for local dev)
 pnpm run db:reset         # Reset local DB and re-run migrations + seeds
@@ -44,7 +44,7 @@ The redirect URI in Google Console and the `redirect_uri` in `config.toml` must 
 
 ## Commands
 
-```powershell
+```bash
 pnpm run build            # Build for production
 pnpm run preview          # Preview production build
 pnpm run supabase:types   # Regenerate types/database.types.ts from schema
