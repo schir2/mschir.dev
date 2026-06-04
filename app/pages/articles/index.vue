@@ -1,7 +1,12 @@
 <script lang="ts" setup>
 import type {ArticleCardItem, ArticleCategory, ArticleSeriesSummary} from '#shared/types/Article'
 
-definePageMeta({layout: 'page'})
+definePageMeta({title: 'Articles', layout: 'page'})
+
+usePageSeo({
+  title: 'Articles',
+  description: 'Articles on software development, systems architecture, API integrations, and technology by Marek Schir.',
+})
 
 const supabase = useSupabaseClient()
 
@@ -85,7 +90,7 @@ const {
       <h2 class="text-2xl font-bold">Featured Articles</h2>
       <p-progress-spinner v-if="featuredPending"/>
       <p v-else-if="featuredError">{{ featuredError.message }}</p>
-      <div v-else class="flex flex-col gap-3">
+      <div v-else class="flex flex-col gap-4">
         <article-card
             v-for="article in featuredArticles"
             :key="article.id"
@@ -98,7 +103,7 @@ const {
       <h2 class="text-2xl font-bold">Recent Articles</h2>
       <p-progress-spinner v-if="recentPending"/>
       <p v-else-if="recentError">{{ recentError.message }}</p>
-      <div v-else class="flex flex-col gap-3">
+      <div v-else class="flex flex-col gap-4">
         <article-card
             v-for="article in recentArticles ?? []"
             :key="article.id"

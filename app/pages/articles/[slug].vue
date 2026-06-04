@@ -17,7 +17,7 @@ const {
   const {data, error} = await supabase
       .from('articles')
       .select(`
-      id, title, slug, content, image_url, published_at, archived_at,
+      id, title, slug, summary, content, image_url, published_at, archived_at,
       view_count, series_id, series_sequence_number,
       article_categories(name, slug),
       article_tags_links(article_tags(name, slug, icon)),
@@ -29,7 +29,7 @@ const {
 
   if (error) throw error
   return data
-}, {lazy: true})
+})
 
 watchEffect(() => {
   if (!articleLoading.value && article.value === null) {
@@ -63,6 +63,14 @@ const {data: seriesSiblings} = await useAsyncData<SeriesArticle[]>(
     },
     {lazy: true, watch: [() => article.value?.series_id]},
 )
+
+usePageSeo({
+  title: () => article.value?.title,
+  description: () => article.value?.summary ?? undefined,
+  image: () => heroImageUrl.value ?? undefined,
+  type: 'article',
+  publishedAt: () => article.value?.published_at ?? undefined,
+})
 
 const mdTheme = useMdEditorTheme()
 
@@ -100,7 +108,7 @@ const {previousArticle, nextArticle, allArticles} = useSeriesNavigation(
     <p-progress-spinner v-if="articleLoading"/>
     <article v-else-if="article" class="flex flex-col gap-8">
       <breadcrumb :model="breadcrumbs"/>
-      <p-message v-if="article.archived_at" role="alert" severity="secondary" class="mb-8">
+      <p-message v-if="article.archived_at" role="alert" severity="secondary">
         This article has been archived and may be outdated.
       </p-message>
 
@@ -108,15 +116,15 @@ const {previousArticle, nextArticle, allArticles} = useSeriesNavigation(
           v-if="heroImageUrl"
           :src="heroImageUrl"
           :alt="article.title"
-          class="w-full rounded-lg mb-8 object-cover max-h-80"
+          class="w-full rounded-lg object-cover max-h-80"
       />
 
-      <header>
-        <div class="flex justify-between items-start mb-4">
+      <header class="flex flex-col gap-4">
+        <div class="flex justify-between items-start">
           <h1 class="text-3xl font-bold">{{ article.title }}</h1>
           <article-admin-edit-button :article-id="article.id"/>
         </div>
-        <div class="flex flex-wrap gap-3 text-sm text-color-secondary items-center">
+        <div class="flex flex-wrap gap-4 text-sm text-color-secondary items-center">
           <span v-if="article.article_categories">
             {{ article.article_categories.name }}
           </span>
@@ -124,7 +132,7 @@ const {previousArticle, nextArticle, allArticles} = useSeriesNavigation(
           <span>{{ article.view_count }} views</span>
           <span>Marek Schir</span>
         </div>
-        <div v-if="article.article_tags_links?.length" class="flex flex-wrap gap-2 mt-3">
+        <div v-if="article.article_tags_links?.length" class="flex flex-wrap gap-2">
           <nuxt-link
               v-for="tagLink in article.article_tags_links"
               :key="tagLink.article_tags.slug"

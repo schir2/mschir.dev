@@ -12,7 +12,7 @@ const {skills} = defineProps<Props>()
     <div
       v-for="skill in skills"
       :key="skill.id"
-      class="flex flex-col items-center gap-2 p-3"
+      class="flex flex-col items-center gap-2 p-4"
     >
       <icon v-if="skill.icon" :name="skill.icon" class="text-3xl text-primary"/>
       <span class="text-xs text-center text-surface-300 leading-tight">{{ skill.name }}</span>

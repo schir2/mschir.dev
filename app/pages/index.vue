@@ -1,7 +1,12 @@
 <script lang="ts" setup>
 import type {ArticleCardItem} from '#shared/types/Article'
 
-definePageMeta({title: 'Home'})
+definePageMeta({})
+
+usePageSeo({
+  title: undefined,
+  description: 'Software Developer & Systems Architect building custom integrations, applications, and AI workflows for growing businesses.',
+})
 
 const supabase = useSupabaseClient()
 

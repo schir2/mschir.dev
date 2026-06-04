@@ -15,8 +15,8 @@ defineEmits<{
 </script>
 
 <template>
-  <div>
-    <div class="flex flex-wrap gap-2 mb-2">
+  <div class="flex flex-col gap-2">
+    <div class="flex flex-wrap gap-2">
       <button
         v-for="category in categories"
         :key="category.slug"

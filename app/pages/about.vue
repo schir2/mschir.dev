@@ -3,6 +3,11 @@ import type { ArticleCardItem } from '#shared/types/Article'
 
 definePageMeta({ title: 'About', layout: 'page' })
 
+usePageSeo({
+  title: 'About',
+  description: '14 years of experience across networking, infrastructure, software development, integrations, and automation. Get to know Marek Schir.',
+})
+
 const supabase = useSupabaseClient()
 
 const { data: recentArticles } = await useAsyncData<ArticleCardItem[]>(
@@ -29,9 +34,9 @@ const { data: recentArticles } = await useAsyncData<ArticleCardItem[]>(
 
       <!-- Name + identity + first paragraph: left two-thirds -->
       <div class="md:col-span-2 flex flex-col gap-4">
-        <div>
+        <div class="flex flex-col gap-2">
           <h1 class="text-4xl font-bold">Marek Schir</h1>
-          <p class="text-lg mt-1 text-muted-color">Software Developer & Systems Architect</p>
+          <p class="text-lg text-muted-color">Software Developer & Systems Architect</p>
         </div>
         <p class="leading-relaxed">
           I didn't take the straight path here. I started out in 3D graphics and design, moved into networking
@@ -49,7 +54,7 @@ const { data: recentArticles } = await useAsyncData<ArticleCardItem[]>(
     </div>
 
     <!-- Continued narrative: full width below the intro block -->
-    <div class="flex flex-col gap-5 max-w-2xl">
+    <div class="flex flex-col gap-4 max-w-2xl">
       <p class="leading-relaxed">
         Most of my work has been with small and medium-sized businesses: field service companies, operations-heavy
         organizations, and teams where technology needs to fit the workflow rather than reshape it. I spend a lot of
@@ -68,7 +73,7 @@ const { data: recentArticles } = await useAsyncData<ArticleCardItem[]>(
     <!-- Recent Articles -->
     <div class="flex flex-col gap-4">
       <span class="text-xs uppercase tracking-widest font-medium text-muted-color">Recent Articles</span>
-      <div class="flex flex-col gap-3">
+      <div class="flex flex-col gap-4">
         <article-card
           v-for="article in recentArticles"
           :key="article.id"
@@ -78,7 +83,7 @@ const { data: recentArticles } = await useAsyncData<ArticleCardItem[]>(
     </div>
 
     <!-- CTA -->
-    <div class="py-16 flex flex-col items-center gap-5 text-center">
+    <div class="py-16 flex flex-col items-center gap-4 text-center">
       <p class="text-lg max-w-md leading-relaxed">
         Want to work together, or just talk through a problem? I'm happy to have a conversation.
       </p>

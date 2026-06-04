@@ -6,7 +6,7 @@ defineProps<{
 </script>
 
 <template>
-  <footer class="flex justify-between mt-12 pt-6 border-t border-surface-200">
+  <footer class="flex justify-between pt-6 border-t border-surface-200">
     <nuxt-link
       v-if="previousArticle"
       :to="`/articles/${previousArticle.slug}`"

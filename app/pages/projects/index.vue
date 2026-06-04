@@ -3,6 +3,11 @@ import type { ProjectWithSkills, ProjectCardItem } from '#shared/types/Project'
 
 definePageMeta({ title: 'Projects', layout: 'page' })
 
+usePageSeo({
+  title: 'Projects',
+  description: 'Projects built by Marek Schir — software applications, API integrations, field service management, and business automation.',
+})
+
 const supabase = useSupabaseClient()
 
 const {
@@ -37,11 +42,11 @@ const projectCards = computed<ProjectCardItem[]>(() =>
 </script>
 
 <template>
-  <section>
-    <h1 class="mb-6">Projects</h1>
+  <section class="flex flex-col gap-6">
+    <h1>Projects</h1>
     <p v-if="projectsError" class="text-red-400">{{ projectsError.message }}</p>
     <p-progress-spinner v-else-if="projectsLoading" />
-    <div v-else class="flex flex-col gap-3">
+    <div v-else class="flex flex-col gap-4">
       <nuxt-link
         v-for="project in projectCards"
         :key="project.id"

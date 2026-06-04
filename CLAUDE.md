@@ -138,9 +138,11 @@ For any task that involves redesigning a visual component's layout — especiall
 
 ### Spacing & Padding
 
-**Scale**: 8-point grid — use only Tailwind values that are multiples of 8px. Valid: `p-2` (8px), `p-4` (16px), `p-6` (24px), `p-8` (32px), `p-10` (40px), `p-12` (48px), `p-16` (64px). The same applies to `gap-*`, `m-*`, `px-*`, `py-*`, `pb-*`, `pt-*`. Off-grid values (`p-3`, `p-5`, `p-7`, `gap-3`, `gap-5`, `mb-3`) are not permitted.
+**Scale — two-tier**:
+- **Layout spacing** (between components, sections, content blocks): 8-point grid only. Valid: `p-2` (8px), `p-4` (16px), `p-6` (24px), `p-8` (32px), `p-10` (40px), `p-12` (48px), `p-16` (64px). Off-grid values (`gap-3`, `gap-5`, `p-3`, `p-5`) are not permitted.
+- **Micro-spacing** (inside a single atomic UI element — a chip, badge, or icon+label pair that renders as one visual unit): 4-point grid is allowed (`py-1`, `px-2`, `gap-1`, `gap-1.5`). The boundary is: spacing *between* elements → 8-point; spacing *inside* one atomic element → 4-point.
 
-**No external margin on components**: Components must not set `mb-*` or `mt-*` to push siblings away. External spacing is the parent's responsibility via `gap` on a flex container.
+**No external margin anywhere**: Neither components nor page templates may set `mb-*` or `mt-*`. External spacing is always the parent's responsibility via `gap` on a flex container.
 
 **Admin page layer model**:
 
@@ -174,6 +176,34 @@ For any task that involves redesigning a visual component's layout — especiall
   <div class="px-6 pt-6 pb-8">
     <admin-page-header class="mb-6">...</admin-page-header>
   </div>
+</template>
+```
+
+**Public page layer model**:
+
+| Layer | Class responsibility |
+|---|---|
+| `page` layout | `px-6 pt-6 pb-8` — all outer shell padding; pages add none |
+| Page root | `flex flex-col gap-*` — gaps between top-level sections |
+| Section blocks | `flex flex-col gap-*` on their own — no `mb-*`/`mt-*` on children |
+
+```vue
+<!-- ✅ public page pattern -->
+<template>
+  <section class="flex flex-col gap-16">
+    <div class="flex flex-col gap-6">
+      <h2 class="text-2xl font-bold">Section Title</h2>
+      <some-content-component />
+    </div>
+  </section>
+</template>
+
+<!-- ❌ wrong — mb-* on h2 and no flex container -->
+<template>
+  <section>
+    <h2 class="text-2xl font-bold mb-6">Section Title</h2>
+    <some-content-component />
+  </section>
 </template>
 ```
 

@@ -5,6 +5,11 @@ import type {SkillSnapshot} from "~/types/Skill";
 
 definePageMeta({title: 'Portfolio', layout: 'page'})
 
+usePageSeo({
+  title: 'Portfolio',
+  description: 'Skills, featured projects, and recent articles from Marek Schir — software development, API integrations, and infrastructure.',
+})
+
 const supabase = useSupabaseClient()
 
 const {data: highlightedSkills} = await useAsyncData<SkillSnapshot[]>(
@@ -69,15 +74,15 @@ const {data: featuredArticles} = await useAsyncData<ArticleCardItem[]>(
   <section class="flex flex-col gap-16">
 
     <!-- Skills Snapshot -->
-    <div>
-      <h2 class="text-2xl font-bold mb-6">Skills</h2>
+    <div class="flex flex-col gap-6">
+      <h2 class="text-2xl font-bold">Skills</h2>
       <portfolio-skills-snapshot v-if="highlightedSkills?.length" :skills="highlightedSkills"/>
     </div>
 
     <!-- Featured Projects -->
-    <div v-if="featuredProjectCards.length">
-      <h2 class="text-2xl font-bold mb-6">Featured Projects</h2>
-      <div class="flex flex-col gap-3">
+    <div v-if="featuredProjectCards.length" class="flex flex-col gap-6">
+      <h2 class="text-2xl font-bold">Featured Projects</h2>
+      <div class="flex flex-col gap-4">
         <nuxt-link
             v-for="project in featuredProjectCards"
             :key="project.id"
@@ -90,9 +95,9 @@ const {data: featuredArticles} = await useAsyncData<ArticleCardItem[]>(
     </div>
 
     <!-- Featured Articles -->
-    <div v-if="featuredArticles?.length">
-      <h2 class="text-2xl font-bold mb-6">Featured Articles</h2>
-      <div class="flex flex-col gap-3">
+    <div v-if="featuredArticles?.length" class="flex flex-col gap-6">
+      <h2 class="text-2xl font-bold">Featured Articles</h2>
+      <div class="flex flex-col gap-4">
         <article-card
             v-for="article in featuredArticles"
             :key="article.id"

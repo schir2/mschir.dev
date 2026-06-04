@@ -7,10 +7,12 @@ defineProps<{
 </script>
 
 <template>
-  <aside class="border border-surface-200 rounded-lg p-4 mb-8">
-    <h2 class="font-semibold text-lg mb-1">Series: {{ series.title }}</h2>
-    <p v-if="series.description" class="text-sm text-color-secondary mb-3">{{ series.description }}</p>
-    <ol class="space-y-1">
+  <aside class="border border-surface-200 rounded-lg p-4 flex flex-col gap-4">
+    <div class="flex flex-col gap-2">
+      <h2 class="font-semibold text-lg">Series: {{ series.title }}</h2>
+      <p v-if="series.description" class="text-sm text-color-secondary">{{ series.description }}</p>
+    </div>
+    <ol class="flex flex-col gap-2">
       <li v-for="seriesArticle in allArticles" :key="seriesArticle.id">
         <nuxt-link
           :to="`/articles/${seriesArticle.slug}`"

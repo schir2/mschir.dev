@@ -24,7 +24,7 @@ const {
       .maybeSingle()
   if (error) throw error
   return data as ProjectDetail | null
-}, {lazy: true})
+})
 
 watchEffect(() => {
   if (!projectLoading.value && project.value === null) {
@@ -37,6 +37,12 @@ const heroImageUrl = computed<string | null>(() => {
   if (!path) return null
   if (path.startsWith('http://') || path.startsWith('https://')) return path
   return supabase.storage.from('images').getPublicUrl(path).data.publicUrl
+})
+
+usePageSeo({
+  title: () => project.value?.name,
+  description: () => project.value?.summary ?? undefined,
+  image: () => heroImageUrl.value ?? undefined,
 })
 
 const mdTheme = useMdEditorTheme()

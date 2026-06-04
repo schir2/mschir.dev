@@ -23,7 +23,7 @@ export type ArticleListItem = Pick<Article, 'id' | 'title' | 'slug' | 'author' |
 }
 
 export type ArticleDetail = Pick<Article,
-    'id' | 'title' | 'slug' | 'content' | 'image_url' | 'published_at' | 'archived_at' |
+    'id' | 'title' | 'slug' | 'summary' | 'content' | 'image_url' | 'published_at' | 'archived_at' |
     'view_count' | 'series_id' | 'series_sequence_number'
 > & {
     article_categories: Pick<ArticleCategory, 'name' | 'slug'> | null

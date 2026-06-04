@@ -23,13 +23,17 @@ const {
     if (error) throw error
     return data
   },
-  { lazy: true },
 )
 
 watchEffect(() => {
   if (!seriesPending.value && seriesData.value === null) {
     throw createError({ statusCode: 404, message: 'Series not found' })
   }
+})
+
+usePageSeo({
+  title: () => seriesData.value?.title,
+  description: () => seriesData.value?.description ?? undefined,
 })
 
 const {

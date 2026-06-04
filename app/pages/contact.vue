@@ -7,6 +7,11 @@ import type {ContactReason} from "#shared/types/ContactReason";
 
 definePageMeta({title: 'Contact', layout: 'page'})
 
+usePageSeo({
+  title: 'Contact',
+  description: 'Get in touch with Marek Schir for software development, API integrations, AI workflow consulting, and other project inquiries.',
+})
+
 const supabase = useSupabaseClient()
 const toast = useToast()
 
@@ -63,8 +68,8 @@ async function onFormSubmit(event: FormSubmitEvent) {
 
       <!-- Left: pitch -->
       <div class="flex flex-col gap-6">
-        <div>
-          <h1 class="text-4xl font-bold mb-4">Get in Touch</h1>
+        <div class="flex flex-col gap-4">
+          <h1 class="text-4xl font-bold">Get in Touch</h1>
           <p class="text-surface-300 text-lg leading-relaxed">
             Got a project in mind? Whether it's connecting systems you already have, building
             something new, or exploring what AI can do for your workflow — I'd love to hear from you.
@@ -96,7 +101,7 @@ async function onFormSubmit(event: FormSubmitEvent) {
           :resolver="resolver"
           :initialValues="initialValues"
           @submit="onFormSubmit"
-          class="flex flex-col gap-5"
+          class="flex flex-col gap-4"
       >
         <div class="flex flex-col gap-1">
           <label class="text-sm font-medium">Name</label>

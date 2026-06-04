@@ -38,7 +38,7 @@ function confirmPublish() {
     rejectLabel: 'Cancel',
     acceptProps: { severity: 'success' },
     rejectProps: { severity: 'secondary', outlined: true },
-    accept: () => togglePublished(true),
+    accept: async () => { togglePublished(true); await save() },
   })
 }
 
@@ -51,7 +51,7 @@ function confirmUnpublish() {
     rejectLabel: 'Cancel',
     acceptProps: { severity: 'danger' },
     rejectProps: { severity: 'secondary', outlined: true },
-    accept: () => togglePublished(false),
+    accept: async () => { togglePublished(false); await save() },
   })
 }
 
@@ -396,8 +396,6 @@ async function createSeries() {
 
 <template>
   <div class="flex flex-col" :style="{ height: '100dvh' }">
-    <p-confirm-dialog />
-
     <!-- Toolbar -->
     <div class="flex items-center gap-3 px-4 py-3 border-b shrink-0">
       <p-button

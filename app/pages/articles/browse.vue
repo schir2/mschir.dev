@@ -1,7 +1,12 @@
 <script lang="ts" setup>
 import type {ArticleCardItem, ArticleCategory, ArticleTag} from '#shared/types/Article'
 
-definePageMeta({layout: 'page'})
+definePageMeta({title: 'Browse Articles', layout: 'page'})
+
+usePageSeo({
+  title: 'Browse Articles',
+  description: 'Browse all articles by Marek Schir. Filter by category and tags to find content on software development, integrations, and more.',
+})
 
 const supabase = useSupabaseClient()
 const route = useRoute()
@@ -132,7 +137,7 @@ function onTagsUpdate(slugs: string[]) {
       </p>
       <div
           v-else
-          :class="listColumns === 2 ? 'grid grid-cols-1 sm:grid-cols-2 gap-3' : 'flex flex-col gap-3'"
+          :class="listColumns === 2 ? 'grid grid-cols-1 sm:grid-cols-2 gap-4' : 'flex flex-col gap-4'"
       >
         <article-card
             v-for="article in filteredArticles"

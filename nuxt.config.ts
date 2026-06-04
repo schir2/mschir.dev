@@ -9,10 +9,25 @@ export default defineNuxtConfig({
     devtools: {enabled: true},
     modules: ['@nuxt/icon', '@nuxtjs/supabase', '@nuxtjs/tailwindcss', '@primevue/nuxt-module', '@pinia/nuxt', '@nuxtjs/turnstile', '@nuxt/test-utils/module', 'nuxt-gtag', '@nuxtjs/seo'],
 
+    site: {
+        url: process.env.SITE_URL || 'https://mschir.dev',
+        name: 'Marek Schir',
+        description: 'Software and integrations for growing businesses.',
+        defaultLocale: 'en',
+    },
+
+    robots: {
+        robotsTxt: true,
+        disallow: ['/admin', '/login', '/register', '/callback', '/prototype'],
+    },
+
+    sitemap: {
+        sources: ['/api/__sitemap__/urls'],
+    },
+
     app: {
         pageTransition: {name: 'page', mode: 'out-in'},
         head: {
-            title: 'mschir.dev',
             htmlAttrs: {
                 lang: 'en',
                 class: 'dark-mode',
@@ -42,7 +57,7 @@ export default defineNuxtConfig({
         turnstileSecretKey: '',   // NUXT_TURNSTILE_SECRET_KEY
         resendApiKey: '',         // NUXT_RESEND_API_KEY
         public: {
-            appName: 'Marek Schir  Portfolio',
+            appName: 'Marek Schir Portfolio',
             defaultTitle: 'Marek Schir Developer Portfolio Site',
             siteUrl: process.env.SITE_URL || 'http://localhost:3000',
             port: parseInt(process.env.PORT || '3000'),
