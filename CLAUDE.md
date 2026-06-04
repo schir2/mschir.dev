@@ -57,7 +57,9 @@ This is a **Nuxt 4** personal portfolio site (mschir.dev) backed by **Supabase**
 
 ### Key patterns
 
-**Data fetching** — pages call `useSupabaseClient()` directly inside `useAsyncData()` with `lazy: true`. There is no intermediate service/store layer for reads.
+**Data fetching** — pages call `useSupabaseClient()` directly inside `useAsyncData()` with `lazy: true`. There is no intermediate service/store layer for reads. Exception: article and project detail pages omit `lazy: true` so SSR can await the data and populate meta tags before sending HTML to crawlers.
+
+**SEO** — every public page calls `usePageSeo({ title, description, image?, type?, publishedAt? })` from `~/composables/usePageSeo`. It sets the `<title>` (with `titleTemplate`), all `og:*` and `twitter:*` meta tags, and the canonical link. Admin, auth, and prototype routes are noindexed via `nuxt-robots` and must not call `usePageSeo`. See `app/pages/CLAUDE.md` for the full pattern and `docs/adr/0021-seo-strategy.md` for the decision record.
 
 **Type flow** — Supabase generates `shared/types/database.types.ts`. Domain type files in `shared/types/` create named aliases (e.g. `export type Project = Database['public']['Tables']['projects']['Row']`). Components import from those aliases, not from `database.types.ts` directly. Three tiers: `shared/types/` (DB-derived, server+client), `app/types/` (frontend-only exported), local (unexported, single-file). See `shared/types/CLAUDE.md` and `app/types/CLAUDE.md`.
 

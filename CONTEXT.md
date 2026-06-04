@@ -213,17 +213,17 @@ All `/admin/**` routes are guarded by a global Nuxt route middleware (`middlewar
 ### Homepage
 The `/` route. First impression for all visitors. Leads with value — what gets built and who it helps — not personal narrative (that's `/about`). Drives visitors toward `/portfolio` and `/contact`.
 
-**Sections** (in order): (1) Hero — name + subtitle + headline + two CTAs, (2) Service Pillars — 2×2 `<p-card>` grid, (3) Recent Articles — latest 3 published from DB (borderless link list), (4) Bottom CTA.
+**Sections** (in order): (1) Hero — name + subtitle + headline + two CTAs, (2) Service Pillars — 2×2 custom card grid, (3) Recent Articles — latest 3 published from DB (borderless link list), (4) Bottom CTA.
 
 **Hero name**: "Marek Schir" (h1, `text-6xl`, Fraunces)
 **Hero subtitle**: "Software Developer & Systems Architect" (`text-2xl`)
 **Hero headline**: *"Building the software and systems that make businesses run better."* (`text-xl`)
 **Hero CTAs**: Two buttons — "See My Work" (outlined) → `/portfolio` and "Get in Touch" (filled) → `/contact`.
-**Hero visual**: Full-bleed animated gradient — `--p-primary-950` → `--p-primary-800` → amber `#92400e` (placeholder hex; replace with `var(--p-accent-800)` once accent tokens are confirmed available). Entrance animation staggers name, subtitle, headline, buttons in on load.
+**Hero visual**: Full-bleed animated gradient — `--p-primary-950` → `--p-primary-800` → `var(--p-accent-800)`. Entrance animation staggers name, subtitle, headline, buttons in on load.
 
 **Bottom CTA copy**: *"Got a system, workflow, or idea that needs the right technology behind it? Let's talk."* Button: "Get in Touch" → `/contact`.
 
-**Typography**: Tracked in issue #57. Two-font system: **Fraunces** (serif, display) + **Inter** (sans-serif, body). Fraunces applies to `h1` and `h2` only — hero name, article titles, major section breaks. `h3` and below use Inter. Implementation spans PrimeVue theme, Tailwind config, and md-editor override (`#article-detail .md-editor-preview h1, h2`).
+**Heading structure**: Hero h1 is the only `<h1>`. Section eyebrow labels ("What I Build", "Recent Articles") are plain `<span>` elements — visual decoration only, not semantic headings. Service pillar titles are `<h2>` (Fraunces applied via the global h1/h2 rule). See `app/pages/CLAUDE.md` for the full heading convention. See ADR-0009 for the typography system.
 
 ## Site Design Domain
 

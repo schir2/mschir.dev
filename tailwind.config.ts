@@ -12,6 +12,7 @@ function withOpacity(variableName) {
 
 export default {
   content: [],
+  darkMode: ['selector', '.dark-mode'],
   theme: {
     extend: {
       fontFamily: {

@@ -5,6 +5,13 @@ import { toMenuItems } from '~/config/adminSections'
 const user = useSupabaseUser()
 const router = useRouter()
 const supabase = useSupabaseClient()
+const colorMode = useColorMode()
+
+const isDark = computed(() => colorMode.value === 'dark')
+
+function toggleColorMode() {
+  colorMode.preference = isDark.value ? 'light' : 'dark'
+}
 
 const isAdmin = computed(() => user.value?.app_metadata?.role === 'admin')
 
@@ -91,6 +98,11 @@ onUnmounted(() => window.removeEventListener('scroll', handleScroll))
                 </template>
               </p-button>
             </a>
+            <p-button text rounded :aria-label="isDark ? 'Switch to light mode' : 'Switch to dark mode'" @click="toggleColorMode">
+              <template #icon>
+                <icon :name="isDark ? 'material-symbols:light-mode' : 'material-symbols:dark-mode'"/>
+              </template>
+            </p-button>
           </div>
           <client-only>
             <template v-if="user">
