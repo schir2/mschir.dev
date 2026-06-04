@@ -25,7 +25,7 @@ Every agent must follow these rules:
 | Pure functions, utils, helpers | `test/unit/` | Vitest (no Nuxt runtime) |
 | Components, composables, store-dependent code | `test/nuxt/` | `@nuxt/test-utils` + Vitest |
 | Shared mocks and test setup | `test/helpers/` | — |
-| Pages | — | **Not tested at page level** — extract logic into composables or utils instead. See issue [#47](https://github.com/schir2/mschir.dev/issues/47) to set up proper page-test infrastructure later. |
+| Pages | `test/nuxt/pages/` | `@nuxt/test-utils` + Vitest — same `nuxt` environment as components |
 
 ## Naming conventions
 
@@ -40,6 +40,48 @@ Every agent must follow these rules:
 - Mount with `@nuxt/test-utils` `mountSuspended()` for components that use Nuxt composables
 - Test props, emits, and user interactions — not implementation details
 - Follow TDD: write failing tests before implementing the component
+
+## Page test pattern
+
+Page tests live under `test/nuxt/pages/`, mirroring the source path (e.g. `app/pages/articles/browse.vue` → `test/nuxt/pages/articles/browse.test.ts`).
+
+Use the `mountPage` helper from `test/helpers/page.ts` — it wraps `mountSuspended`, injects the route, waits for lazy async data via `flushPromises()`, and returns `{ wrapper, router }`:
+
+```typescript
+import { vi } from 'vitest'
+import { mountPage } from '#tests/helpers/page'
+import BrowsePage from '../../../../app/pages/articles/browse.vue'
+
+it('renders categories from Supabase', async () => {
+  const { wrapper } = await mountPage(BrowsePage)
+  // Real Supabase calls resolve after mountPage returns — use vi.waitFor for data assertions
+  await vi.waitFor(() => expect(wrapper.text()).toContain('Web Development'))
+})
+
+it('seeds active category from query param', async () => {
+  const { wrapper } = await mountPage(BrowsePage, { query: { category: 'web-development' } })
+  await vi.waitFor(() =>
+    expect(wrapper.findComponent(CategoryTagFilter).props('modelCategory')).toBe('web-development'),
+  )
+})
+
+it('calls router.replace when a filter is updated', async () => {
+  const { wrapper, router } = await mountPage(BrowsePage)
+  await vi.waitFor(() => wrapper.findComponent(CategoryTagFilter).exists())
+  await wrapper.findComponent(CategoryTagFilter).vm.$emit('update:modelCategory', 'web-development')
+  expect(router.replace).toHaveBeenCalledWith({ query: { category: 'web-development' } })
+})
+```
+
+**`vi.waitFor` is required for assertions on Supabase data.** Pages use `useAsyncData({ lazy: true })`, which defers the fetch past the initial render. `mountPage` calls `flushPromises()` to drain the microtask queue, but the real HTTP response arrives later in the I/O phase — `flushPromises()` exits before it lands. Wrap any assertion that depends on loaded data in `vi.waitFor(() => ...)`. Assertions on route state (e.g. `router.replace` call args after a user interaction) do not need `vi.waitFor` once you've confirmed the data-dependent component is rendered.
+
+**Auth:** `mountPage` is auth-agnostic. Wrap the suite in `describeAuthenticated` for pages that query RLS-protected data (e.g. admin pages). Leave it as plain `describe` for public pages — this explicitly tests that anonymous RLS reads work.
+
+**Do not mock `useSupabaseClient` in page tests.** Mocks hide RLS bugs and wrong queries. Real Supabase is what catches these. See [ADR-0020](../docs/adr/0020-page-test-infrastructure.md).
+
+**Prerequisites** (same as composable tests):
+1. `pnpm run supabase:start`
+2. `pnpm run db:reset`
 
 ## Integration tests against local Supabase
 

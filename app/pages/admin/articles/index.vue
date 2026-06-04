@@ -54,7 +54,7 @@ async function deleteArticle(articleId: string) {
 </script>
 
 <template>
-  <div class="pb-8">
+  <div class="flex flex-col gap-8 pb-8">
     <admin-page-header>
       <template #actions>
         <p-button label="New Article" rounded severity="secondary" @click="navigateTo('/admin/articles/new')">
@@ -67,8 +67,8 @@ async function deleteArticle(articleId: string) {
 
     <p-progress-spinner v-if="articlesLoading" />
 
-    <template v-else>
-      <div class="flex justify-end mb-3">
+    <div v-else class="flex flex-col gap-4">
+      <div class="flex justify-end">
         <p-input-text v-model="filters.global.value" placeholder="Search…" />
       </div>
 
@@ -155,6 +155,6 @@ async function deleteArticle(articleId: string) {
           </template>
         </p-column>
       </p-data-table>
-    </template>
+    </div>
   </div>
 </template>

@@ -47,7 +47,7 @@ async function onSubmit({ valid, values }: { valid: boolean; values: Record<stri
 </script>
 
 <template>
-  <div class="max-w-2xl mx-auto px-6 pt-6 pb-8">
+  <div class="flex flex-col gap-8 max-w-2xl mx-auto px-6 pb-8">
     <admin-page-header>
       <template #actions>
         <p-button label="All Categories" rounded severity="secondary" @click="navigateTo('/admin/categories')">
@@ -58,7 +58,7 @@ async function onSubmit({ valid, values }: { valid: boolean; values: Record<stri
       </template>
     </admin-page-header>
 
-    <p-form :resolver="resolver" class="flex flex-col gap-5" @submit="onSubmit">
+    <p-form :resolver="resolver" class="flex flex-col gap-6" @submit="onSubmit">
       <p-form-field v-slot="$field" name="name" class="flex flex-col gap-1">
         <label class="text-sm font-medium text-muted-color">Name</label>
         <p-input-text v-bind="$field" fluid />
@@ -79,7 +79,7 @@ async function onSubmit({ valid, values }: { valid: boolean; values: Record<stri
 
       <div class="flex flex-col gap-1">
         <label class="text-sm font-medium text-muted-color">Color</label>
-        <div class="flex items-center gap-3">
+        <div class="flex items-center gap-4">
           <p-color-picker v-model="colorValue" />
           <span class="text-muted-color font-mono text-sm">{{ normalizeColor(colorValue) ?? 'none' }}</span>
         </div>

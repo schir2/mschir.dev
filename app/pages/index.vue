@@ -81,7 +81,7 @@ const pillars = [
           <div
             v-for="pillar in pillars"
             :key="pillar.title"
-            class="pillar-card group relative flex items-center gap-5 p-7 rounded-xl border border-surface-700 bg-surface-900 cursor-default overflow-hidden"
+            class="pillar-card group relative flex items-center gap-6 p-6 rounded-xl border border-surface-700 bg-surface-900 cursor-default overflow-hidden"
           >
             <div class="pillar-top-bar absolute inset-x-0 top-0 h-0.5"/>
             <div class="flex flex-col gap-2 flex-1">
@@ -96,7 +96,7 @@ const pillars = [
       <!-- Recent Articles -->
       <div v-if="recentArticles?.length" class="flex flex-col gap-4">
         <span class="text-xs uppercase tracking-widest font-medium text-muted-color">Recent Articles</span>
-        <div class="flex flex-col gap-3">
+        <div class="flex flex-col gap-4">
           <article-card
               v-for="article in recentArticles"
               :key="article.id"
@@ -106,7 +106,7 @@ const pillars = [
       </div>
 
       <!-- Bottom CTA -->
-      <div class="py-16 flex flex-col items-center gap-5 text-center">
+      <div class="py-16 flex flex-col items-center gap-6 text-center">
         <p class="text-lg max-w-lg leading-relaxed">
           Got a system, workflow, or idea that needs the right technology behind it? Let's talk.
         </p>

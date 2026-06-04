@@ -7,7 +7,7 @@ export default defineNuxtConfig({
         '#tests': fileURLToPath(new URL('./test', import.meta.url)),
     },
     devtools: {enabled: true},
-    modules: ['@nuxt/icon', '@nuxtjs/supabase', '@nuxtjs/tailwindcss', '@primevue/nuxt-module', '@pinia/nuxt', '@nuxtjs/turnstile', '@nuxt/test-utils/module', 'nuxt-gtag'],
+    modules: ['@nuxt/icon', '@nuxtjs/supabase', '@nuxtjs/tailwindcss', '@primevue/nuxt-module', '@pinia/nuxt', '@nuxtjs/turnstile', '@nuxt/test-utils/module', 'nuxt-gtag', '@nuxtjs/seo'],
 
     app: {
         pageTransition: {name: 'page', mode: 'out-in'},

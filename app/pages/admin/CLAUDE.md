@@ -45,22 +45,44 @@ Never invent a bespoke page header. Component: `app/components/admin/AdminPageHe
 
 ## Page padding
 
-The `admin-list` layout already provides horizontal padding (`px-6`) and the `<admin-page-header>` component provides top padding (`pt-6`). Do not add redundant padding in page wrapper divs.
+The `admin-list` layout provides horizontal padding (`px-6`) and `<admin-page-header>` provides top padding (`pt-6`). Page wrappers use `flex flex-col gap-8` so the header-to-content gap is automatic — `AdminPageHeader` must not set `mb-*`.
+
+**List pages** — the outer wrapper is the gap+bottom container; search + table are grouped inside a nested div:
 
 ```vue
-<!-- ✅ correct — layout handles px, header handles pt -->
+<!-- ✅ list page -->
 <template>
-  <admin-page-header>...</admin-page-header>
-  <div class="pb-8">
-    <!-- page content -->
+  <div class="flex flex-col gap-8 pb-8">
+    <admin-page-header>...</admin-page-header>
+    <p-progress-spinner v-if="loading" />
+    <div v-else class="flex flex-col gap-4">
+      <div class="flex justify-end">
+        <p-input-text v-model="filters.global.value" placeholder="Search…" />
+      </div>
+      <p-data-table .../>
+    </div>
   </div>
 </template>
+```
 
-<!-- ❌ wrong — p-6 double-pads horizontally and overwrites header top spacing -->
+**Detail/create pages** — same principle; add `max-w-2xl mx-auto px-6` since `admin-detail` layout provides no container:
+
+```vue
+<!-- ✅ detail page -->
 <template>
-  <div class="p-6">
-    <div class="flex justify-between ...">...</div>
-    <!-- page content -->
+  <div class="flex flex-col gap-8 max-w-2xl mx-auto px-6 pb-8">
+    <admin-page-header>...</admin-page-header>
+    <p-form class="flex flex-col gap-6" ...>...</p-form>
+  </div>
+</template>
+```
+
+```vue
+<!-- ❌ wrong — pt-6 double-pads with header; flat pb-8 without gap loses the header separation -->
+<template>
+  <div class="px-6 pt-6 pb-8">
+    <admin-page-header>...</admin-page-header>
+    <div class="pb-8">...</div>
   </div>
 </template>
 ```
@@ -196,7 +218,7 @@ const filters = ref({ global: { value: null, matchMode: FilterMatchMode.CONTAINS
 </script>
 
 <template>
-  <div class="flex justify-end mb-3">
+  <div class="flex justify-end">
     <p-input-text v-model="filters['global'].value" placeholder="Search…" size="small" />
   </div>
   <p-data-table v-model:filters="filters" :global-filter-fields="['title', 'status']" ...>

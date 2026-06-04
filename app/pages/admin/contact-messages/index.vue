@@ -67,7 +67,7 @@ async function deleteMessage(messageId: string) {
 </script>
 
 <template>
-  <div class="pb-8">
+  <div class="flex flex-col gap-8 pb-8">
     <p-confirm-dialog />
 
     <p-dialog
@@ -100,8 +100,8 @@ async function deleteMessage(messageId: string) {
 
     <p-progress-spinner v-if="messagesLoading" />
 
-    <template v-else>
-      <div class="flex justify-end mb-3">
+    <div v-else class="flex flex-col gap-4">
+      <div class="flex justify-end">
         <p-input-text v-model="filters.global.value" placeholder="Search…" />
       </div>
 
@@ -171,6 +171,6 @@ async function deleteMessage(messageId: string) {
           </template>
         </p-column>
       </p-data-table>
-    </template>
+    </div>
   </div>
 </template>

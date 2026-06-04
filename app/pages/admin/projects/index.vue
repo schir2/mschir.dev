@@ -54,7 +54,7 @@ async function deleteProject(projectId: string) {
 </script>
 
 <template>
-  <div class="pb-8">
+  <div class="flex flex-col gap-8 pb-8">
     <admin-page-header>
       <template #actions>
         <nuxt-link to="/admin/companies" class="text-sm text-muted-color hover:text-color underline">Manage Companies</nuxt-link>
@@ -68,8 +68,8 @@ async function deleteProject(projectId: string) {
 
     <p-progress-spinner v-if="projectsLoading" />
 
-    <template v-else>
-      <div class="flex justify-end mb-3">
+    <div v-else class="flex flex-col gap-4">
+      <div class="flex justify-end">
         <p-input-text v-model="filters.global.value" placeholder="Search…" />
       </div>
 
@@ -140,6 +140,6 @@ async function deleteProject(projectId: string) {
           </template>
         </p-column>
       </p-data-table>
-    </template>
+    </div>
   </div>
 </template>

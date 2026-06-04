@@ -136,6 +136,47 @@ For any task that involves redesigning a visual component's layout — especiall
 
 ## Code Style
 
+### Spacing & Padding
+
+**Scale**: 8-point grid — use only Tailwind values that are multiples of 8px. Valid: `p-2` (8px), `p-4` (16px), `p-6` (24px), `p-8` (32px), `p-10` (40px), `p-12` (48px), `p-16` (64px). The same applies to `gap-*`, `m-*`, `px-*`, `py-*`, `pb-*`, `pt-*`. Off-grid values (`p-3`, `p-5`, `p-7`, `gap-3`, `gap-5`, `mb-3`) are not permitted.
+
+**No external margin on components**: Components must not set `mb-*` or `mt-*` to push siblings away. External spacing is the parent's responsibility via `gap` on a flex container.
+
+**Admin page layer model**:
+
+| Layer | Class responsibility |
+|---|---|
+| `admin-list` layout | `px-6` — horizontal edges |
+| `AdminPageHeader` | `pt-6 pb-4` — internal only, no `mb-*` |
+| Page wrapper (list pages) | `flex flex-col gap-8 pb-8` |
+| Page wrapper (detail pages) | `flex flex-col gap-8 max-w-2xl mx-auto px-6 pb-8` |
+| Individual components | Internal padding only — never compensate for outer context |
+
+```vue
+<!-- ✅ list page wrapper -->
+<template>
+  <div class="flex flex-col gap-8 pb-8">
+    <admin-page-header>...</admin-page-header>
+    <div><!-- page content --></div>
+  </div>
+</template>
+
+<!-- ✅ detail page wrapper -->
+<template>
+  <div class="flex flex-col gap-8 max-w-2xl mx-auto px-6 pb-8">
+    <admin-page-header>...</admin-page-header>
+    <p-form class="flex flex-col gap-6" ...><!-- form fields --></p-form>
+  </div>
+</template>
+
+<!-- ❌ wrong — pt-6 double-pads with header; mb-* leaks outside component box -->
+<template>
+  <div class="px-6 pt-6 pb-8">
+    <admin-page-header class="mb-6">...</admin-page-header>
+  </div>
+</template>
+```
+
 ### Color roles — primary vs accent
 
 Two semantic colors serve distinct purposes. Never swap them:
@@ -172,7 +213,7 @@ Use scoped CSS with `var(--p-accent-*)` tokens for all hover color values — do
 The canonical layout for service pillar cards is a horizontal strip:
 
 ```html
-<div class="pillar-card group relative flex items-center gap-5 p-7 rounded-xl border border-surface-700 bg-surface-900 overflow-hidden">
+<div class="pillar-card group relative flex items-center gap-6 p-6 rounded-xl border border-surface-700 bg-surface-900 overflow-hidden">
   <div class="pillar-top-bar absolute inset-x-0 top-0 h-0.5"/>
   <div class="flex flex-col gap-2 flex-1">
     <h3 class="font-display text-2xl font-semibold leading-tight">{{ title }}</h3>

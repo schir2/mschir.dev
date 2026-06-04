@@ -53,7 +53,7 @@ async function deleteSkill(skillId: string) {
 </script>
 
 <template>
-  <div class="pb-8">
+  <div class="flex flex-col gap-8 pb-8">
     <p-confirm-dialog />
 
     <admin-page-header>
@@ -68,8 +68,8 @@ async function deleteSkill(skillId: string) {
 
     <p-progress-spinner v-if="skillsLoading" />
 
-    <template v-else>
-      <div class="flex justify-end mb-3">
+    <div v-else class="flex flex-col gap-4">
+      <div class="flex justify-end">
         <p-input-text v-model="filters.global.value" placeholder="Search…" />
       </div>
 
@@ -144,6 +144,6 @@ async function deleteSkill(skillId: string) {
           </template>
         </p-column>
       </p-data-table>
-    </template>
+    </div>
   </div>
 </template>

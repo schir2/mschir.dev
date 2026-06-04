@@ -22,6 +22,7 @@
   },
   "dependencies": {
     "@nuxt/icon": "^2.2.2",
+    "@nuxtjs/seo": "5.1.3",
     "@nuxtjs/supabase": "^2.0.9",
     "@nuxtjs/tailwindcss": "^6.14.0",
     "@nuxtjs/turnstile": "^1.1.3",
