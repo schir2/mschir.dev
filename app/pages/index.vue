@@ -90,7 +90,7 @@ const pillars = [
           >
             <div class="pillar-top-bar absolute inset-x-0 top-0 h-0.5"/>
             <div class="flex flex-col gap-2 flex-1">
-              <h3 class="font-display text-2xl font-semibold leading-tight">{{ pillar.title }}</h3>
+              <h2 class="text-2xl font-semibold leading-tight">{{ pillar.title }}</h2>
               <p class="text-base leading-relaxed text-muted-color">{{ pillar.description }}</p>
             </div>
             <icon :name="pillar.icon" class="pillar-icon flex-shrink-0 text-6xl"/>

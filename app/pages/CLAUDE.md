@@ -1,5 +1,23 @@
 # app/pages/CLAUDE.md
 
+## Heading hierarchy
+
+Every public content page must have exactly one `<h1>` as its first visible element. Use `text-4xl font-bold` to match the site-wide scale. Sections within a page use `<h2>` (Fraunces applies automatically via the global `h1, h2` CSS rule — no `font-display` class needed on h2s).
+
+| Page | h1 text | Notes |
+|---|---|---|
+| `/about` | "Marek Schir" | Name is the subject — not "About" |
+| `/contact` | "Get in Touch" | Functional label, not the page-nav label |
+| `/portfolio` | "Portfolio" | |
+| `/articles` | "Articles" | |
+| `/projects` | "Projects" | |
+| `/articles/[slug]` | article title | Dynamic, from data |
+| `/projects/[slug]` | project name | Dynamic, from data |
+
+**Homepage exception**: `/` uses "Marek Schir" as `<h1>` in the hero. Section eyebrow labels ("What I Build", "Recent Articles") are plain `<span class="text-xs uppercase tracking-widest font-medium text-muted-color">` — intentional visual decoration, not semantic headings. Service pillar titles are `<h2>` (the first real document heading after the hero h1).
+
+**Never skip heading levels.** h1 → h3 without an h2 in between is invalid. If a section label is visually styled as an eyebrow/overline rather than a document heading, use a `<span>` — don't force it into an h2 just to satisfy hierarchy.
+
 ## SEO
 
 Every **public** page must call `usePageSeo()` from `~/composables/usePageSeo`. Admin, auth, and prototype pages are excluded — they are served with `noindex` via `nuxt-robots` configuration and must not call `usePageSeo`.

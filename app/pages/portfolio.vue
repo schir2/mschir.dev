@@ -73,6 +73,8 @@ const {data: featuredArticles} = await useAsyncData<ArticleCardItem[]>(
 <template>
   <section class="flex flex-col gap-16">
 
+    <h1 class="text-4xl font-bold">Portfolio</h1>
+
     <!-- Skills Snapshot -->
     <div class="flex flex-col gap-6">
       <h2 class="text-2xl font-bold">Skills</h2>
