@@ -1,5 +1,5 @@
 allowBuilds:
   '@parcel/watcher': true
   esbuild: true
-  sharp: set this to true or false
-  vue-demi: set this to true or false
+  sharp: true
+  vue-demi: true

@@ -54,6 +54,40 @@ pnpm run test:db          # Run pgTAP database tests (requires supabase:start)
 pnpm run test:edge        # Run Deno edge function tests
 ```
 
+## Dev Environment Setup (WSL Ubuntu)
+
+### 1. Node.js (via nvm)
+
+```bash
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
+rm -rf ~/.nvm  # if install fails due to broken existing install
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+nvm install --lts
+```
+
+### 2. pnpm
+
+```bash
+curl -fsSL https://get.pnpm.io/install.sh | sh -
+source ~/.bashrc
+pnpm --version
+```
+
+### 3. Claude Code
+
+```bash
+npm install -g @anthropic-ai/claude-code
+claude --version
+```
+
+### 4. WebStorm — pnpm integration
+
+Run `which pnpm` to get the pnpm binary path, then:
+
+**Settings → Languages & Frameworks → Node.js** → set package manager to pnpm and paste the path.
+
 ## Documentation
 
 - [`CLAUDE.md`](./CLAUDE.md) — development environment, conventions, and architecture guide for Claude Code
