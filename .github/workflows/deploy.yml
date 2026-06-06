@@ -70,4 +70,4 @@ jobs:
       - name: Reload app
         run: |
           ssh ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }} \
-            "pm2 reload mschir 2>/dev/null || (pm2 start /apps/ecosystem.config.js --only mschir && pm2 save)"
+            "bash -lc 'pm2 reload mschir 2>/dev/null || (pm2 start /apps/ecosystem.config.js --only mschir && pm2 save)'"

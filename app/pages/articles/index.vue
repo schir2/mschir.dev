@@ -21,6 +21,7 @@ const {
   const {data, error} = await supabase
       .from('featured_articles')
       .select(`article_id, articles(${articleCardSelect})`)
+      .order('created_at', {ascending: false})
       .limit(3)
   if (error) throw error
   return (data ?? []).map((row: any) => row.articles).filter(Boolean) as ArticleCardItem[]
