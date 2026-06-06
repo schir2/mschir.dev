@@ -171,9 +171,4 @@ export default defineNuxtConfig({
         }
     },
 
-    vite: {
-        server: {
-            allowedHosts: process.env.NODE_ENV !== 'production' ? 'all' : [],
-        }
-    },
 })
