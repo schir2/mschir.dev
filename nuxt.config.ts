@@ -66,8 +66,7 @@ export default defineNuxtConfig({
             appName: 'Marek Schir Portfolio',
             defaultTitle: 'Marek Schir Developer Portfolio Site',
             siteUrl: process.env.SITE_URL || 'http://localhost:3000',
-            port: parseInt(process.env.PORT || '3000'),
-            turnstileSiteKey: '', // NUXT_PUBLIC_TURNSTILE_SITE_KEY,
+            turnstileSiteKey: '', // NUXT_PUBLIC_TURNSTILE_SITE_KEY
         }
     },
 

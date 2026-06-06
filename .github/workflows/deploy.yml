@@ -1,0 +1,74 @@
+name: Deploy
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: latest
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build
+        run: pnpm build
+        env:
+          NODE_ENV: production
+          SITE_URL: ${{ secrets.SITE_URL }}
+          NUXT_PUBLIC_TURNSTILE_SITE_KEY: ${{ secrets.NUXT_PUBLIC_TURNSTILE_SITE_KEY }}
+
+      - name: Apply migrations
+        run: npx supabase db push --linked
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+
+      - name: Set up SSH
+        uses: webfactory/ssh-agent@v0.9.0
+        with:
+          ssh-private-key: ${{ secrets.VPS_SSH_KEY }}
+
+      - name: Add VPS to known hosts
+        run: ssh-keyscan -H ${{ secrets.VPS_HOST }} >> ~/.ssh/known_hosts
+
+      - name: Backup previous build
+        run: |
+          ssh ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }} \
+            "rm -rf /apps/mschir.dev/.output.bak && mv /apps/mschir.dev/.output /apps/mschir.dev/.output.bak 2>/dev/null || true"
+
+      - name: Write env file
+        run: |
+          cat > .env.production << 'EOF'
+          NUXT_TURNSTILE_SECRET_KEY=${{ secrets.NUXT_TURNSTILE_SECRET_KEY }}
+          NUXT_PUBLIC_TURNSTILE_SITE_KEY=${{ secrets.NUXT_PUBLIC_TURNSTILE_SITE_KEY }}
+          NUXT_RESEND_API_KEY=${{ secrets.NUXT_RESEND_API_KEY }}
+          SUPABASE_URL=${{ secrets.SUPABASE_URL }}
+          SUPABASE_ANON_KEY=${{ secrets.SUPABASE_ANON_KEY }}
+          SUPABASE_SERVICE_ROLE_KEY=${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+          SITE_URL=${{ secrets.SITE_URL }}
+          PORT=3002
+          NODE_ENV=production
+          EOF
+          scp .env.production ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }}:/apps/mschir.dev/.env
+
+      - name: Deploy artifact
+        run: |
+          rsync -az --delete .output/ \
+            ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }}:/apps/mschir.dev/.output/
+
+      - name: Reload app
+        run: |
+          ssh ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }} \
+            "pm2 reload mschir 2>/dev/null || (pm2 start /apps/ecosystem.config.js --only mschir && pm2 save)"
