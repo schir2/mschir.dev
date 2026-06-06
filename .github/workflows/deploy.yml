@@ -47,6 +47,8 @@ jobs:
         env:
           NODE_ENV: production
           SITE_URL: ${{ secrets.SITE_URL }}
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
           NUXT_PUBLIC_TURNSTILE_SITE_KEY: ${{ secrets.NUXT_PUBLIC_TURNSTILE_SITE_KEY }}
 
       - name: Write env file
