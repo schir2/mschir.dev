@@ -12,6 +12,8 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Commands
 
+> **Never run the dev server.** Do not run `pnpm run dev` or `pnpm run preview`. The user manages the dev server themselves.
+
 ```bash
 pnpm install          # Install dependencies
 pnpm run dev          # Start dev server at http://localhost:3000
@@ -94,6 +96,13 @@ See `CONTEXT.md` for the domain model.
 2. Run `pnpm run db:reset` to apply it to the linked remote
 3. Run `pnpm run supabase:types` to regenerate `shared/types/database.types.ts`
 4. Update or add domain type aliases in `shared/types/` if new tables were added
+
+### After adding environment variables
+
+Whenever a new environment variable is introduced (in `nuxt.config.ts`, an edge function, a script, or anywhere else):
+
+1. Add it to `.env.example` with a blank or placeholder value and a short comment describing what it's for.
+2. If it is a production secret used by the deploy pipeline, add a row for it in the **Required GitHub secrets** table in `README.md`.
 
 ### Testing
 

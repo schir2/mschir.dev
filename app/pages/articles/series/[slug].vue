@@ -36,6 +36,18 @@ usePageSeo({
   description: () => seriesData.value?.description ?? undefined,
 })
 
+useSchemaOrg(computed(() => {
+  if (!seriesData.value) return []
+  return [
+    defineBreadcrumb({
+      itemListElement: [
+        { name: 'Articles', item: '/articles' },
+        { name: seriesData.value.title },
+      ],
+    }),
+  ]
+}))
+
 const {
   data: articleList,
   pending: articlesPending,

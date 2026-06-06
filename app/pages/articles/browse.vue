@@ -8,6 +8,15 @@ usePageSeo({
   description: 'Browse all articles by Marek Schir. Filter by category and tags to find content on software development, integrations, and more.',
 })
 
+useSchemaOrg([
+  defineBreadcrumb({
+    itemListElement: [
+      { name: 'Articles', item: '/articles' },
+      { name: 'Browse' },
+    ],
+  }),
+])
+
 const supabase = useSupabaseClient()
 const route = useRoute()
 const router = useRouter()

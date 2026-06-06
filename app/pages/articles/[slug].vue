@@ -93,6 +93,26 @@ const breadcrumbs = computed<Crumb[]>(() => {
   return crumbs
 })
 
+useSchemaOrg(computed(() => {
+  if (!article.value) return []
+  return [
+    defineArticle({
+      '@type': 'BlogPosting',
+      headline: article.value.title,
+      description: article.value.summary ?? undefined,
+      image: heroImageUrl.value ?? undefined,
+      datePublished: article.value.published_at ?? undefined,
+      author: [{ name: 'Marek Schir', url: '/about' }],
+    }),
+    defineBreadcrumb({
+      itemListElement: breadcrumbs.value.map(crumb => ({
+        name: crumb.label,
+        ...(crumb.route ? { item: crumb.route } : {}),
+      })),
+    }),
+  ]
+}))
+
 const {previousArticle, nextArticle, allArticles} = useSeriesNavigation(
     computed(() => ({
       id: article.value?.id ?? '',

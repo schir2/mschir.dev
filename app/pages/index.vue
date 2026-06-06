@@ -8,6 +8,15 @@ usePageSeo({
   description: 'Software Developer & Systems Architect building custom integrations, applications, and AI workflows for growing businesses.',
 })
 
+useSchemaOrg([
+  defineWebSite(),
+  definePerson({
+    name: 'Marek Schir',
+    url: '/about',
+    description: 'Software Developer & Systems Architect with 14 years of experience across networking, infrastructure, software development, and integrations.',
+  }),
+])
+
 const supabase = useSupabaseClient()
 
 const {data: recentArticles} = await useAsyncData<ArticleCardItem[]>(
