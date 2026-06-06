@@ -7,6 +7,8 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    env:
+      PM2: /root/.nvm/versions/node/v22.14.0/bin/pm2
 
     steps:
       - uses: actions/checkout@v4
@@ -70,4 +72,4 @@ jobs:
       - name: Reload app
         run: |
           ssh ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }} \
-            "bash -lc 'pm2 reload mschir 2>/dev/null || (pm2 start /apps/ecosystem.config.js --only mschir && pm2 save)'"
+            "${{ env.PM2 }} reload mschir 2>/dev/null || (${{ env.PM2 }} start /apps/ecosystem.config.js --only mschir && ${{ env.PM2 }} save)"
