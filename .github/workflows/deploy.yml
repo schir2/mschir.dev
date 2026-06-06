@@ -38,10 +38,8 @@ jobs:
       - name: Add VPS to known hosts
         run: ssh-keyscan -H ${{ secrets.VPS_HOST }} >> ~/.ssh/known_hosts
 
-      - name: Backup previous build
-        run: |
-          ssh ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }} \
-            "rm -rf /apps/mschir.dev/.output.bak && mv /apps/mschir.dev/.output /apps/mschir.dev/.output.bak 2>/dev/null || true"
+      - name: Test SSH connection
+        run: ssh -o BatchMode=yes ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }} "echo ok"
 
       - name: Write env file
         run: |
