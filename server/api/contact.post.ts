@@ -2,27 +2,8 @@ import { serverSupabaseServiceRole } from '#supabase/server'
 
 export default defineEventHandler(async (event) => {
     const { name, email, reason_id, message, turnstileToken } = await readBody(event)
-    const config = useRuntimeConfig()
 
-    // Verify Turnstile token before touching the DB
-    if (config.turnstileSecretKey) {
-        const params = new URLSearchParams()
-        params.append('secret', config.turnstileSecretKey)
-        params.append('response', turnstileToken)
-
-        const verification = await $fetch<{ success: boolean }>(
-            'https://challenges.cloudflare.com/turnstile/v0/siteverify',
-            {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                body: params.toString(),
-            }
-        )
-
-        if (!verification.success) {
-            throw createError({ statusCode: 400, statusMessage: 'CAPTCHA verification failed' })
-        }
-    }
+    await verifyTurnstileToken(turnstileToken)
 
     const supabase = serverSupabaseServiceRole(event)
     const { error } = await supabase
@@ -32,6 +13,8 @@ export default defineEventHandler(async (event) => {
     if (error) {
         throw createError({ statusCode: 500, statusMessage: 'Failed to save message' })
     }
+
+    const config = useRuntimeConfig()
 
     // Email notification — best-effort; failure does not fail the request
     try {

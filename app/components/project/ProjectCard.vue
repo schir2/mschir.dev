@@ -2,23 +2,24 @@
 import type { ProjectCardItem } from '#shared/types/Project'
 
 const props = defineProps<{
-  project: ProjectCardItem
+  project?: ProjectCardItem
+  loading?: boolean
 }>()
 
 const supabase = useSupabaseClient()
 
 const resolvedImageUrl = computed<string | null>(() => {
-  const path = props.project.image_url
+  const path = props.project?.image_url
   if (!path) return null
   if (path.startsWith('http://') || path.startsWith('https://')) return path
   return supabase.storage.from('images').getPublicUrl(path).data.publicUrl
 })
 
-const visibleSkills = computed(() => props.project.project_skills.slice(0, 5))
-const hiddenSkillCount = computed(() => Math.max(0, props.project.project_skills.length - 5))
+const visibleSkills = computed(() => props.project?.project_skills.slice(0, 5) ?? [])
+const hiddenSkillCount = computed(() => Math.max(0, (props.project?.project_skills.length ?? 0) - 5))
 
 const displayText = computed<string | null>(() =>
-  (props.project.featured && props.project.tagline) ? props.project.tagline : props.project.summary
+  props.project ? ((props.project.featured && props.project.tagline) ? props.project.tagline : props.project.summary) : null
 )
 
 const thumbnailGradients = [
@@ -41,65 +42,86 @@ function hashName(name: string): number {
 const thumbnailStyle = computed(() => ({
   background: resolvedImageUrl.value
     ? undefined
-    : thumbnailGradients[hashName(props.project.name) % thumbnailGradients.length],
+    : props.project
+      ? thumbnailGradients[hashName(props.project.name) % thumbnailGradients.length]
+      : thumbnailGradients[0],
 }))
 </script>
 
 <template>
   <article
-    class="group relative flex overflow-hidden rounded-lg border border-surface-800 bg-surface-900 cursor-pointer
-           opacity-85 transition-all duration-200
-           hover:opacity-100 hover:shadow-xl hover:shadow-black/40 hover:border-surface-700"
+    class="group relative flex overflow-hidden rounded-lg border border-surface-800 bg-surface-900"
+    :class="loading ? 'cursor-default' : 'cursor-pointer opacity-85 transition-all duration-200 hover:opacity-100 hover:shadow-xl hover:shadow-black/40 hover:border-surface-700'"
   >
-    <div
-      v-if="project.featured"
-      class="w-1.5 shrink-0 bg-amber-500 opacity-80 transition-opacity duration-200 group-hover:opacity-100"
-    />
+    <template v-if="loading">
+      <div class="w-1.5 shrink-0 bg-surface-700 animate-pulse" />
+      <div class="flex gap-4 p-4 w-full min-w-0">
+        <div class="flex flex-col gap-2 flex-1 min-w-0">
+          <div class="h-[10px] w-[30%] rounded bg-surface-700 animate-pulse" />
+          <div class="h-[18px] w-[75%] rounded bg-surface-700 animate-pulse" />
+          <div class="h-[18px] w-[48%] rounded bg-surface-700 animate-pulse" />
+          <div class="h-[13px] w-[60%] rounded bg-surface-700 animate-pulse" />
+          <div class="mt-auto pt-2 border-t border-surface-800 flex gap-2">
+            <div class="h-[22px] w-[65px] rounded-full bg-surface-700 animate-pulse" />
+            <div class="h-[22px] w-[75px] rounded-full bg-surface-700 animate-pulse" />
+            <div class="h-[22px] w-[60px] rounded-full bg-surface-700 animate-pulse" />
+          </div>
+        </div>
+        <div class="w-24 h-24 rounded-lg bg-surface-700 animate-pulse shrink-0 self-center" />
+      </div>
+    </template>
 
-    <div class="flex gap-4 p-4 w-full min-w-0">
-      <div class="flex flex-col gap-1.5 flex-1 min-w-0">
+    <template v-else-if="project">
+      <div
+        v-if="project.featured"
+        class="w-1.5 shrink-0 bg-amber-500 opacity-80 transition-opacity duration-200 group-hover:opacity-100"
+      />
 
-        <span class="text-xs text-surface-300">
-          {{ project.companies ? `${project.companies.name} · ` : '' }}{{ project.year }}
-        </span>
+      <div class="flex gap-4 p-4 w-full min-w-0">
+        <div class="flex flex-col gap-1.5 flex-1 min-w-0">
 
-        <span class="font-display text-lg font-semibold leading-snug line-clamp-2 group-hover:text-primary-400 transition-colors duration-200">
-          {{ project.name }}
-        </span>
-
-        <p v-if="displayText" class="text-sm text-surface-400 line-clamp-3">
-          {{ displayText }}
-        </p>
-
-        <div class="mt-auto pt-2 border-t border-surface-800 flex flex-wrap items-center gap-2">
-          <span
-            v-for="skillLink in visibleSkills"
-            :key="skillLink.skills.id"
-            class="flex items-center gap-1 text-xs px-2.5 py-1 rounded-full bg-surface-800 text-surface-300 leading-none"
-          >
-            <icon v-if="skillLink.skills.icon" :name="skillLink.skills.icon" class="w-4 h-4 shrink-0" />
-            {{ skillLink.skills.name }}
+          <span class="text-xs text-surface-300">
+            {{ project.companies ? `${project.companies.name} · ` : '' }}{{ project.year }}
           </span>
-          <span
-            v-if="hiddenSkillCount > 0"
-            class="text-xs px-2.5 py-1 rounded-full bg-surface-800 text-surface-500 leading-none"
-          >
-            +{{ hiddenSkillCount }}
+
+          <span class="font-display text-lg font-semibold leading-snug line-clamp-2 group-hover:text-primary-400 transition-colors duration-200">
+            {{ project.name }}
           </span>
+
+          <p v-if="displayText" class="text-sm text-surface-400 line-clamp-3">
+            {{ displayText }}
+          </p>
+
+          <div class="mt-auto pt-2 border-t border-surface-800 flex flex-wrap items-center gap-2">
+            <span
+              v-for="skillLink in visibleSkills"
+              :key="skillLink.skills.id"
+              class="flex items-center gap-1 text-xs px-2.5 py-1 rounded-full bg-surface-800 text-surface-300 leading-none"
+            >
+              <icon v-if="skillLink.skills.icon" :name="skillLink.skills.icon" class="w-4 h-4 shrink-0" />
+              {{ skillLink.skills.name }}
+            </span>
+            <span
+              v-if="hiddenSkillCount > 0"
+              class="text-xs px-2.5 py-1 rounded-full bg-surface-800 text-surface-500 leading-none"
+            >
+              +{{ hiddenSkillCount }}
+            </span>
+          </div>
+        </div>
+
+        <div
+          class="w-24 h-24 shrink-0 rounded-lg overflow-hidden self-center"
+          :style="thumbnailStyle"
+        >
+          <img
+            v-if="resolvedImageUrl"
+            :src="resolvedImageUrl"
+            :alt="project.name"
+            class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
+          />
         </div>
       </div>
-
-      <div
-        class="w-24 h-24 shrink-0 rounded-lg overflow-hidden self-center"
-        :style="thumbnailStyle"
-      >
-        <img
-          v-if="resolvedImageUrl"
-          :src="resolvedImageUrl"
-          :alt="project.name"
-          class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
-        />
-      </div>
-    </div>
+    </template>
   </article>
 </template>

@@ -9,6 +9,10 @@ export default defineNuxtConfig({
     devtools: {enabled: process.env.NODE_ENV !== 'production'},
     modules: ['@nuxtjs/color-mode', '@nuxt/icon', '@nuxtjs/supabase', '@nuxtjs/tailwindcss', '@primevue/nuxt-module', '@nuxtjs/turnstile', '@nuxt/test-utils/module', 'nuxt-gtag', '@nuxtjs/seo'],
 
+    turnstile: {
+        siteKey: '', // NUXT_PUBLIC_TURNSTILE_SITE_KEY
+    },
+
     colorMode: {
         preference: 'system',
         fallback: 'dark',
@@ -60,13 +64,14 @@ export default defineNuxtConfig({
     ],
 
     runtimeConfig: {
-        turnstileSecretKey: '',   // NUXT_TURNSTILE_SECRET_KEY
+        turnstile: {
+            secretKey: '', // NUXT_TURNSTILE_SECRET_KEY
+        },
         resendApiKey: '',         // NUXT_RESEND_API_KEY
         public: {
             appName: 'Marek Schir Portfolio',
             defaultTitle: 'Marek Schir Developer Portfolio Site',
             siteUrl: process.env.SITE_URL || 'http://localhost:3000',
-            turnstileSiteKey: '', // NUXT_PUBLIC_TURNSTILE_SITE_KEY
         }
     },
 

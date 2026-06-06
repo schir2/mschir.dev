@@ -3,14 +3,15 @@ import type { ArticleCardItem } from '#shared/types/Article'
 import { useArticleThumbnail } from '~/composables/useArticleThumbnail'
 
 const props = defineProps<{
-  article: ArticleCardItem
+  article?: ArticleCardItem
+  loading?: boolean
 }>()
 
-const visibleTags = computed(() => props.article.article_tags_links.slice(0, 3))
-const hiddenTagCount = computed(() => Math.max(0, props.article.article_tags_links.length - 3))
+const visibleTags = computed(() => props.article?.article_tags_links.slice(0, 3) ?? [])
+const hiddenTagCount = computed(() => Math.max(0, (props.article?.article_tags_links.length ?? 0) - 3))
 
 const formattedDate = computed(() =>
-  props.article.published_at
+  props.article?.published_at
     ? new Date(props.article.published_at).toLocaleDateString('en-US', {
         year: 'numeric',
         month: 'short',
@@ -19,7 +20,9 @@ const formattedDate = computed(() =>
     : ''
 )
 
-const thumbnail = computed(() => useArticleThumbnail(props.article))
+const thumbnail = computed(() =>
+  props.article ? useArticleThumbnail(props.article) : { type: 'color' as const, color: 'var(--p-surface-800)' }
+)
 
 const resolvedThumbnailUrl = computed(() => {
   const thumbResult = thumbnail.value
@@ -35,6 +38,7 @@ const ripples = ref<Ripple[]>([])
 let rippleCounter = 0
 
 function handleClick(event: MouseEvent) {
+  if (props.loading) return
   const el = event.currentTarget as HTMLElement
   const rect = el.getBoundingClientRect()
   const size = Math.max(rect.width, rect.height) * 2
@@ -51,110 +55,132 @@ function handleClick(event: MouseEvent) {
 
 <template>
   <article
-    class="group relative flex overflow-hidden rounded-lg border border-surface-800 bg-surface-900 cursor-pointer
-           opacity-85 transition-all duration-200
-           hover:opacity-100 hover:shadow-xl hover:shadow-black/40 hover:border-surface-700"
+    class="group relative flex overflow-hidden rounded-lg border border-surface-800 bg-surface-900"
+    :class="loading ? 'cursor-default' : 'cursor-pointer opacity-85 transition-all duration-200 hover:opacity-100 hover:shadow-xl hover:shadow-black/40 hover:border-surface-700'"
     @click="handleClick"
   >
-    <div
-      v-for="ripple in ripples"
-      :key="ripple.id"
-      class="ripple-circle absolute rounded-full bg-white/15 pointer-events-none"
-      :style="{ left: `${ripple.x}px`, top: `${ripple.y}px`, width: `${ripple.size}px`, height: `${ripple.size}px` }"
-    />
-
-    <div
-      v-if="article.featured_articles"
-      data-testid="featured-bar"
-      class="w-1.5 shrink-0 bg-amber-500 opacity-80 transition-opacity duration-200 group-hover:opacity-100"
-    />
-
-    <div class="flex gap-4 p-4 w-full min-w-0">
-      <div class="flex flex-col gap-1.5 flex-1 min-w-0">
-
-        <div class="flex items-center gap-2 min-w-0">
-          <nuxt-link
-            v-if="article.article_categories"
-            :to="`/articles/browse?category=${article.article_categories.slug}`"
-            class="flex items-center gap-1.5 min-w-0 overflow-hidden"
-          >
-            <span
-              data-testid="category-dot"
-              class="w-2.5 h-2.5 rounded-full shrink-0 ring-2 ring-white/10"
-              :style="{ backgroundColor: article.article_categories.color ?? 'var(--p-surface-500)' }"
-            />
-            <span class="text-xs text-surface-300 truncate">{{ article.article_categories.name }}</span>
-          </nuxt-link>
-          <span class="ml-auto shrink-0 text-xs text-surface-400">{{ formattedDate }}</span>
-        </div>
-
-        <nuxt-link
-          :to="`/articles/${article.slug}`"
-          class="font-display text-lg font-semibold leading-snug line-clamp-2 group-hover:text-primary-400 transition-colors duration-200"
-        >
-          {{ article.title }}
-        </nuxt-link>
-
-        <span
-          v-if="article.featured_articles?.featured_reason"
-          data-testid="featured-reason"
-          class="self-start text-xs px-2 py-0.5 rounded-full border border-amber-500/50 text-amber-400 leading-none"
-        >
-          {{ article.featured_articles.featured_reason }}
-        </span>
-
-        <p
-          v-if="article.summary"
-          data-testid="article-summary"
-          class="text-sm text-surface-400 line-clamp-2"
-        >
-          {{ article.summary }}
-        </p>
-
-        <div class="mt-auto min-w-0">
-          <div v-if="article.article_series" class="flex items-center gap-1.5 pb-2 min-w-0">
-            <span class="text-xs text-surface-500 shrink-0">Part {{ article.series_sequence_number }} of</span>
-            <nuxt-link
-              :to="`/articles/series/${article.article_series.slug}`"
-              class="text-xs text-primary-400 truncate hover:underline"
-            >
-              {{ article.article_series.title }}
-            </nuxt-link>
+    <template v-if="loading">
+      <div class="w-1.5 shrink-0 bg-surface-700 animate-pulse" />
+      <div class="flex gap-4 p-4 w-full min-w-0">
+        <div class="flex flex-col gap-2 flex-1 min-w-0">
+          <div class="flex items-center gap-2">
+            <div class="h-[10px] w-[35%] rounded bg-surface-700 animate-pulse" />
+            <div class="h-[10px] w-[18%] rounded bg-surface-700 animate-pulse ml-auto" />
           </div>
-          <div class="flex flex-wrap items-center gap-2 pt-2 border-t border-surface-800">
-            <nuxt-link
-              v-for="tagLink in visibleTags"
-              :key="tagLink.article_tags.slug"
-              :to="`/articles/browse?tag=${tagLink.article_tags.slug}`"
-              class="flex items-center gap-1 text-xs px-2.5 py-1 rounded-full bg-surface-800 text-surface-300 leading-none hover:bg-surface-700 transition-colors"
-            >
-              <icon v-if="tagLink.article_tags.icon" :name="tagLink.article_tags.icon" class="w-3.5 h-3.5 shrink-0" />
-              {{ tagLink.article_tags.name }}
-            </nuxt-link>
-            <span
-              v-if="hiddenTagCount > 0"
-              data-testid="hidden-tag-count"
-              class="text-xs px-2.5 py-1 rounded-full bg-surface-800 text-surface-500 leading-none"
-            >
-              +{{ hiddenTagCount }}
-            </span>
+          <div class="h-[18px] w-[80%] rounded bg-surface-700 animate-pulse" />
+          <div class="h-[18px] w-[52%] rounded bg-surface-700 animate-pulse" />
+          <div class="h-[13px] w-[65%] rounded bg-surface-700 animate-pulse" />
+          <div class="mt-auto pt-2 border-t border-surface-800 flex gap-2">
+            <div class="h-[22px] w-[70px] rounded-full bg-surface-700 animate-pulse" />
+            <div class="h-[22px] w-[80px] rounded-full bg-surface-700 animate-pulse" />
+            <div class="h-[22px] w-[55px] rounded-full bg-surface-700 animate-pulse" />
           </div>
         </div>
+        <div class="w-24 h-24 rounded-lg bg-surface-700 animate-pulse shrink-0 self-center" />
       </div>
+    </template>
+
+    <template v-else-if="article">
+      <div
+        v-for="ripple in ripples"
+        :key="ripple.id"
+        class="ripple-circle absolute rounded-full bg-white/15 pointer-events-none"
+        :style="{ left: `${ripple.x}px`, top: `${ripple.y}px`, width: `${ripple.size}px`, height: `${ripple.size}px` }"
+      />
 
       <div
-        data-testid="article-thumbnail"
-        class="w-24 h-24 shrink-0 rounded-lg overflow-hidden self-center"
-        :style="thumbnail.type === 'color' ? { backgroundColor: thumbnail.color } : {}"
-      >
-        <img
-          v-if="thumbnail.type === 'image' && resolvedThumbnailUrl"
-          :src="resolvedThumbnailUrl"
-          :alt="article.title"
-          class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
-        />
+        v-if="article.featured_articles"
+        data-testid="featured-bar"
+        class="w-1.5 shrink-0 bg-amber-500 opacity-80 transition-opacity duration-200 group-hover:opacity-100"
+      />
+
+      <div class="flex gap-4 p-4 w-full min-w-0">
+        <div class="flex flex-col gap-1.5 flex-1 min-w-0">
+
+          <div class="flex items-center gap-2 min-w-0">
+            <nuxt-link
+              v-if="article.article_categories"
+              :to="`/articles/browse?category=${article.article_categories.slug}`"
+              class="flex items-center gap-1.5 min-w-0 overflow-hidden"
+            >
+              <span
+                data-testid="category-dot"
+                class="w-2.5 h-2.5 rounded-full shrink-0 ring-2 ring-white/10"
+                :style="{ backgroundColor: article.article_categories.color ?? 'var(--p-surface-500)' }"
+              />
+              <span class="text-xs text-surface-300 truncate">{{ article.article_categories.name }}</span>
+            </nuxt-link>
+            <span class="ml-auto shrink-0 text-xs text-surface-400">{{ formattedDate }}</span>
+          </div>
+
+          <nuxt-link
+            :to="`/articles/${article.slug}`"
+            class="font-display text-lg font-semibold leading-snug line-clamp-2 group-hover:text-primary-400 transition-colors duration-200"
+          >
+            {{ article.title }}
+          </nuxt-link>
+
+          <span
+            v-if="article.featured_articles?.featured_reason"
+            data-testid="featured-reason"
+            class="self-start text-xs px-2 py-0.5 rounded-full border border-amber-500/50 text-amber-400 leading-none"
+          >
+            {{ article.featured_articles.featured_reason }}
+          </span>
+
+          <p
+            v-if="article.summary"
+            data-testid="article-summary"
+            class="text-sm text-surface-400 line-clamp-2"
+          >
+            {{ article.summary }}
+          </p>
+
+          <div class="mt-auto min-w-0">
+            <div v-if="article.article_series" class="flex items-center gap-1.5 pb-2 min-w-0">
+              <span class="text-xs text-surface-500 shrink-0">Part {{ article.series_sequence_number }} of</span>
+              <nuxt-link
+                :to="`/articles/series/${article.article_series.slug}`"
+                class="text-xs text-primary-400 truncate hover:underline"
+              >
+                {{ article.article_series.title }}
+              </nuxt-link>
+            </div>
+            <div class="flex flex-wrap items-center gap-2 pt-2 border-t border-surface-800">
+              <nuxt-link
+                v-for="tagLink in visibleTags"
+                :key="tagLink.article_tags.slug"
+                :to="`/articles/browse?tag=${tagLink.article_tags.slug}`"
+                class="flex items-center gap-1 text-xs px-2.5 py-1 rounded-full bg-surface-800 text-surface-300 leading-none hover:bg-surface-700 transition-colors"
+              >
+                <icon v-if="tagLink.article_tags.icon" :name="tagLink.article_tags.icon" class="w-3.5 h-3.5 shrink-0" />
+                {{ tagLink.article_tags.name }}
+              </nuxt-link>
+              <span
+                v-if="hiddenTagCount > 0"
+                data-testid="hidden-tag-count"
+                class="text-xs px-2.5 py-1 rounded-full bg-surface-800 text-surface-500 leading-none"
+              >
+                +{{ hiddenTagCount }}
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <div
+          data-testid="article-thumbnail"
+          class="w-24 h-24 shrink-0 rounded-lg overflow-hidden self-center"
+          :style="thumbnail.type === 'color' ? { backgroundColor: thumbnail.color } : {}"
+        >
+          <img
+            v-if="thumbnail.type === 'image' && resolvedThumbnailUrl"
+            :src="resolvedThumbnailUrl"
+            :alt="article.title"
+            class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
+          />
+        </div>
       </div>
-    </div>
+    </template>
   </article>
 </template>
 

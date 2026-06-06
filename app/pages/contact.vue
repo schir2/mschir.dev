@@ -41,13 +41,17 @@ async function onFormSubmit(event: FormSubmitEvent) {
   }
   pending.value = true
 
-  const {data, error} = await supabase.from('contact_messages').insert(event.values)
-
-  if (error) {
-
+  try {
+    await $fetch('/api/contact', {
+      method: 'POST',
+      body: {...event.values, turnstileToken: turnstileToken.value},
+    })
+    submitted.value = true
+  } catch {
     toast.add({severity: 'error', summary: 'Something went wrong', detail: 'Please try again later.', life: 5000})
+  } finally {
+    pending.value = false
   }
-  pending.value = false
 }
 </script>
 
@@ -142,7 +146,7 @@ async function onFormSubmit(event: FormSubmitEvent) {
           </p-message>
         </div>
 
-        <auth-turnstile-placeholder v-model="turnstileToken"/>
+        <nuxt-turnstile v-model="turnstileToken"/>
 
         <p-button type="submit" label="Send Message" :loading="pending" fluid class="btn-accent">
           <template #icon>
