@@ -170,4 +170,10 @@ export default defineNuxtConfig({
             callback: '/callback'
         }
     },
+
+    vite: {
+        server: {
+            allowedHosts: process.env.NODE_ENV !== 'production' ? 'all' : [],
+        }
+    },
 })
