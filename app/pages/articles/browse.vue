@@ -1,5 +1,6 @@
 <script lang="ts" setup>
-import type {ArticleCardItem, ArticleCategory, ArticleTag} from '#shared/types/Article'
+import type { ArticleCardItem, ArticleTag } from '#shared/types/Article'
+import type { ArticleCategory } from '#shared/types/ArticleCategory'
 
 definePageMeta({title: 'Browse Articles', layout: 'page'})
 

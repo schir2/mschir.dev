@@ -1,5 +1,6 @@
 <script lang="ts" setup>
-import type { ArticleCategory, ArticleTag } from '#shared/types/Article'
+import type { ArticleTag } from '#shared/types/Article'
+import type { ArticleCategory } from '#shared/types/ArticleCategory'
 
 defineProps<{
   categories: ArticleCategory[]

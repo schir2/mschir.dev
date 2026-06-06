@@ -1,5 +1,6 @@
 <script lang="ts" setup>
-import type { ArticleCardItem, ArticleSeries } from '#shared/types/Article'
+import type { ArticleCardItem } from '#shared/types/Article'
+import type { ArticleSeries } from '#shared/types/ArticleSeries'
 
 definePageMeta({ layout: 'page' })
 

@@ -14,6 +14,8 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 > **Never run the dev server.** Do not run `pnpm run dev` or `pnpm run preview`. The user manages the dev server themselves.
 
+> **Never remove modules or dependencies without explicit confirmation.** If a module appears unused, always ask before removing it — it may be planned for upcoming work. This applies to `nuxt.config.ts` modules, `package.json` dependencies, and any registered plugins.
+
 ```bash
 pnpm install          # Install dependencies
 pnpm run dev          # Start dev server at http://localhost:3000

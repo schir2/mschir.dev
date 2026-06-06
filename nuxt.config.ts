@@ -7,7 +7,7 @@ export default defineNuxtConfig({
         '#tests': fileURLToPath(new URL('./test', import.meta.url)),
     },
     devtools: {enabled: true},
-    modules: ['@nuxtjs/color-mode', '@nuxt/icon', '@nuxtjs/supabase', '@nuxtjs/tailwindcss', '@primevue/nuxt-module', '@pinia/nuxt', '@nuxtjs/turnstile', '@nuxt/test-utils/module', 'nuxt-gtag', '@nuxtjs/seo'],
+    modules: ['@nuxtjs/color-mode', '@nuxt/icon', '@nuxtjs/supabase', '@nuxtjs/tailwindcss', '@primevue/nuxt-module', '@nuxtjs/turnstile', '@nuxt/test-utils/module', 'nuxt-gtag', '@nuxtjs/seo'],
 
     colorMode: {
         preference: 'system',

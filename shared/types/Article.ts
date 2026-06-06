@@ -1,9 +1,9 @@
 import type {Database} from '#shared/types/database.types'
+import type { ArticleCategory } from '#shared/types/ArticleCategory'
+import type { ArticleSeries } from '#shared/types/ArticleSeries'
 
 export type Article = Database['public']['Tables']['articles']['Row']
-export type ArticleCategory = Database['public']['Tables']['article_categories']['Row']
 export type ArticleTag = Database['public']['Tables']['article_tags']['Row']
-export type ArticleSeries = Database['public']['Tables']['article_series']['Row']
 
 export type ArticleSeriesSummary = Pick<ArticleSeries, 'id' | 'title' | 'slug' | 'description' | 'image_url'> & {
     article_count: number
