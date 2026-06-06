@@ -89,6 +89,32 @@ Run `which pnpm` to get the pnpm binary path, then:
 
 **Settings → Languages & Frameworks → Node.js** → set package manager to pnpm and paste the path.
 
+## Deployment
+
+Deploys automatically on push to `main` via GitHub Actions (`.github/workflows/deploy.yml`). The workflow:
+
+1. Tests the SSH connection to the VPS (fails fast before the build if the key or host is wrong)
+2. Builds the Nuxt app
+3. Copies the `.output/` artifact to the VPS via `rsync`
+4. Reloads the app with `pm2`
+
+**Required GitHub secrets:**
+
+| Secret | Description |
+|---|---|
+| `VPS_HOST` | Public IP or hostname of the VPS |
+| `VPS_USER` | SSH username on the VPS |
+| `VPS_SSH_KEY` | Private SSH key — matching public key must be in `~/.ssh/authorized_keys` on the VPS |
+| `SITE_URL` | Public site URL (e.g. `https://mschir.dev`) |
+| `NUXT_PUBLIC_TURNSTILE_SITE_KEY` | Cloudflare Turnstile site key |
+| `NUXT_TURNSTILE_SECRET_KEY` | Cloudflare Turnstile secret key |
+| `NUXT_RESEND_API_KEY` | Resend API key for contact form emails |
+| `SUPABASE_URL` | Supabase project URL |
+| `SUPABASE_ANON_KEY` | Supabase anon key |
+| `SUPABASE_SERVICE_ROLE_KEY` | Supabase service role key |
+
+> **Migrations are not run by the pipeline.** Apply migrations manually with `npx supabase db push --linked` before or after deploying.
+
 ## Documentation
 
 - [`CLAUDE.md`](./CLAUDE.md) — development environment, conventions, and architecture guide for Claude Code
