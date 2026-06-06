@@ -1,21 +1,6 @@
-create table public.article_audit_log
-(
-    id         uuid        primary key default gen_random_uuid(),
-    operation  text        not null check (operation in ('INSERT', 'UPDATE', 'DELETE')),
-    old_data   jsonb,
-    new_data   jsonb,
-    changed_at timestamptz not null    default now()
-);
-
-alter table public.article_audit_log enable row level security;
-
-create policy "Admin can read audit log"
-    on public.article_audit_log
-    for select
-    to authenticated
-    using (
-        (auth.jwt() -> 'app_metadata' ->> 'role') = 'admin'
-    );
+-- =============================================================
+-- Article audit trigger
+-- =============================================================
 
 create or replace function public.articles_audit_trigger_fn()
     returns trigger

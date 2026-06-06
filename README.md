@@ -57,6 +57,7 @@ pnpm run test:edge        # Run Deno edge function tests
 ## Dev Environment Setup (WSL Ubuntu)
 
 ### 1. Node.js (via nvm)
+81C3-3539
 
 ```bash
 curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
