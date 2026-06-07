@@ -10,7 +10,7 @@ const navLinks = [
 </script>
 
 <template>
-  <footer class="footer-bg border-t border-surface-700 mt-16">
+  <footer class="dark-mode footer-bg border-t border-surface-700 mt-16">
     <div class="max-w-6xl mx-auto px-6 py-12 flex flex-col gap-10">
 
       <div class="grid grid-cols-1 md:grid-cols-3 gap-10">
@@ -70,6 +70,7 @@ const navLinks = [
 <style scoped>
 .footer-bg {
   background-color: var(--p-surface-900);
+  color: var(--p-surface-100);
 }
 
 .footer-tagline {

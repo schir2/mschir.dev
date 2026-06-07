@@ -55,28 +55,28 @@ function handleClick(event: MouseEvent) {
 
 <template>
   <article
-    class="group relative flex overflow-hidden rounded-lg border border-surface-800 bg-surface-900"
-    :class="loading ? 'cursor-default' : 'cursor-pointer opacity-85 transition-all duration-200 hover:opacity-100 hover:shadow-xl hover:shadow-black/40 hover:border-surface-700'"
+    class="group relative flex overflow-hidden rounded-lg border border-surface-200 bg-surface-100 dark:border-surface-800 dark:bg-surface-900"
+    :class="loading ? 'cursor-default' : 'cursor-pointer opacity-85 transition-all duration-200 hover:opacity-100 hover:shadow-xl hover:shadow-black/10 dark:hover:shadow-black/40 hover:border-surface-300 dark:hover:border-surface-700'"
     @click="handleClick"
   >
     <template v-if="loading">
-      <div class="w-1.5 shrink-0 bg-surface-700 animate-pulse" />
+      <div class="w-1.5 shrink-0 bg-surface-200 dark:bg-surface-700 animate-pulse" />
       <div class="flex gap-4 p-4 w-full min-w-0">
         <div class="flex flex-col gap-2 flex-1 min-w-0">
           <div class="flex items-center gap-2">
-            <div class="h-[10px] w-[35%] rounded bg-surface-700 animate-pulse" />
-            <div class="h-[10px] w-[18%] rounded bg-surface-700 animate-pulse ml-auto" />
+            <div class="h-[10px] w-[35%] rounded bg-surface-200 dark:bg-surface-700 animate-pulse" />
+            <div class="h-[10px] w-[18%] rounded bg-surface-200 dark:bg-surface-700 animate-pulse ml-auto" />
           </div>
-          <div class="h-[18px] w-[80%] rounded bg-surface-700 animate-pulse" />
-          <div class="h-[18px] w-[52%] rounded bg-surface-700 animate-pulse" />
-          <div class="h-[13px] w-[65%] rounded bg-surface-700 animate-pulse" />
-          <div class="mt-auto pt-2 border-t border-surface-800 flex gap-2">
-            <div class="h-[22px] w-[70px] rounded-full bg-surface-700 animate-pulse" />
-            <div class="h-[22px] w-[80px] rounded-full bg-surface-700 animate-pulse" />
-            <div class="h-[22px] w-[55px] rounded-full bg-surface-700 animate-pulse" />
+          <div class="h-[18px] w-[80%] rounded bg-surface-200 dark:bg-surface-700 animate-pulse" />
+          <div class="h-[18px] w-[52%] rounded bg-surface-200 dark:bg-surface-700 animate-pulse" />
+          <div class="h-[13px] w-[65%] rounded bg-surface-200 dark:bg-surface-700 animate-pulse" />
+          <div class="mt-auto pt-2 border-t border-surface-200 dark:border-surface-800 flex gap-2">
+            <div class="h-[22px] w-[70px] rounded-full bg-surface-200 dark:bg-surface-700 animate-pulse" />
+            <div class="h-[22px] w-[80px] rounded-full bg-surface-200 dark:bg-surface-700 animate-pulse" />
+            <div class="h-[22px] w-[55px] rounded-full bg-surface-200 dark:bg-surface-700 animate-pulse" />
           </div>
         </div>
-        <div class="w-24 h-24 rounded-lg bg-surface-700 animate-pulse shrink-0 self-center" />
+        <div class="w-24 h-24 rounded-lg bg-surface-200 dark:bg-surface-700 animate-pulse shrink-0 self-center" />
       </div>
     </template>
 
@@ -108,9 +108,9 @@ function handleClick(event: MouseEvent) {
                 class="w-2.5 h-2.5 rounded-full shrink-0 ring-2 ring-white/10"
                 :style="{ backgroundColor: article.article_categories.color ?? 'var(--p-surface-500)' }"
               />
-              <span class="text-xs text-surface-300 truncate">{{ article.article_categories.name }}</span>
+              <span class="text-xs text-surface-700 dark:text-surface-300 truncate">{{ article.article_categories.name }}</span>
             </nuxt-link>
-            <span class="ml-auto shrink-0 text-xs text-surface-400">{{ formattedDate }}</span>
+            <span class="ml-auto shrink-0 text-xs text-surface-600 dark:text-surface-400">{{ formattedDate }}</span>
           </div>
 
           <nuxt-link
@@ -131,14 +131,14 @@ function handleClick(event: MouseEvent) {
           <p
             v-if="article.summary"
             data-testid="article-summary"
-            class="text-sm text-surface-400 line-clamp-2"
+            class="text-sm text-surface-600 dark:text-surface-400 line-clamp-2"
           >
             {{ article.summary }}
           </p>
 
           <div class="mt-auto min-w-0">
             <div v-if="article.article_series" class="flex items-center gap-1.5 pb-2 min-w-0">
-              <span class="text-xs text-surface-500 shrink-0">Part {{ article.series_sequence_number }} of</span>
+              <span class="text-xs text-surface-600 dark:text-surface-500 shrink-0">Part {{ article.series_sequence_number }} of</span>
               <nuxt-link
                 :to="`/articles/series/${article.article_series.slug}`"
                 class="text-xs text-primary-400 truncate hover:underline"
@@ -146,12 +146,12 @@ function handleClick(event: MouseEvent) {
                 {{ article.article_series.title }}
               </nuxt-link>
             </div>
-            <div class="flex flex-wrap items-center gap-2 pt-2 border-t border-surface-800">
+            <div class="flex flex-wrap items-center gap-2 pt-2 border-t border-surface-200 dark:border-surface-800">
               <nuxt-link
                 v-for="tagLink in visibleTags"
                 :key="tagLink.article_tags.slug"
                 :to="`/articles/browse?tag=${tagLink.article_tags.slug}`"
-                class="flex items-center gap-1 text-xs px-2.5 py-1 rounded-full bg-surface-800 text-surface-300 leading-none hover:bg-surface-700 transition-colors"
+                class="flex items-center gap-1 text-xs px-2.5 py-1 rounded-full bg-surface-100 text-surface-700 dark:bg-surface-800 dark:text-surface-300 leading-none hover:bg-surface-200 dark:hover:bg-surface-700 transition-colors"
               >
                 <icon v-if="tagLink.article_tags.icon" :name="tagLink.article_tags.icon" class="w-3.5 h-3.5 shrink-0" />
                 {{ tagLink.article_tags.name }}
@@ -159,7 +159,7 @@ function handleClick(event: MouseEvent) {
               <span
                 v-if="hiddenTagCount > 0"
                 data-testid="hidden-tag-count"
-                class="text-xs px-2.5 py-1 rounded-full bg-surface-800 text-surface-500 leading-none"
+                class="text-xs px-2.5 py-1 rounded-full bg-surface-100 text-surface-600 dark:bg-surface-800 dark:text-surface-500 leading-none"
               >
                 +{{ hiddenTagCount }}
               </span>

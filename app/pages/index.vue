@@ -95,7 +95,7 @@ const pillars = [
           <div
             v-for="pillar in pillars"
             :key="pillar.title"
-            class="pillar-card group relative flex items-center gap-6 p-6 rounded-xl border border-surface-700 bg-surface-900 cursor-default overflow-hidden"
+            class="pillar-card group relative flex items-center gap-6 p-6 rounded-xl border border-surface-200 bg-surface-100 dark:border-surface-700 dark:bg-surface-900 cursor-default overflow-hidden"
           >
             <div class="pillar-top-bar absolute inset-x-0 top-0 h-0.5"/>
             <div class="flex flex-col gap-2 flex-1">

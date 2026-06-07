@@ -62,7 +62,7 @@ async function onFormSubmit(event: FormSubmitEvent) {
       <div class="flex flex-col gap-6">
         <div class="flex flex-col gap-4">
           <h1 class="text-4xl font-bold">Get in Touch</h1>
-          <p class="text-surface-300 text-lg leading-relaxed">
+          <p class="text-surface-700 dark:text-surface-300 text-lg leading-relaxed">
             Got a project in mind? Whether it's connecting systems you already have, building
             something new, or exploring what AI can do for your workflow — I'd love to hear from you.
           </p>
@@ -70,19 +70,19 @@ async function onFormSubmit(event: FormSubmitEvent) {
         <ul class="flex flex-col gap-4">
           <li class="flex items-center gap-3">
             <icon name="material-symbols:hub" class="pillar-icon text-2xl flex-shrink-0"/>
-            <span class="text-surface-300">Integrations &amp; APIs</span>
+            <span class="text-surface-700 dark:text-surface-300">Integrations &amp; APIs</span>
           </li>
           <li class="flex items-center gap-3">
             <icon name="material-symbols:code-blocks" class="pillar-icon text-2xl flex-shrink-0"/>
-            <span class="text-surface-300">Application Development</span>
+            <span class="text-surface-700 dark:text-surface-300">Application Development</span>
           </li>
           <li class="flex items-center gap-3">
             <icon name="material-symbols:smart-toy" class="pillar-icon text-2xl flex-shrink-0"/>
-            <span class="text-surface-300">AI &amp; Automation</span>
+            <span class="text-surface-700 dark:text-surface-300">AI &amp; Automation</span>
           </li>
           <li class="flex items-center gap-3">
             <icon name="material-symbols:cloud" class="pillar-icon text-2xl flex-shrink-0"/>
-            <span class="text-surface-300">Infrastructure &amp; Cloud</span>
+            <span class="text-surface-700 dark:text-surface-300">Infrastructure &amp; Cloud</span>
           </li>
         </ul>
       </div>
