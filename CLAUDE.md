@@ -394,3 +394,11 @@ const crumbs = [{ label: 'Articles', to: '/articles' }]
 Avoid the `as` keyword. Cast only where genuinely unavoidable — the one accepted exception is coercing Supabase query return types to domain aliases (`return (data ?? []) as ArticleCardItem[]`), because Supabase's inferred structural type is not directly assignable to hand-crafted domain types.
 
 Use generics with explicit type parameters rather than relying on inference. When a type has optional variants, prefer optional fields over union types where possible.
+
+## Prose Writing and Copy
+
+**This section is about written language — not CSS, not code formatting.** Rules for any human-readable text produced for this site: article body content, project descriptions, taglines, summaries, email templates, page hero copy, and CTA blurbs.
+
+The full rule set (voice, tone, AI-tell patterns to strip, heading style, article structure) lives in `.claude/skills/copy-style/REFERENCE.md`.
+
+**Always invoke `/copy-style`** before writing or rewriting any of the above. The skill reads the rules at runtime and grills the draft against them category by category.

@@ -31,5 +31,15 @@ values
         (select id from public.projects where name = 'Vehicle GPS Alerting System for Field Service Workers'),
         'Real-time GPS alerting system keeping field technicians safe and accountable.',
         3
+    ),
+    (
+        (select id from public.projects where name = 'Arcus'),
+        'Asana and Linear-inspired task manager built from the ground up with Nuxt, Supabase, and TypeScript.',
+        4
+    ),
+    (
+        (select id from public.projects where name = 'Calcura'),
+        'Interactive retirement scenario simulator built with Nuxt, Naive UI, and Chart.js.',
+        5
     )
 on conflict (project_id) do nothing;

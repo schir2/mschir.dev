@@ -58,8 +58,7 @@ const breadcrumbs = computed<Crumb[]>(() => {
 
 <template>
   <div>
-    <p-progress-spinner v-if="projectLoading"/>
-    <article v-else-if="project" class="flex flex-col gap-6">
+    <article v-if="project" class="flex flex-col gap-6">
 
       <breadcrumb :breadcrumbs="breadcrumbs"/>
 

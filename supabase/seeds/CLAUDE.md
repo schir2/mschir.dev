@@ -79,6 +79,46 @@ Setting `published_at` to a timestamp makes the article visible to public visito
 
 `software-development`, `web-development`, `data-science-analytics`, `devops-automation`, `it-infrastructure`, `it-operations-support`, `climbing`, `running`, `fitness`
 
+## Adding a portfolio project
+
+Projects go in `03_projects.sql`. Featured entries (tagline + display order) go in `06_portfolio.sql`.
+
+### Tone and voice
+
+This is a personal portfolio, not a product landing page. Write as a developer talking about work they're proud of — warm, direct, and factual. Avoid sales language.
+
+**Do:**
+- Write descriptions in first person where it feels natural ("I built", "a tool I made")
+- Reference what the project is inspired by or comparable to (e.g. "Asana and Linear-inspired")
+- Mention the tech stack and any notable implementation details (real-time, WebSockets, etc.)
+- Keep taglines short and grounded — describe what it is, not what it promises
+
+**Don't:**
+- Use marketing framing ("built for people who want to...", "without the bloat", "at a fraction of the cost")
+- Reference pricing, competitors' prices, or subscription tiers
+- Over-sell with superlatives ("powerful", "seamless", "world-class")
+
+### Field guidance
+
+| Field | Guidance |
+|---|---|
+| `description` | 2–3 sentences. What it is, what it does, the stack. Personal voice. |
+| `summary` | One sentence for card previews. Factual, no fluff. |
+| `tagline` (featured) | One sentence. What it is and how it was built. Not a slogan. |
+
+### Example
+
+```sql
+-- description
+'An Asana and Linear-inspired task management app I built from scratch. Arcus organizes work into projects, sections, and tasks with support for priorities, dependencies, color-coded tags, subtasks, and deadline tracking — all updating in real time via Supabase. Built with Nuxt, Supabase, and TypeScript, deployed at getarcus.com.'
+
+-- summary
+'Personal take on task management, inspired by Asana and Linear, with real-time updates and a clean interface.'
+
+-- tagline
+'Asana and Linear-inspired task manager built from the ground up with Nuxt, Supabase, and TypeScript.'
+```
+
 ## After adding a seed file
 
 Run `npx supabase db reset` to apply all seeds to the local DB (non-TTY safe, use `npx` not `pnpm`).

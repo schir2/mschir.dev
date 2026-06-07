@@ -125,8 +125,7 @@ const {previousArticle, nextArticle, allArticles} = useSeriesNavigation(
 <template>
   <div>
 
-    <p-progress-spinner v-if="articleLoading"/>
-    <article v-else-if="article" class="flex flex-col gap-8">
+    <article v-if="article" class="flex flex-col gap-8">
       <breadcrumb :model="breadcrumbs"/>
       <p-message v-if="article.archived_at" role="alert" severity="secondary">
         This article has been archived and may be outdated.
