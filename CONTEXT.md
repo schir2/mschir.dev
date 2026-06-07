@@ -175,13 +175,13 @@ The resolution order used by the `useArticleThumbnail` composable to determine t
 A reusable card component (`SeriesCard`) that renders a series preview from an `ArticleSeriesSummary` prop. Does no data fetching. Displays: series title (link to `/articles/series/[slug]`), article count as a `<p-tag severity="secondary">` badge, and series description.
 
 ### Category Tag Filter
-A reusable filter bar component (`CategoryTagFilter`) used on the Article Browse Page. Accepts `categories`, `tags`, `modelCategory` (single-select slug or null), and `modelTags` (multi-select slug array) as props. Emits `update:modelCategory` and `update:modelTags` on interaction. Clicking an active category chip deselects it (emits null). Tag chips toggle on/off independently (multi-select). Does no data fetching — the parent page owns query and URL state.
+A reusable filter bar component (`CategoryTagFilter`) used on the Article Browse Page. Wrapped in a `<p-panel toggleable>` that is collapsed by default; the panel header shows "Filters" or "Filters (N active)" when filters are set. Two chip rows inside: one for categories (amber inset ring when active), one for tags (violet inset ring when active). A "Clear filters" button appears below the panel when any filter is active and emits both `update:modelCategory: null` and `update:modelTags: []`. Accepts `categories`, `tags`, `modelCategory` (single-select slug or null), and `modelTags` (multi-select slug array) as props. Emits `update:modelCategory` and `update:modelTags` on interaction. Does no data fetching — the parent page owns query and URL state.
 
 ### Article Landing Page
 The `/articles` route. A visual dashboard that serves as the entry point to the article section. Four sections in order: Featured Articles (from the `featured_articles` table), Recent Articles (latest 5 published, excluding featured), Series (all series with at least one published article, rendered as Series Cards), and Browse by Category (chip links into the Article Browse Page filtered by category). Sections with no content are hidden.
 
 ### Article Browse Page
-The `/articles/browse` route. A filterable list of all published articles. Filters by category (single-select) and tags (multi-select) are reflected in the URL query string (`?category=` and `?tag=`) so filtered views are bookmarkable and shareable. Filtering is client-side (computed properties over the full loaded list). Initialises filter state from the URL on mount; updates the URL via `router.replace` on filter change. Layout: single-column list by default with a 1/2 column toggle in the top-right of the article section (state is not persisted across page loads).
+The `/articles/browse` route. A filterable list of all published articles. Filters are rendered inside a Category Tag Filter panel (collapsed by default). Filters by category (single-select) and tags (multi-select, AND logic) are reflected in the URL query string (`?category=` and `?tag=`) so filtered views are bookmarkable and shareable. Filtering is client-side (computed properties over the full loaded list). Tag data is fetched with an `!inner` join so only tags attached to at least one published article are shown. Initialises filter state from the URL on mount; updates the URL via `router.replace` on filter change. Article list renders via `<p-data-view>` with list and grid layouts; layout toggles between single-column and two-column (state is not persisted across page loads).
 
 ### Article Series Page
 The `/articles/series/[slug]` route. Displays a series title and description, then lists all published articles in the series ordered by `series_sequence_number` ascending. Used to read a series sequentially from part 1 to the end. Returns 404 if the series slug does not exist.
@@ -364,7 +364,14 @@ Form validation schemas live in `app/schemas/`. Each schema file exports **only 
 ## Contact Domain
 
 ### ContactReason
-A lookup record that classifies why someone is reaching out. Stored in the `contact_reasons` table (`id`, `label`, `order`). Currently three values: Employer Inquiry, Contracting, Article Question. Publicly readable; new reasons can be added without a schema migration.
+A lookup record that classifies why someone is reaching out. Stored in the `contact_reasons` table (`id`, `label`, `order`). Five values (in order): Employer Inquiry, Contract Inquiry, Article Question, Project Question, Other. Publicly readable; new reasons can be added without a schema migration.
 
 ### ContactMessage
-A submission from the contact form. Stored in `contact_messages`. Fields: `name`, `email`, `reason_id` (FK → `contact_reasons`), `message`, `created_at`. Written server-side (Nuxt API route) after Cloudflare Turnstile verification. On success, also triggers an email notification to the site owner via Resend.
+A submission from the contact form. Stored in `contact_messages`. Fields: `name`, `email`, `reason_id` (FK → `contact_reasons`), `message`, `created_at`. Written server-side (Nuxt API route) after Cloudflare Turnstile verification. On success: the visitor is redirected to `/contact/thanks` and the API route invokes the `send-contact-emails` edge function fire-and-forget (no await), which sends two emails via Resend:
+1. Owner notification to schir2@gmail.com — includes the reason label, full message, and `Reply-To` set to the submitter's address.
+2. Submitter confirmation — short personal copy with the original message quoted below a divider.
+
+Both sends are best-effort inside try/catch blocks. The edge function always returns `{ ok: true }` — email failure never surfaces to the user.
+
+### Contact Thanks Page
+The `/contact/thanks` route. Shown after a successful contact form submission. Displays a confirmation message and two fixed CTAs: "See my work" (→ `/portfolio`, accent) and "Read some articles" (→ `/articles`, secondary outlined). CTAs are not conditional on the contact reason — avoids coupling the UI to reason label strings that can change in the DB. Noindexed via nuxt-robots.

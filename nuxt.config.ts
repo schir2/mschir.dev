@@ -29,7 +29,7 @@ export default defineNuxtConfig({
 
     robots: {
         robotsTxt: true,
-        disallow: ['/admin', '/login', '/register', '/callback', '/prototype'],
+        disallow: ['/admin', '/login', '/register', '/callback', '/prototype', '/contact/thanks'],
     },
 
     sitemap: {

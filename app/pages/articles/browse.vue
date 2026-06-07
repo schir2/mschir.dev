@@ -29,71 +29,69 @@ const {
   pending: articlesPending,
   error: articlesError,
 } = useAsyncData<ArticleCardItem[]>('browse-articles', async () => {
-  const {data, error} = await supabase
-      .from('articles')
-      .select(articleCardSelect)
-      .not('published_at', 'is', null)
-      .is('archived_at', null)
-      .order('published_at', {ascending: false})
+  const { data, error } = await supabase
+    .from('articles')
+    .select(articleCardSelect)
+    .not('published_at', 'is', null)
+    .is('archived_at', null)
+    .order('published_at', { ascending: false })
   if (error) throw error
   return (data ?? []) as ArticleCardItem[]
-}, {lazy: true})
+}, { lazy: true })
 
 const {
   data: categories,
-  pending: categoriesPending,
   error: categoriesError,
 } = useAsyncData<ArticleCategory[]>('browse-categories', async () => {
-  const {data, error} = await supabase
-      .from('article_categories')
-      .select('id, name, slug, description')
-      .order('name')
+  const { data, error } = await supabase
+    .from('article_categories')
+    .select('id, name, slug, description')
+    .order('name')
   if (error) throw error
   return (data ?? []) as ArticleCategory[]
-}, {lazy: true})
+}, { lazy: true })
 
 const {
   data: tags,
-  pending: tagsPending,
   error: tagsError,
 } = useAsyncData<ArticleTag[]>('browse-tags', async () => {
-  const {data, error} = await supabase
-      .from('article_tags')
-      .select('id, name, slug')
-      .order('name')
+  const { data, error } = await supabase
+    .from('article_tags')
+    .select('id, name, slug, icon, article_tags_links!inner(article_id)')
+    .order('name')
   if (error) throw error
-  return (data ?? []) as ArticleTag[]
-}, {lazy: true})
+  return (data ?? []) as unknown as ArticleTag[]
+}, { lazy: true })
 
-const listColumns = ref<1 | 2>(1)
+const layout = ref<'list' | 'grid'>('list')
 
 const activeCategory = ref<string | null>((route.query.category as string) ?? null)
 const activeTags = ref<string[]>(
-    route.query.tag
-        ? (Array.isArray(route.query.tag) ? (route.query.tag as string[]) : [route.query.tag as string])
-        : [],
+  route.query.tag
+    ? (Array.isArray(route.query.tag) ? (route.query.tag as string[]) : [route.query.tag as string])
+    : [],
 )
 
-const filteredArticles = computed(() =>
-    filterArticles(allArticles.value ?? [], activeCategory.value, activeTags.value),
+const filteredArticles = computed<ArticleCardItem[]>(() =>
+  filterArticles(allArticles.value ?? [], activeCategory.value, activeTags.value),
 )
 
-function onCategoryUpdate(slug: string | null) {
+function onCategoryUpdate(slug: string | null): void {
   activeCategory.value = slug
   router.replace({
     query: {
-      ...(slug ? {category: slug} : {}),
-      ...(activeTags.value.length ? {tag: activeTags.value} : {}),
+      ...(slug ? { category: slug } : {}),
+      ...(activeTags.value.length ? { tag: activeTags.value } : {}),
     },
   })
 }
 
-function onTagsUpdate(slugs: string[]) {
+function onTagsUpdate(slugs: string[]): void {
   activeTags.value = slugs
   router.replace({
     query: {
-      ...(activeCategory.value ? {category: activeCategory.value} : {}),
-      ...(slugs.length ? {tag: slugs} : {}),
+      ...(activeCategory.value ? { category: activeCategory.value } : {}),
+      ...(slugs.length ? { tag: slugs } : {}),
     },
   })
 }
@@ -102,71 +100,76 @@ function onTagsUpdate(slugs: string[]) {
 <template>
   <div class="flex flex-col gap-8">
     <article-page-header
-        :crumbs="[{ label: 'Articles', route: '/articles' }, { label: 'Browse' }]"
-        title="Browse Articles"
+      :crumbs="[{ label: 'Articles', route: '/articles' }, { label: 'Browse' }]"
+      title="Browse Articles"
     />
 
-    <section class="flex flex-col gap-4">
-      <template v-if="categoriesPending || tagsPending">
-        <div class="flex flex-wrap gap-2">
-          <div v-for="n in 6" :key="n" class="h-[28px] rounded-full bg-surface-700 animate-pulse" :style="`width: ${60 + n * 12}px`" />
-        </div>
-        <div class="flex flex-wrap gap-2">
-          <div v-for="n in 8" :key="n" class="h-[28px] rounded-full bg-surface-700 animate-pulse" :style="`width: ${50 + n * 10}px`" />
-        </div>
-      </template>
-      <template v-else>
-        <p v-if="categoriesError || tagsError" class="text-red-500">Failed to load filters.</p>
-        <article-category-tag-filter
-            v-else
-            :categories="categories ?? []"
-            :tags="tags ?? []"
-            :model-category="activeCategory"
-            :model-tags="activeTags"
-            @update:model-category="onCategoryUpdate"
-            @update:model-tags="onTagsUpdate"
-        />
-      </template>
+    <section>
+      <p v-if="categoriesError || tagsError" class="text-red-500">Failed to load filters.</p>
+      <article-category-tag-filter
+        v-else
+        :categories="categories ?? []"
+        :tags="tags ?? []"
+        :model-category="activeCategory"
+        :model-tags="activeTags"
+        @update:model-category="onCategoryUpdate"
+        @update:model-tags="onTagsUpdate"
+      />
     </section>
 
     <section class="flex flex-col gap-4">
       <div class="flex items-center justify-end gap-1">
         <p-button
-            :severity="listColumns === 1 ? 'primary' : 'secondary'"
-            variant="text"
-            size="small"
-            aria-label="Single column"
-            @click="listColumns = 1"
+          :severity="layout === 'list' ? 'primary' : 'secondary'"
+          variant="text"
+          size="small"
+          aria-label="Single column"
+          @click="layout = 'list'"
         >
-          <icon name="material-symbols:view-agenda-outline"/>
+          <template #icon>
+            <icon name="material-symbols:view-agenda-outline" class="text-lg" />
+          </template>
         </p-button>
         <p-button
-            :severity="listColumns === 2 ? 'primary' : 'secondary'"
-            variant="text"
-            size="small"
-            aria-label="Two columns"
-            @click="listColumns = 2"
+          :severity="layout === 'grid' ? 'primary' : 'secondary'"
+          variant="text"
+          size="small"
+          aria-label="Two columns"
+          @click="layout = 'grid'"
         >
-          <icon name="material-symbols:grid-view-outline"/>
+          <template #icon>
+            <icon name="material-symbols:grid-view-outline" class="text-lg" />
+          </template>
         </p-button>
       </div>
+
       <div v-if="articlesPending" class="flex flex-col gap-4">
         <article-card v-for="n in 3" :key="n" loading />
       </div>
       <p v-else-if="articlesError">{{ articlesError.message }}</p>
-      <p v-else-if="filteredArticles.length === 0" class="text-color-secondary">
-        No articles match the selected filters.
-      </p>
-      <div
-          v-else
-          :class="listColumns === 2 ? 'grid grid-cols-1 sm:grid-cols-2 gap-4' : 'flex flex-col gap-4'"
-      >
-        <article-card
-            v-for="article in filteredArticles"
-            :key="article.id"
-            :article="article"
-        />
-      </div>
+      <p-data-view v-else :value="filteredArticles" :layout="layout">
+        <template #list="slotProps">
+          <div class="flex flex-col gap-4">
+            <article-card
+              v-for="article in slotProps.items"
+              :key="article.id"
+              :article="article"
+            />
+          </div>
+        </template>
+        <template #grid="slotProps">
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <article-card
+              v-for="article in slotProps.items"
+              :key="article.id"
+              :article="article"
+            />
+          </div>
+        </template>
+        <template #empty>
+          <p class="text-color-secondary">No articles match the selected filters.</p>
+        </template>
+      </p-data-view>
     </section>
   </div>
 </template>

@@ -31,7 +31,6 @@ const initialValues = reactive({name: '', email: '', reason_id: '', message: ''}
 const resolver = zodResolver(ContactMessageInsertSchema)
 const turnstileToken = ref('')
 const pending = ref(false)
-const submitted = ref(false)
 
 async function onFormSubmit(event: FormSubmitEvent) {
   if (!event.valid) return
@@ -46,7 +45,7 @@ async function onFormSubmit(event: FormSubmitEvent) {
       method: 'POST',
       body: {...event.values, turnstileToken: turnstileToken.value},
     })
-    submitted.value = true
+    await navigateTo('/contact/thanks')
   } catch {
     toast.add({severity: 'error', summary: 'Something went wrong', detail: 'Please try again later.', life: 5000})
   } finally {
@@ -57,18 +56,7 @@ async function onFormSubmit(event: FormSubmitEvent) {
 
 <template>
   <section>
-
-    <!-- Confirmation state -->
-    <div v-if="submitted" class="flex flex-col items-center justify-center py-24 gap-6 text-center">
-      <icon name="material-symbols:check-circle" class="text-green-400 text-6xl"/>
-      <h2 class="text-3xl font-bold">Message sent</h2>
-      <p class="text-surface-400 max-w-md">
-        Thanks for reaching out. I'll get back to you as soon as I can.
-      </p>
-    </div>
-
-    <!-- Form state -->
-    <div v-else class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-start">
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-start">
 
       <!-- Left: pitch -->
       <div class="flex flex-col gap-6">

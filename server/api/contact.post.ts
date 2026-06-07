@@ -14,38 +14,20 @@ export default defineEventHandler(async (event) => {
         throw createError({ statusCode: 500, statusMessage: 'Failed to save message' })
     }
 
-    const config = useRuntimeConfig()
-
-    // Email notification — best-effort; failure does not fail the request
-    try {
-        await $fetch('https://api.resend.com/emails', {
-            method: 'POST',
-            headers: {
-                Authorization: `Bearer ${config.resendApiKey}`,
-                'Content-Type': 'application/json',
-            },
-            body: {
-                from: 'contact@mschir.dev',
-                to: 'schir2@gmail.com',
-                subject: `New contact from ${name}`,
-                html: `
-                    <p><strong>From:</strong> ${escape(name)} &lt;${escape(email)}&gt;</p>
-                    <p><strong>Message:</strong></p>
-                    <p>${escape(message).replace(/\n/g, '<br>')}</p>
-                `,
-            },
-        })
-    } catch {
-        // swallowed intentionally
+    let reasonLabel = ''
+    if (reason_id) {
+        const { data: reason } = await supabase
+            .from('contact_reasons')
+            .select('label')
+            .eq('id', reason_id)
+            .single()
+        reasonLabel = reason?.label ?? ''
     }
+
+    // Fire-and-forget — email failure must never surface to the user
+    supabase.functions.invoke('send-contact-emails', {
+        body: { name, email, message, reasonLabel },
+    })
 
     return { success: true }
 })
-
-function escape(str: string): string {
-    return str
-        .replace(/&/g, '&amp;')
-        .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;')
-        .replace(/"/g, '&quot;')
-}
