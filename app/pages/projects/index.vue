@@ -45,7 +45,9 @@ const projectCards = computed<ProjectCardItem[]>(() =>
   <section class="flex flex-col gap-6">
     <h1>Projects</h1>
     <p v-if="projectsError" class="text-red-400">{{ projectsError.message }}</p>
-    <p-progress-spinner v-else-if="projectsLoading" />
+    <div v-else-if="projectsLoading" class="flex flex-col gap-4">
+      <project-card v-for="n in 3" :key="n" loading />
+    </div>
     <div v-else class="flex flex-col gap-4">
       <nuxt-link
         v-for="project in projectCards"

@@ -75,8 +75,7 @@ const {
 
 <template>
   <div class="flex flex-col gap-16">
-    <p-progress-spinner v-if="seriesPending" />
-    <p v-else-if="seriesError">{{ seriesError.message }}</p>
+    <p v-if="seriesError">{{ seriesError.message }}</p>
     <template v-else-if="seriesData">
       <article-page-header
         :crumbs="[{ label: 'Articles', route: '/articles' }, { label: seriesData.title }]"
@@ -86,7 +85,12 @@ const {
 
       <section class="flex flex-col gap-6">
         <h2 class="text-2xl font-bold">Articles in this Series</h2>
-        <p-progress-spinner v-if="articlesPending" />
+        <ol v-if="articlesPending" class="flex flex-col gap-4 list-none">
+          <li v-for="n in 3" :key="n" class="flex gap-4 items-start">
+            <div class="w-8 h-[28px] rounded bg-surface-700 animate-pulse shrink-0" />
+            <article-card loading class="flex-1" />
+          </li>
+        </ol>
         <p v-else-if="articlesError">{{ articlesError.message }}</p>
         <p v-else-if="!articleList || articleList.length === 0" class="text-color-secondary">
           No published articles in this series yet.

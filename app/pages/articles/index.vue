@@ -90,7 +90,9 @@ const {
     </div>
     <section v-if="featuredPending || (featuredArticles && featuredArticles.length > 0)" class="flex flex-col gap-6">
       <h2 class="text-2xl font-bold">Featured Articles</h2>
-      <p-progress-spinner v-if="featuredPending"/>
+      <div v-if="featuredPending" class="flex flex-col gap-4">
+        <article-card v-for="n in 3" :key="n" loading />
+      </div>
       <p v-else-if="featuredError">{{ featuredError.message }}</p>
       <div v-else class="flex flex-col gap-4">
         <article-card
@@ -103,7 +105,9 @@ const {
 
     <section class="flex flex-col gap-6">
       <h2 class="text-2xl font-bold">Recent Articles</h2>
-      <p-progress-spinner v-if="recentPending"/>
+      <div v-if="recentPending" class="flex flex-col gap-4">
+        <article-card v-for="n in 3" :key="n" loading />
+      </div>
       <p v-else-if="recentError">{{ recentError.message }}</p>
       <div v-else class="flex flex-col gap-4">
         <article-card
@@ -116,7 +120,9 @@ const {
 
     <section v-if="seriesPending || (seriesList && seriesList.length > 0)" class="flex flex-col gap-6">
       <h2 class="text-2xl font-bold">Series</h2>
-      <p-progress-spinner v-if="seriesPending"/>
+      <div v-if="seriesPending" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <article-series-card v-for="n in 2" :key="n" loading />
+      </div>
       <p v-else-if="seriesError">{{ seriesError.message }}</p>
       <div v-else class="grid grid-cols-1 md:grid-cols-2 gap-4">
         <article-series-card
@@ -129,7 +135,9 @@ const {
 
     <section class="flex flex-col gap-6">
       <h2 class="text-2xl font-bold">Browse by Category</h2>
-      <p-progress-spinner v-if="categoriesPending"/>
+      <div v-if="categoriesPending" class="flex flex-wrap gap-2">
+        <div v-for="n in 6" :key="n" class="h-[28px] rounded-full bg-surface-700 animate-pulse" :style="`width: ${60 + n * 12}px`" />
+      </div>
       <p v-else-if="categoriesError">{{ categoriesError.message }}</p>
       <div v-else class="flex flex-wrap gap-2">
         <nuxt-link

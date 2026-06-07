@@ -106,17 +106,27 @@ function onTagsUpdate(slugs: string[]) {
         title="Browse Articles"
     />
 
-    <section v-if="!categoriesPending && !tagsPending" class="flex flex-col gap-4">
-      <p v-if="categoriesError || tagsError" class="text-red-500">Failed to load filters.</p>
-      <article-category-tag-filter
-          v-else
-          :categories="categories ?? []"
-          :tags="tags ?? []"
-          :model-category="activeCategory"
-          :model-tags="activeTags"
-          @update:model-category="onCategoryUpdate"
-          @update:model-tags="onTagsUpdate"
-      />
+    <section class="flex flex-col gap-4">
+      <template v-if="categoriesPending || tagsPending">
+        <div class="flex flex-wrap gap-2">
+          <div v-for="n in 6" :key="n" class="h-[28px] rounded-full bg-surface-700 animate-pulse" :style="`width: ${60 + n * 12}px`" />
+        </div>
+        <div class="flex flex-wrap gap-2">
+          <div v-for="n in 8" :key="n" class="h-[28px] rounded-full bg-surface-700 animate-pulse" :style="`width: ${50 + n * 10}px`" />
+        </div>
+      </template>
+      <template v-else>
+        <p v-if="categoriesError || tagsError" class="text-red-500">Failed to load filters.</p>
+        <article-category-tag-filter
+            v-else
+            :categories="categories ?? []"
+            :tags="tags ?? []"
+            :model-category="activeCategory"
+            :model-tags="activeTags"
+            @update:model-category="onCategoryUpdate"
+            @update:model-tags="onTagsUpdate"
+        />
+      </template>
     </section>
 
     <section class="flex flex-col gap-4">
@@ -140,7 +150,9 @@ function onTagsUpdate(slugs: string[]) {
           <icon name="material-symbols:grid-view-outline"/>
         </p-button>
       </div>
-      <p-progress-spinner v-if="articlesPending"/>
+      <div v-if="articlesPending" class="flex flex-col gap-4">
+        <article-card v-for="n in 3" :key="n" loading />
+      </div>
       <p v-else-if="articlesError">{{ articlesError.message }}</p>
       <p v-else-if="filteredArticles.length === 0" class="text-color-secondary">
         No articles match the selected filters.
