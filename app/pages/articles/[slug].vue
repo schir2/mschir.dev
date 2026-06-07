@@ -66,7 +66,11 @@ const {data: seriesSiblings} = await useAsyncData<SeriesArticle[]>(
 
 usePageSeo({
   title: () => article.value?.title,
-  description: () => article.value?.summary ?? undefined,
+  description: () => {
+    if (article.value?.summary) return article.value.summary
+    const firstPara = article.value?.content?.split('\n').find(line => line.trim() && !line.startsWith('#'))
+    return firstPara?.replace(/[*_`[\]]/g, '').substring(0, 160) ?? undefined
+  },
   image: () => heroImageUrl.value ?? undefined,
   type: 'article',
   publishedAt: () => article.value?.published_at ?? undefined,
@@ -156,7 +160,7 @@ const {previousArticle, nextArticle, allArticles} = useSeriesNavigation(
               v-for="tagLink in article.article_tags_links"
               :key="tagLink.article_tags.slug"
               :to="`/articles/browse?tag=${tagLink.article_tags.slug}`"
-              class="flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-full bg-surface-800 text-surface-300 leading-none hover:bg-surface-700 hover:text-surface-100 transition-colors"
+              class="flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-full bg-surface-100 text-surface-700 dark:bg-surface-800 dark:text-surface-300 leading-none hover:bg-surface-200 dark:hover:bg-surface-700 hover:text-surface-800 dark:hover:text-surface-100 transition-colors"
           >
             <icon v-if="tagLink.article_tags.icon" :name="tagLink.article_tags.icon" class="w-4 h-4 shrink-0"/>
             {{ tagLink.article_tags.name }}

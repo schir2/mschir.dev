@@ -15,7 +15,7 @@ export default defineEventHandler(async (event) => {
       .is('archived_at', null),
     client
       .from('projects')
-      .select('slug, updated_at'),
+      .select('slug'),
     client
       .from('article_series')
       .select('slug, updated_at'),
@@ -28,7 +28,6 @@ export default defineEventHandler(async (event) => {
     })),
     ...(projects ?? []).map(project => ({
       loc: `/projects/${project.slug}`,
-      lastmod: project.updated_at,
     })),
     ...(series ?? []).map(seriesItem => ({
       loc: `/articles/series/${seriesItem.slug}`,

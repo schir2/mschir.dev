@@ -41,7 +41,11 @@ const heroImageUrl = computed<string | null>(() => {
 
 usePageSeo({
   title: () => project.value?.name,
-  description: () => project.value?.summary ?? undefined,
+  description: () => {
+    if (project.value?.summary) return project.value.summary
+    const firstPara = project.value?.description?.split('\n').find(line => line.trim() && !line.startsWith('#'))
+    return firstPara?.replace(/[*_`[\]]/g, '').substring(0, 160) ?? undefined
+  },
   image: () => heroImageUrl.value ?? undefined,
 })
 
@@ -95,9 +99,9 @@ const breadcrumbs = computed<Crumb[]>(() => {
 
         <!-- Company + year -->
         <div v-if="project.companies || project.year" class="flex items-center gap-2 text-sm">
-          <span v-if="project.companies" class="font-semibold text-surface-200">{{ project.companies.name }}</span>
-          <span v-if="project.companies && project.year" class="text-surface-600">·</span>
-          <span v-if="project.year" class="text-surface-400">{{ project.year }}</span>
+          <span v-if="project.companies" class="font-semibold text-surface-800 dark:text-surface-200">{{ project.companies.name }}</span>
+          <span v-if="project.companies && project.year" class="text-surface-400 dark:text-surface-600">·</span>
+          <span v-if="project.year" class="text-surface-600 dark:text-surface-400">{{ project.year }}</span>
         </div>
 
         <!-- Skills -->
@@ -105,7 +109,7 @@ const breadcrumbs = computed<Crumb[]>(() => {
           <span
               v-for="skillLink in project.project_skills"
               :key="skillLink.skills.id"
-              class="flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-full bg-surface-800 text-surface-300 leading-none"
+              class="flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-full bg-surface-100 text-surface-700 dark:bg-surface-800 dark:text-surface-300 leading-none"
           >
             <icon v-if="skillLink.skills.icon" :name="skillLink.skills.icon" class="w-4 h-4 shrink-0"/>
             {{ skillLink.skills.name }}
