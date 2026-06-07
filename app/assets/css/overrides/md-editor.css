@@ -23,6 +23,17 @@
   --md-theme-link-color: var(--p-primary-color);
   --md-theme-link-hover-color: var(--p-primary-hover-color);
   --md-theme-border-color: var(--p-content-border-color);
+  word-break: normal;
+  overflow-wrap: break-word;
+}
+
+.md-content-preview > .md-editor .md-editor-preview h1,
+.md-content-preview > .md-editor .md-editor-preview h2,
+.md-content-preview > .md-editor .md-editor-preview h3,
+.md-content-preview > .md-editor .md-editor-preview h4,
+.md-content-preview > .md-editor .md-editor-preview h5,
+.md-content-preview > .md-editor .md-editor-preview h6 {
+  word-break: normal;
 }
 
 .md-content-preview > .md-editor .md-editor-preview h1,

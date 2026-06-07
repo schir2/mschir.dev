@@ -132,6 +132,10 @@ Default canonical label vocabulary (`needs-triage`, `needs-info`, `ready-for-age
 
 Single-context repo — one `CONTEXT.md` + `docs/adr/` at the root. See `docs/agents/domain.md`.
 
+### Prose and copy style
+
+Voice, tone, AI-tell patterns, heading style, and article structure rules for all written copy on this site. See `.claude/skills/copy-style/REFERENCE.md`. Use `/copy-style` when writing or rewriting any user-facing prose.
+
 ## UI and Visual Work
 
 ### Prototype before implementing

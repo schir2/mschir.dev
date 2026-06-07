@@ -76,4 +76,26 @@ from public.projects p
     )
 where p.name = 'Automated User Lookup and Reporting System'
 
+union all
+select
+    p.id,
+    s.id
+from public.projects p
+         join public.skills s on s.name in (
+    -- Arcus
+                                            'Nuxt', 'VUE', 'TypeScript', 'Tailwind', 'Supabase', 'Postgres'
+    )
+where p.name = 'Arcus'
+
+union all
+select
+    p.id,
+    s.id
+from public.projects p
+         join public.skills s on s.name in (
+    -- Calcura
+                                            'Nuxt', 'VUE', 'TypeScript', 'Tailwind', 'Django', 'Python', 'REST', 'Postgres'
+    )
+where p.name = 'Calcura'
+
 on conflict do nothing;
