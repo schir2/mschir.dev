@@ -28,6 +28,15 @@ h1, h2 {
   opacity: 0;
 }
 
+.layout-enter-active,
+.layout-leave-active {
+  transition: opacity 0.15s ease;
+}
+.layout-enter-from,
+.layout-leave-to {
+  opacity: 0;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .page-enter-active,
   .page-leave-active {
@@ -35,5 +44,9 @@ h1, h2 {
   }
   .page-enter-from {
     transform: none;
+  }
+  .layout-enter-active,
+  .layout-leave-active {
+    transition: none;
   }
 }

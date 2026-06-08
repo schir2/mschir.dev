@@ -3,6 +3,9 @@ import type {ArticleCardItem} from '#shared/types/Article'
 
 definePageMeta({})
 
+const heroMounted = ref(false)
+onMounted(() => nextTick(() => (heroMounted.value = true)))
+
 usePageSeo({
   title: undefined,
   description: 'Software Developer & Systems Architect building custom integrations, applications, and AI workflows for growing businesses.',
@@ -44,22 +47,20 @@ const pillars = [
   {
     icon: 'material-symbols:hub',
     title: 'Integrations & APIs',
-    description: 'Connecting your platforms, building the APIs that tie them together.'
+    description: 'Connecting your platforms, building the APIs that tie them together.',
+    to: '/services/integrations-apis',
   },
   {
     icon: 'material-symbols:code-blocks',
     title: 'Application Development',
-    description: 'Custom software and legacy modernization for the way your business actually runs.'
+    description: 'Custom software and legacy modernization for the way your business actually runs.',
+    to: '/services/application-development',
   },
   {
     icon: 'material-symbols:smart-toy',
     title: 'AI & Automation',
-    description: 'Workflow automation and AI-enriched pipelines that eliminate the manual work.'
-  },
-  {
-    icon: 'material-symbols:cloud',
-    title: 'Infrastructure & Cloud',
-    description: 'Cloud architecture, networking, and security across AWS, Azure, DigitalOcean, and more.'
+    description: 'Workflow automation and AI-enriched pipelines that eliminate the manual work.',
+    to: '/services/ai-automation',
   },
 ]
 </script>
@@ -67,15 +68,15 @@ const pillars = [
 <template>
   <div>
     <!-- Hero: violet + amber animated gradient, entrance animation -->
-    <section class="hero-gradient flex flex-col items-center justify-center text-center gap-6 px-6 min-h-nav-offset">
+    <section :class="['hero-gradient flex flex-col items-center justify-center text-center gap-6 px-6 min-h-nav-offset', { 'hero-mounted': heroMounted }]">
       <div class="flex flex-col items-center gap-2">
-        <h1 class="text-6xl font-bold text-white fade-up-1">Marek Schir</h1>
-        <p class="text-2xl fade-up-2 hero-subtitle">Software Developer & Systems Architect</p>
+        <h1 class="text-6xl font-bold text-white hero-item hero-item-1">Marek Schir</h1>
+        <p class="text-2xl hero-subtitle hero-item hero-item-2">Software Developer & Systems Architect</p>
       </div>
-      <p class="text-xl max-w-2xl fade-up-3 hero-headline">
+      <p class="text-xl max-w-2xl hero-headline hero-item hero-item-3">
         Building the software and systems that make businesses run better.
       </p>
-      <div class="flex gap-4 flex-wrap justify-center fade-up-4">
+      <div class="flex gap-4 flex-wrap justify-center hero-item hero-item-4">
         <nuxt-link to="/portfolio">
           <p-button label="See My Work" class="hero-outlined-btn" outlined/>
         </nuxt-link>
@@ -92,10 +93,11 @@ const pillars = [
       <div class="flex flex-col gap-6">
         <span class="text-xs uppercase tracking-widest font-medium text-muted-color">What I Build</span>
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
-          <div
+          <nuxt-link
             v-for="pillar in pillars"
             :key="pillar.title"
-            class="pillar-card group relative flex items-center gap-6 p-6 rounded-xl border border-surface-200 bg-surface-100 dark:border-surface-700 dark:bg-surface-900 cursor-default overflow-hidden"
+            :to="pillar.to"
+            class="pillar-card group relative flex items-center gap-6 p-6 rounded-xl border border-surface-200 bg-surface-100 dark:border-surface-700 dark:bg-surface-900 overflow-hidden"
           >
             <div class="pillar-top-bar absolute inset-x-0 top-0 h-0.5"/>
             <div class="flex flex-col gap-2 flex-1">
@@ -103,7 +105,7 @@ const pillars = [
               <p class="text-base leading-relaxed text-muted-color">{{ pillar.description }}</p>
             </div>
             <icon :name="pillar.icon" class="pillar-icon flex-shrink-0 text-6xl"/>
-          </div>
+          </nuxt-link>
         </div>
       </div>
 
@@ -153,20 +155,32 @@ const pillars = [
   }
 }
 
-.fade-up-1 {
-  animation: fadeUp 0.6s ease both;
+/* Before mount: elements are fully visible (SSR-safe, no animation applied) */
+/* After mount: hero-mounted class enables animations via hero-item-* */
+
+.hero-mounted .hero-item {
+  opacity: 0;
 }
 
-.fade-up-2 {
-  animation: fadeUp 0.6s ease 0.12s both;
+.hero-mounted .hero-item-1 {
+  animation: fadeUp 0.6s ease forwards;
 }
 
-.fade-up-3 {
-  animation: fadeUp 0.6s ease 0.24s both;
+.hero-mounted .hero-item-2 {
+  animation: fadeUp 0.6s ease 0.12s forwards;
 }
 
-.fade-up-4 {
-  animation: fadeUp 0.6s ease 0.36s both;
+.hero-mounted .hero-item-3 {
+  animation: fadeUp 0.6s ease 0.24s forwards;
+}
+
+.hero-mounted .hero-item-4 {
+  animation: fadeUp 0.6s ease 0.36s forwards;
+}
+
+/* Stop hero animations during page leave so the opacity transition is clean */
+.page-leave-active .hero-item {
+  animation: none;
 }
 
 @keyframes fadeUp {

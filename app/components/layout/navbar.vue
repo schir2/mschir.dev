@@ -17,6 +17,7 @@ const isAdmin = computed(() => user.value?.app_metadata?.role === 'admin')
 
 const navItems = ref<MenuItem[]>([
   { label: 'Portfolio', to: '/portfolio' },
+  { label: 'Services', to: '/services' },
   { label: 'Articles', to: '/articles' },
   { label: 'About', to: '/about' },
   { label: 'Contact', to: '/contact' },

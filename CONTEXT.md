@@ -213,7 +213,7 @@ All `/admin/**` routes are guarded by a global Nuxt route middleware (`middlewar
 ### Homepage
 The `/` route. First impression for all visitors. Leads with value — what gets built and who it helps — not personal narrative (that's `/about`). Drives visitors toward `/portfolio` and `/contact`.
 
-**Sections** (in order): (1) Hero — name + subtitle + headline + two CTAs, (2) Service Pillars — 2×2 custom card grid, (3) Recent Articles — latest 3 published from DB (borderless link list), (4) Bottom CTA.
+**Sections** (in order): (1) Hero — name + subtitle + headline + two CTAs, (2) Service Pillars — 3-card grid (single column on mobile, three columns on lg+), (3) Recent Articles — latest 3 published from DB (borderless link list), (4) Bottom CTA.
 
 **Hero name**: "Marek Schir" (h1, `text-6xl`, Fraunces)
 **Hero subtitle**: "Software Developer & Systems Architect" (`text-2xl`)
@@ -224,6 +224,40 @@ The `/` route. First impression for all visitors. Leads with value — what gets
 **Bottom CTA copy**: *"Got a system, workflow, or idea that needs the right technology behind it? Let's talk."* Button: "Get in Touch" → `/contact`.
 
 **Heading structure**: Hero h1 is the only `<h1>`. Section eyebrow labels ("What I Build", "Recent Articles") are plain `<span>` elements — visual decoration only, not semantic headings. Service pillar titles are `<h2>` (Fraunces applied via the global h1/h2 rule). See `app/pages/CLAUDE.md` for the full heading convention. See ADR-0009 for the typography system.
+
+## Services Domain
+
+### Services Section
+The `/services` route subtree. A set of public-facing sales pages — one index and three detail pages — that elaborate on each Service Pillar for visitors evaluating whether to hire. Separate routes (not a single tabbed page) so each service has its own SEO surface, canonical URL, and shareable link. See ADR-0022.
+
+### Service Index Page
+The `/services` route. Lists all three Service Pillars with a brief description and a link to each Service Detail Page. Entry point for visitors exploring what's on offer. Calls `usePageSeo()`.
+
+### Service Detail Page
+One of three routes: `/services/integrations-apis`, `/services/application-development`, `/services/ai-automation`. Each elaborates on one Service Pillar — what it involves, who it's for, relevant past projects, and a CTA to `/contact`.
+
+**Page structure (top to bottom):**
+1. `"Services"` eyebrow — `text-xs uppercase tracking-widest text-muted-color`, links to `/services`
+2. `<h1>` — service name
+3. **Service Sibling Nav** — immediately below the h1
+4. Body copy — sections vary per service (authored in `temp/`)
+5. Project references — lightweight link list (name + one-line descriptor → `/projects/[slug]`), not full ProjectCard
+6. CTA — "Get in touch" → `/contact`
+
+### Service Sibling Nav
+An icon card strip placed immediately below the `<h1>` on every Service Detail Page, preceded by a `"Services"` eyebrow label above the h1. Three cards in a `grid-cols-3` grid, one per service. Each card shows the service icon (left) and label (right). Active card: amber border (`border-amber-500/60`), amber background tint (`bg-amber-500/10`), amber icon (`text-amber-400`). Inactive cards: `border-surface-700 bg-surface-900 text-muted-color`, lighten on hover.
+
+Implemented as `<nuxt-link>` cards (not `<p-tab-menu>`) — active state set by comparing the current route to each service's path. Visually consistent with the Service Pillar cards on the Homepage (same icon + label layout).
+
+### Series Nav
+The navigation UI on the Article Detail Page for articles that belong to a series. Structure (top to bottom within the article header):
+
+1. `"Series · [Series Title]"` eyebrow — `text-xs uppercase tracking-widest text-muted-color`; "Series" is plain text, the series title links to `/articles/series/[slug]`
+2. `<h1>` — article title (the eyebrow sits above it, providing series context before the title)
+3. **Jump nav**: a `<p-select>` dropdown immediately below the h1, showing "Part X of Y — [Current Title]" as the selected value. All series articles are options. Scales to any series length (tested with 19 articles). Replaces the current collapsible `<p-panel>` list which is unusable at large series sizes.
+
+At the bottom of the article:
+4. **Prev/next strip**: two columns — previous article on the left, next on the right — each showing a direction label (`← Previous` / `Next →`) and the article title. Supports sequential reading flow.
 
 ## Site Design Domain
 
@@ -317,12 +351,11 @@ The `/about` route. A personal introduction page presenting the site owner's bac
 **Personality traits for copy reference**: Methodical and deliberate — prefers to plan thoroughly before acting, front-loads work to accelerate later. Utility over beauty (but beauty matters). Finds genuine satisfaction in making people's work faster and easier. Creative at heart (started in 3D design, still takes design courses, uses Figma) — that creativity shows up in software architecture.
 
 ### Service Pillars
-The four core capability areas presented on the **Homepage**. Each is a distinct type of engagement, but all share the same consulting-first approach: understand the business workflow before writing any code.
+The three core capability areas presented on the **Homepage** and elaborated on the **Services Section**. Each is a distinct type of engagement. Infrastructure & Cloud was dropped as a public-facing offering (removed from homepage and contact page as of issue #140).
 
-1. **Integrations & API Development** — connecting disparate platforms, building APIs, and modernizing the data flows between systems. Includes CRM platforms (HubSpot, Zoho, Salesforce) and communication systems (3CX, FreePBX).
-2. **Application Development & Digital Transformation** — building net-new applications for specific business needs (e.g. field service management, job scheduling, technician dispatch), and rebuilding or extending legacy software.
-3. **AI Workflows & Automation** — designing and building AI-enriched automation pipelines using tools like N8n, Zapier, or custom webhook integrations. Applies AI to improve operational efficiency, not as a novelty.
-4. **Infrastructure & Cloud Architecture** — cloud platforms (AWS, Cloudflare, DigitalOcean, Azure), network architecture (Cisco, Juniper), and security. Enables end-to-end ownership of a client's technology stack, not just the application layer.
+1. **Integrations & APIs** — connecting disparate platforms, building APIs, and modernizing the data flows between systems. Includes CRM platforms (HubSpot, Zoho, Salesforce) and communication systems (3CX, FreePBX). Detail page: `/services/integrations-apis`.
+2. **Application Development** — building net-new applications for specific business needs and rebuilding or extending legacy software. Focused on smaller, well-scoped builds. Detail page: `/services/application-development`.
+3. **AI & Automation** — workflow automation and AI-enriched pipelines that reduce manual work and surface actionable information. Detail page: `/services/ai-automation`.
 
 ### Consulting Approach
 The process that precedes all implementation work. Involves working directly with business owners and domain experts to understand existing workflows, identify inefficiencies, and define a technology strategy before any code is written. Distinguishes the site owner from a pure-execution developer.

@@ -80,10 +80,6 @@ async function onFormSubmit(event: FormSubmitEvent) {
             <icon name="material-symbols:smart-toy" class="pillar-icon text-2xl flex-shrink-0"/>
             <span class="text-surface-700 dark:text-surface-300">AI &amp; Automation</span>
           </li>
-          <li class="flex items-center gap-3">
-            <icon name="material-symbols:cloud" class="pillar-icon text-2xl flex-shrink-0"/>
-            <span class="text-surface-700 dark:text-surface-300">Infrastructure &amp; Cloud</span>
-          </li>
         </ul>
       </div>
 
