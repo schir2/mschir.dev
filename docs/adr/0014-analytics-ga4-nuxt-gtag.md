@@ -26,6 +26,11 @@ GTM's core value — letting non-developers manage tags via a UI without code de
 - **Manual `<script>` tag in `nuxt.config.ts`** — rejected. `nuxt-gtag` handles the Nuxt router integration (pageview on route change) and Consent Mode v2 wiring out of the box. Replicating that manually adds boilerplate with no upside.
 - **GA4 enabled in dev for local testing** — not adopted as a permanent setting. DebugView in GA4 can be used temporarily during development by enabling the module conditionally, then reverting before commit.
 
-## GDPR / Consent Debt
+## GDPR / Consent
 
-Consent Mode v2 with all signals defaulting to `denied` satisfies the letter of the requirement (no PII without consent) but does not give users visible control over their data. A consent banner (likely via `nuxt-cookie-control`) is a known follow-up. Until that banner exists, EU visitors receive modeled analytics data only — no cookies, no identifiers.
+Resolved. See ADR 0026 for the full consent implementation. Summary:
+
+- Google Fonts CDN links removed; fonts are self-hosted via `@nuxt/fonts` (eliminates the Google CDN GDPR surface entirely).
+- `@dargmuesli/nuxt-cookie-control` manages consent state, cookie storage, and the consent UI. GA4 is the single optional cookie category (`id: 'ga'`).
+- `useAnalyticsConsent()` composable watches `cookiesEnabledIds` and calls `gtag('consent', 'update', { analytics_storage: 'granted' | 'denied' })` on every change, including immediately on mount.
+- Until a user grants consent, GA4 runs in cookieless/modeled mode — Consent Mode v2 defaults remain `denied` for all signals.

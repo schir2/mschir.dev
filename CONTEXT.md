@@ -269,10 +269,10 @@ Two semantic colors defined in `primevue-theme.ts`:
 Raw Tailwind color values (e.g. `text-red-600`, `bg-yellow-500`) are not used for brand colors. All color references go through PrimeVue tokens (`var(--p-primary-*)`, `var(--p-surface-*)`, or the accent token once added).
 
 ### Typography System
-Two-font system loaded via Google Fonts `<link>` tags in `nuxt.config.ts` (no `@nuxt/fonts` module):
+Two-font system self-hosted via `@nuxt/fonts` (configured in `nuxt.config.ts` under `fonts.families`). Google Fonts CDN links were removed; fonts are downloaded and served from the site's own origin for GDPR compliance.
 
-- **Display font**: Fraunces (variable serif) — applied to `h1` and `h2` only. Configured as `fontFamily.display` in `tailwind.config.ts`. Used via `font-display` utility class or targeted CSS.
-- **Body font**: Inter (sans-serif) — all other text: prose, UI labels, form inputs, card content. Configured as `fontFamily.sans` in `tailwind.config.ts` and as `fontFamily` in `primevue-theme.ts` semantic tokens so PrimeVue components inherit it automatically.
+- **Display font**: Fraunces (variable serif, weights 400/700/900) — applied to `h1` and `h2` only. Configured as `fontFamily.display` in `tailwind.config.ts`. Used via `font-display` utility class or targeted CSS.
+- **Body font**: Inter (sans-serif, weights 400/500/600/700) — all other text: prose, UI labels, form inputs, card content. Configured as `fontFamily.sans` in `tailwind.config.ts` and as `fontFamily` in `primevue-theme.ts` semantic tokens so PrimeVue components inherit it automatically.
 
 **Hero type scale**: h1 `text-6xl` (Fraunces) / subtitle `text-2xl` / headline `text-xl`.
 

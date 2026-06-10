@@ -60,6 +60,7 @@ This is a **Nuxt 4** personal portfolio site (mschir.dev) backed by **Supabase**
 - `scripts/` — one-off dev utility scripts (not part of the Nuxt app)
 - `supabase/tests/` — pgTAP database tests and Deno edge function tests; see `supabase/tests/CLAUDE.md`
 - `primevue-theme.ts` — custom PrimeVue theme imported by `nuxt.config.ts`
+- `packages/portfolio-mcp/` — (planned) Portfolio MCP server; pnpm workspace package published as `@mschir/portfolio-mcp`; see #170 and ADR-0026
 
 ### Key patterns
 
