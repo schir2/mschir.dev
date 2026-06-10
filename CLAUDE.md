@@ -16,6 +16,8 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 > **Never remove modules or dependencies without explicit confirmation.** If a module appears unused, always ask before removing it — it may be planned for upcoming work. This applies to `nuxt.config.ts` modules, `package.json` dependencies, and any registered plugins.
 
+> **Permission prompts for "never do X" rules.** When the user says "never do X" and it relates to a tool permission (e.g. "never run the dev server", "never push without asking"), ask whether it should be added as a permission rule in `.claude/settings.json` (project-scoped) or `~/.claude/settings.json` (user-scoped, applies across all projects). Some rules belong only here; others are better enforced by the harness. Ask before adding to settings — scope matters.
+
 ```bash
 pnpm install          # Install dependencies
 pnpm run dev          # Start dev server at http://localhost:3000
@@ -69,7 +71,7 @@ This is a **Nuxt 4** personal portfolio site (mschir.dev) backed by **Supabase**
 
 **Auth** — Supabase auth via `@nuxtjs/supabase`. All routes are excluded from redirect (`exclude: ['/**']`), so auth is opt-in per page. `useSupabaseUser()` is available everywhere; login/logout live in the navbar.
 
-**UI** — PrimeVue 4 components are auto-imported with the `p` prefix (e.g. `<p-card>`, `<p-button>`). Dark mode is always active (`htmlAttrs.class: 'dark-mode'`). PrimeVue `DialogService` and `ToastService` are registered as Nuxt plugins.
+**UI** — PrimeVue 4 components are auto-imported with the `p` prefix (e.g. `<p-card>`, `<p-button>`). Color mode follows the user's system preference (`preference: 'system'`, `fallback: 'dark'`); the active mode is applied as a class on `<html>` with `-mode` suffix (e.g. `dark-mode`, `light-mode`). PrimeVue's `darkModeSelector` is set to `.dark-mode`. PrimeVue `DialogService` and `ToastService` are registered as Nuxt plugins.
 
 **CSS layering** — three layers in strict priority order: (1) PrimeVue tokens (`var(--p-primary-*)`, `var(--p-surface-*)`) for all colors; (2) Tailwind utilities for layout/spacing/breakpoints only — no raw color class names for brand colors; (3) third-party overrides in `app/assets/css/overrides/<lib>.css`, imported via `app/assets/css/main.css`. See `docs/adr/0008-css-layering-strategy.md`.
 
@@ -137,6 +139,12 @@ Single-context repo — one `CONTEXT.md` + `docs/adr/` at the root. See `docs/ag
 Voice, tone, AI-tell patterns, heading style, and article structure rules for all written copy on this site. See `.claude/skills/copy-style/REFERENCE.md`. Use `/copy-style` when writing or rewriting any user-facing prose.
 
 ## UI and Visual Work
+
+### PrimeVue-first for admin pages
+
+Admin pages must use PrimeVue components whenever one fits the need. Do not build custom components for admin UI unless no PrimeVue component can satisfy the requirement. Consistency matters more than aesthetics here — admin is a tool, not a showcase.
+
+For public-facing pages (homepage, services, article pages), custom components are appropriate when visual design calls for it. The dividing line: if you're building something a visitor sees and you're optimizing for visual impact, custom is fine. If you're building something the site owner uses to manage data, reach for PrimeVue first.
 
 ### Prototype before implementing
 

@@ -12,8 +12,9 @@ useHead(() => ({
 </script>
 
 <template>
-  <main class="min-h-nav-offset">
-    <div class="max-w-6xl mx-auto px-6">
+  <main class="min-h-nav-offset flex">
+    <admin-sidebar />
+    <div class="flex-1 min-w-0 px-6">
       <slot />
     </div>
   </main>

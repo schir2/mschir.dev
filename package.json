@@ -21,6 +21,7 @@
     "seed:assets": "node --env-file=.env scripts/upload-covers.mjs"
   },
   "dependencies": {
+    "@nuxt/fonts": "^0.14.0",
     "@nuxt/icon": "^2.2.2",
     "@nuxtjs/color-mode": "^4.0.0",
     "@nuxtjs/seo": "5.1.3",

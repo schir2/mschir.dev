@@ -1,6 +1,5 @@
 <script setup lang="ts">
-import type { MenuItem } from "primevue/menuitem";
-import { toMenuItems } from '~/config/adminSections'
+import type { MenuItem } from "primevue/menuitem"
 
 const user = useSupabaseUser()
 const router = useRouter()
@@ -32,7 +31,7 @@ const userMenuItems = computed<MenuItem[]>(() => {
     items.push({
       label: 'Admin',
       icon: 'material-symbols:shield',
-      items: toMenuItems(),
+      to: '/admin',
     })
   }
 

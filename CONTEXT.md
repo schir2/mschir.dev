@@ -327,13 +327,10 @@ The right-most section of the Site Navbar that reflects authentication state:
 
 ### Navbar User Menu
 A `<p-tiered-menu popup>` triggered by clicking the Navbar Auth Area avatar. Contains:
-- **Admin** (nested submenu, shown only when `app_metadata.role === 'admin'`)
-  - Articles → `/admin/articles`
-  - Projects → `/admin/projects`
-  - Companies → `/admin/companies`
+- **Admin** → `/admin` (shown only when `app_metadata.role === 'admin'`) — links directly to the Admin Index Page; no submenu
 - **Logout**
 
-The "Admin" parent item expands on hover to reveal admin sub-pages. New admin sections are added as sub-items under "Admin" — not as top-level menu items. A Profile item is planned when user profile editing is built out.
+A Profile item is planned when user profile editing is built out.
 
 ## About Page Domain
 
@@ -366,15 +363,21 @@ The 2–3 paragraph personal section of the About Page. Covers: origin (started 
 ## Admin Shell Domain
 
 ### Admin Section Registry
-The single source of truth for all admin pages. Defined as `ADMIN_SECTIONS` in `app/config/adminSections.ts` — a typed `as const` array of `AdminGroup` objects, each containing `AdminSection` entries. Each section carries: `label` (plural display name, e.g. "Articles"), `singular` (singular form, e.g. "Article" — used to construct "New Article" labels), `to` (route path), `icon` (Iconify name), `description` (shown on the admin index page), and an optional `getPublicUrl` function that derives the public-facing URL for a given record. Consumed by the Navbar User Menu, the `/admin` index page, and the future admin sidebar. A `toMenuItems()` utility in the same file converts the registry into PrimeVue `MenuItem[]`. Every new admin page must add an entry — there is no other registration step.
+The single source of truth for all admin pages. Defined as `ADMIN_SECTIONS` in `app/config/adminSections.ts` — a typed `as const` array of `AdminGroup` objects, each containing `AdminSection` entries. Each section carries: `label` (plural display name, e.g. "Articles"), `singular` (singular form, e.g. "Article" — used to construct "New Article" labels), `to` (route path), `icon` (Iconify name), `description` (shown on the admin index page), and an optional `getPublicUrl` function that derives the public-facing URL for a given record. Consumed by the Navbar User Menu, the Admin Index Page, and the Admin Sidebar. Two utilities are exported from the same file: `toMenuItems()` (flat PrimeVue `MenuItem[]` for the Navbar User Menu) and `toSidebarMenuItems()` (grouped `MenuItem[]` with `label`/`items` nesting for the Admin Sidebar). Every new admin page must add an entry — there is no other registration step.
 
 Current groups: **Content** (Articles, Categories, Series) · **Portfolio** (Projects, Companies, Skills) · **Inbox** (Contact Messages).
 
+### Admin Index Page
+The `/admin` route. Entry point to the admin section. Displays all admin sections as a Django-style changelist: groups with a header row, then one row per entity. Each row shows: entity icon, entity name as a link to the list page (e.g. `/admin/articles`), and an "Add [Entity]" button linking to the new-record page (e.g. `/admin/articles/new`). Driven entirely by `ADMIN_SECTIONS` — no hardcoded rows. Uses the `admin-list` layout.
+
+### Admin Sidebar
+A persistent left-column navigation menu rendered inside both admin layouts (`admin-list` and `admin-detail`). Implemented as `app/components/admin/AdminSidebar.vue` using PrimeVue's `p-menu` component with grouped items (`label` + `items` nesting). Groups and sections are derived from `toSidebarMenuItems()` in `adminSections.ts`. Always visible — not collapsible. Each item carries an icon and links to the section's list page. Both admin layouts are two-column: sidebar (fixed width) on the left, page content (`flex-1`) on the right.
+
 ### Admin List Layout
-`app/layouts/admin-list.vue`. The shell for all admin list and index pages. Provides navbar, footer, toast, dynamic-dialog, and a `max-w-6xl mx-auto px-6` page container. Pages declare `definePageMeta({ layout: 'admin-list', title: '...' })`. The title is consumed by the layout for `<head>` and by `<admin-page-header>` for display.
+`app/layouts/admin-list.vue`. The shell for all admin list and index pages. Provides navbar, footer, toast, dynamic-dialog, and a two-column flex shell: Admin Sidebar on the left, `max-w-6xl` content area on the right (`px-6` padding). Pages declare `definePageMeta({ layout: 'admin-list', title: '...' })`. The title is consumed by the layout for `<head>` and by `<admin-page-header>` for display.
 
 ### Admin Detail Layout
-`app/layouts/admin-detail.vue`. The shell for admin editor, create, and edit pages. Provides navbar, footer, toast, and dynamic-dialog but **no container constraint** — full-width to accommodate the split markdown editor. Pages declare `definePageMeta({ layout: 'admin-detail', title: '...' })`.
+`app/layouts/admin-detail.vue`. The shell for admin editor, create, and edit pages. Provides navbar, footer, toast, and dynamic-dialog in a two-column flex shell: Admin Sidebar on the left, full-width content area on the right. Pages declare `definePageMeta({ layout: 'admin-detail', title: '...' })`.
 
 ### Admin Page Header
 A component (`app/components/admin/AdminPageHeader.vue`) that every admin page renders as its first child. Reads the page title from `route.meta.title` automatically and renders it on the left. Exposes a `#actions` slot for right-side buttons (e.g. "New Article"). Provides the consistent Django admin-style page header across all admin surfaces.

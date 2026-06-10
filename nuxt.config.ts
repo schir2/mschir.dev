@@ -7,7 +7,14 @@ export default defineNuxtConfig({
         '#tests': fileURLToPath(new URL('./test', import.meta.url)),
     },
     devtools: {enabled: process.env.NODE_ENV !== 'production'},
-    modules: ['@nuxtjs/color-mode', '@nuxt/icon', '@nuxtjs/supabase', '@nuxtjs/tailwindcss', '@primevue/nuxt-module', '@nuxtjs/turnstile', '@nuxt/test-utils/module', 'nuxt-gtag', '@nuxtjs/seo'],
+    modules: ['@nuxtjs/color-mode', '@nuxt/icon', '@nuxtjs/supabase', '@nuxtjs/tailwindcss', '@primevue/nuxt-module', '@nuxtjs/turnstile', '@nuxt/test-utils/module', 'nuxt-gtag', '@nuxtjs/seo', '@nuxt/fonts'],
+
+    fonts: {
+        families: [
+            { name: 'Fraunces', weights: [400, 700, 900], styles: ['normal'] },
+            { name: 'Inter', weights: [400, 500, 600, 700], styles: ['normal'] },
+        ],
+    },
 
     turnstile: {
         siteKey: '', // NUXT_PUBLIC_TURNSTILE_SITE_KEY
@@ -49,12 +56,6 @@ export default defineNuxtConfig({
                     type: 'image/gif',
                     href: '/favicon.gif'
                 },
-                {rel: 'preconnect', href: 'https://fonts.googleapis.com'},
-                {rel: 'preconnect', href: 'https://fonts.gstatic.com', crossorigin: ''},
-                {
-                    rel: 'stylesheet',
-                    href: 'https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,700;9..144,900&family=Inter:wght@400;500;600;700&display=swap'
-                }
             ]
         }
     },

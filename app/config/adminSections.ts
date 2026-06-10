@@ -83,6 +83,17 @@ export const ADMIN_SECTIONS = [
   },
 ] satisfies AdminGroup[]
 
+export function toSidebarMenuItems(): MenuItem[] {
+  return ADMIN_SECTIONS.map((group: AdminGroup) => ({
+    label: group.label,
+    items: group.sections.map((section: AdminSection) => ({
+      label: section.label,
+      icon: section.icon,
+      to: section.to,
+    })),
+  }))
+}
+
 export function toMenuItems(): MenuItem[] {
   return ADMIN_SECTIONS.flatMap((group: AdminGroup) =>
     group.sections.map((section: AdminSection): MenuItem => ({

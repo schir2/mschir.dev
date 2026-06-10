@@ -87,6 +87,44 @@ The `admin-list` layout provides horizontal padding (`px-6`) and `<admin-page-he
 </template>
 ```
 
+## PrimeVue structural components
+
+Use PrimeVue's own structural components for grouping and separation — never raw Tailwind borders or custom divider markup.
+
+### Grouping content: `p-panel`
+
+Use `<p-panel>` whenever a page section has a label/header and a body of rows or form fields. The `header` prop renders the group label with PrimeVue's own chrome (border, background, typography). The panel body provides consistent padding and surface color automatically.
+
+```vue
+<!-- ✅ group of related rows on the admin index page -->
+<p-panel header="Content">
+  <!-- rows inside -->
+</p-panel>
+
+<!-- ❌ custom header + manual border -->
+<div>
+  <span class="text-xs uppercase tracking-widest text-muted-color">Content</span>
+  <div class="border border-surface-700 rounded">...</div>
+</div>
+```
+
+### Separating rows: `p-divider`
+
+Use `<p-divider>` to separate rows inside a `p-panel` or any other content block. It uses PrimeVue's surface tokens for its line color — no `border-b border-surface-*` classes on individual rows.
+
+```vue
+<!-- ✅ rows separated by p-divider -->
+<template v-for="(item, index) in items" :key="item.id">
+  <p-divider v-if="index > 0" class="my-0" />
+  <div class="flex items-center gap-4 py-2">...</div>
+</template>
+
+<!-- ❌ raw Tailwind border on each row -->
+<div class="border-b border-surface-800 last:border-b-0 py-3">...</div>
+```
+
+`class="my-0"` on `p-divider` removes the default vertical margin when rows already have their own `py-*` padding.
+
 ## Admin sections registry
 
 `app/config/adminSections.ts` is the **single source of truth** for all admin pages. Every new admin page must add an entry here — no exceptions.
