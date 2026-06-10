@@ -411,3 +411,16 @@ Both sends are best-effort inside try/catch blocks. The edge function always ret
 
 ### Contact Thanks Page
 The `/contact/thanks` route. Shown after a successful contact form submission. Displays a confirmation message and two fixed CTAs: "See my work" (→ `/portfolio`, accent) and "Read some articles" (→ `/articles`, secondary outlined). CTAs are not conditional on the contact reason — avoids coupling the UI to reason label strings that can change in the DB. Noindexed via nuxt-robots.
+
+## Publishing Tools Domain
+
+### Portfolio MCP
+A standalone MCP server (`packages/portfolio-mcp/` in the monorepo) that allows the site owner to manage articles directly from any Claude Code session, without opening the portfolio admin UI. Distributed as a scoped npm package (`@mschir/portfolio-mcp`). Authenticates against the production Supabase instance using OAuth Authorization Code Flow with PKCE — a one-time browser login per machine that stores a token locally and auto-registers the server in `~/.claude/settings.json`. Not a public API; the site owner is the only intended user.
+
+Exposes five tools: `capture_idea`, `create_draft`, `update_article`, `publish_article`, `list_articles`. All tools resolve relational field names (category, tags, series) to IDs internally — callers never pass UUIDs. Resolution order: exact match (case-insensitive) → fuzzy match returns suggestions → create new record if no match found. Images are not managed via MCP; `image_url` is left null and set later via the admin UI.
+
+### MCP Auth Endpoint
+The `/mcp-auth` route on the portfolio site. Handles the OAuth callback during `npx @mschir/portfolio-mcp setup`. Initiates the Supabase Google OAuth flow and redirects back to a local callback server (started by the setup command) with the auth token. Noindexed. Not accessible to end visitors — exists solely to support the MCP setup flow.
+
+### MCP Setup Command
+`npx @mschir/portfolio-mcp setup` — a one-time CLI command run on each new machine. Opens a browser to `/mcp-auth`, completes Google OAuth, stores the Supabase session token at `~/.mschir-portfolio.json` (owner-read-only), and writes the `mcpServers` entry to `~/.claude/settings.json`. After setup, the Portfolio MCP is available in every Claude Code session on that machine with no further configuration.

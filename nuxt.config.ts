@@ -7,7 +7,19 @@ export default defineNuxtConfig({
         '#tests': fileURLToPath(new URL('./test', import.meta.url)),
     },
     devtools: {enabled: process.env.NODE_ENV !== 'production'},
-    modules: ['@nuxtjs/color-mode', '@nuxt/icon', '@nuxtjs/supabase', '@nuxtjs/tailwindcss', '@primevue/nuxt-module', '@nuxtjs/turnstile', '@nuxt/test-utils/module', 'nuxt-gtag', '@nuxtjs/seo', '@nuxt/fonts'],
+    modules: [
+      '@nuxtjs/color-mode',
+      '@nuxt/icon',
+      '@nuxtjs/supabase',
+      '@nuxtjs/tailwindcss',
+      '@primevue/nuxt-module',
+      '@nuxtjs/turnstile',
+      '@nuxt/test-utils/module',
+      'nuxt-gtag',
+      '@nuxtjs/seo',
+      '@nuxt/fonts',
+      '@dargmuesli/nuxt-cookie-control',
+    ],
 
     fonts: {
         families: [
@@ -75,6 +87,21 @@ export default defineNuxtConfig({
             defaultTitle: 'Marek Schir Developer Portfolio Site',
             siteUrl: process.env.SITE_URL || 'http://localhost:3000',
         }
+    },
+
+    cookieControl: {
+        barPosition: 'bottom-full',
+        cookies: {
+            necessary: [],
+            optional: [
+                {
+                    id: 'ga',
+                    name: 'Google Analytics',
+                    description: 'Tracks page views to help understand which content is most useful. No advertising data is collected.',
+                    targetCookieIds: ['_ga', '_ga_TBFLGWRP7Y'],
+                },
+            ],
+        },
     },
 
     gtag: {
@@ -177,6 +204,10 @@ export default defineNuxtConfig({
             exclude: ['/**'],
             callback: '/callback'
         }
+    },
+
+    tailwindcss: {
+        quiet: true,
     },
 
     nitro: {

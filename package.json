@@ -21,6 +21,7 @@
     "seed:assets": "node --env-file=.env scripts/upload-covers.mjs"
   },
   "dependencies": {
+    "@dargmuesli/nuxt-cookie-control": "9.1.28",
     "@nuxt/fonts": "^0.14.0",
     "@nuxt/icon": "^2.2.2",
     "@nuxtjs/color-mode": "^4.0.0",

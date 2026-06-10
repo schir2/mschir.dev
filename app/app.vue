@@ -6,6 +6,8 @@ const route = useRoute()
 useHead(() => ({
   title: route.meta.title as string ?? null,
 }))
+
+useAnalyticsConsent()
 </script>
 
 <template>
@@ -13,6 +15,7 @@ useHead(() => ({
   <p-toast position="top-center" />
   <p-confirm-dialog />
   <dynamic-dialog />
+  <cookie-control />
   <NuxtLayout>
     <NuxtPage />
   </NuxtLayout>

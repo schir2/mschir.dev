@@ -71,7 +71,7 @@ This is a **Nuxt 4** personal portfolio site (mschir.dev) backed by **Supabase**
 
 **Auth** — Supabase auth via `@nuxtjs/supabase`. All routes are excluded from redirect (`exclude: ['/**']`), so auth is opt-in per page. `useSupabaseUser()` is available everywhere; login/logout live in the navbar.
 
-**UI** — PrimeVue 4 components are auto-imported with the `p` prefix (e.g. `<p-card>`, `<p-button>`). Color mode follows the user's system preference (`preference: 'system'`, `fallback: 'dark'`); the active mode is applied as a class on `<html>` with `-mode` suffix (e.g. `dark-mode`, `light-mode`). PrimeVue's `darkModeSelector` is set to `.dark-mode`. PrimeVue `DialogService` and `ToastService` are registered as Nuxt plugins.
+**UI** — PrimeVue 4 components are auto-imported with the `p` prefix (e.g. `<p-card>`, `<p-button>`). All PrimeVue components are available — `nuxt.config.ts` uses `include: '*'` so no registration step is needed when adding a new component. Color mode follows the user's system preference (`preference: 'system'`, `fallback: 'dark'`); the active mode is applied as a class on `<html>` with `-mode` suffix (e.g. `dark-mode`, `light-mode`). PrimeVue's `darkModeSelector` is set to `.dark-mode`. PrimeVue `DialogService` and `ToastService` are registered as Nuxt plugins.
 
 **CSS layering** — three layers in strict priority order: (1) PrimeVue tokens (`var(--p-primary-*)`, `var(--p-surface-*)`) for all colors; (2) Tailwind utilities for layout/spacing/breakpoints only — no raw color class names for brand colors; (3) third-party overrides in `app/assets/css/overrides/<lib>.css`, imported via `app/assets/css/main.css`. See `docs/adr/0008-css-layering-strategy.md`.
 
@@ -145,6 +145,20 @@ Voice, tone, AI-tell patterns, heading style, and article structure rules for al
 Admin pages must use PrimeVue components whenever one fits the need. Do not build custom components for admin UI unless no PrimeVue component can satisfy the requirement. Consistency matters more than aesthetics here — admin is a tool, not a showcase.
 
 For public-facing pages (homepage, services, article pages), custom components are appropriate when visual design calls for it. The dividing line: if you're building something a visitor sees and you're optimizing for visual impact, custom is fine. If you're building something the site owner uses to manage data, reach for PrimeVue first.
+
+### PrimeVue container components
+
+Prefer PrimeVue structural components over raw HTML elements with manual CSS for layout containers, separators, and scrollable regions. They carry correct theme-aware surface tokens out of the box — no scoped CSS needed for light/dark mode.
+
+| Need | PrimeVue component | Notes |
+|---|---|---|
+| Scrollable region with themed background | `<p-scrollpanel>` | Replaces `<div class="overflow-y-auto">` + manual background color; handles custom scrollbar styling too |
+| Labeled content group / card | `<p-panel>` | Use `#header` slot for eyebrow-style labels (`text-xs uppercase tracking-widest`) |
+| Row separator inside a panel or list | `<p-divider class="my-0">` | Replaces `border-b border-surface-*` on individual rows |
+
+**Why this matters:** Raw Tailwind surface utilities like `bg-surface-900` are fixed palette values — they do not flip between light and dark mode. PrimeVue component backgrounds use semantic CSS custom properties (`var(--p-*)`) that the theme switches automatically via the `.dark-mode` selector. Always prefer a PrimeVue container over a raw element when a themed background is needed.
+
+See `app/pages/admin/CLAUDE.md` for admin-specific examples of `p-panel` and `p-divider`.
 
 ### Prototype before implementing
 
@@ -364,7 +378,7 @@ rejectProps: { severity: 'secondary', outlined: true }
 
 ### PrimeVue token Tailwind utilities
 
-PrimeVue exposes its design tokens as Tailwind utilities — always use those instead of inline `style` attributes with `var(--p-*)` CSS variables:
+PrimeVue exposes its design tokens as Tailwind utilities — always use those instead of inline `style` attributes or scoped CSS classes that wrap `var(--p-*)` CSS variables. Both are the same anti-pattern: they duplicate the token system and bypass the Tailwind layer.
 
 ```html
 <!-- ✅ Tailwind utility -->
@@ -374,7 +388,15 @@ PrimeVue exposes its design tokens as Tailwind utilities — always use those in
 <!-- ❌ inline style — bypasses the theme system and triggers linting errors -->
 <span style="color: var(--p-text-muted-color)">...</span>
 <icon style="color: var(--p-primary-color)" />
+
+<!-- ❌ scoped CSS wrapper class — same anti-pattern as inline style, just indirected -->
+<!-- .my-label { color: var(--p-surface-400); } -->
+<span class="my-label">...</span>
 ```
+
+If a color can be expressed as a PrimeVue Tailwind token utility (`text-muted-color`, `text-color`, `text-primary`, `bg-surface-*`, etc.), use the utility directly on the element. Do not create a named scoped class that only wraps a single token assignment.
+
+Scoped CSS is only appropriate for structural or behavioral rules that cannot be expressed in Tailwind: complex pseudo-selectors, `:deep()` overrides, multi-property hover transitions on a unique element. A one-line color assignment is never a valid reason for a scoped class.
 
 The one accepted exception is dynamic `:style` bindings where a color value comes from data (e.g. a category color from the database), which may use a token as a fallback: `:style="{ backgroundColor: item.color ?? 'var(--p-surface-500)' }"`.
 
@@ -385,6 +407,8 @@ Always use kebab-case for component names in templates, not PascalCase. This app
 - PrimeVue (already kebab-case by design): `<p-button>`, `<p-form>`, `<p-input-text>`
 - Custom components: `<turnstile-placeholder>`, not `<TurnstilePlaceholder>`
 - `@nuxt/icon`: `<icon name="...">`, not `<Icon name="...">`
+
+**Internal links: always `<nuxt-link>`, never `<router-link>`.** This is a Nuxt project — `<nuxt-link>` is the correct component and adds Nuxt-specific prefetch behaviour. `<router-link>` works but is a Vue Router primitive that bypasses Nuxt's layer. For external links use a plain `<a>` with `target="_blank" rel="noopener noreferrer"`.
 
 ### Variable naming
 
