@@ -106,7 +106,7 @@ export default defineNuxtConfig({
 
     gtag: {
         id: 'G-TBFLGWRP7Y',
-        enabled: true,
+        enabled: process.env.NODE_ENV === 'production',
         initCommands: [
             ['consent', 'default', {
                 ad_storage: 'denied',
