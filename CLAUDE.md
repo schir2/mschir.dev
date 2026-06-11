@@ -434,8 +434,8 @@ Use generics with explicit type parameters rather than relying on inference. Whe
 
 ## Prose Writing and Copy
 
-**This section is about written language — not CSS, not code formatting.** Rules for any human-readable text produced for this site: article body content, project descriptions, taglines, summaries, email templates, page hero copy, and CTA blurbs.
+**This section is about written language — not CSS, not code formatting.**
 
-The full rule set (voice, tone, AI-tell patterns to strip, heading style, article structure) lives in `.claude/skills/copy-style/REFERENCE.md`.
+The full rule set (voice, tone, AI-tell patterns, heading style) lives in `.claude/skills/copy-style/REFERENCE.md`. Article-specific rules (structure, audience context, type overlays) live in `.claude/skills/copy-style/references/article.md`.
 
-**Always invoke `/copy-style`** before writing or rewriting any of the above. The skill reads the rules at runtime and grills the draft against them category by category.
+**Always invoke `/copy-style`** before writing or rewriting any user-facing prose on this site: service pages, article body, project descriptions, taglines, summaries, page hero copy, contact page copy, email templates, CTA blurbs — any text a visitor reads. The skill reads the rules at runtime.

@@ -1,65 +1,59 @@
 ---
 name: copy-style
-description: Enforces the project's canonical voice and style rules on any prose draft. Reads rules live from REFERENCE.md so new rules are picked up automatically. Use when writing or rewriting project descriptions, taglines, summaries, article body content, email templates, or page copy — especially when stripping AI-generated patterns to match the site owner's voice.
+description: >
+  Enforces the project's canonical voice and style rules on any prose draft.
+  Reads rules live from REFERENCE.md so new rules are picked up automatically.
+
+  TRIGGER — invoke before writing or rewriting any user-facing prose on this site:
+  service page copy, article body, project descriptions, taglines, summaries,
+  page hero text, contact page copy, email templates, CTA blurbs, or any text
+  a visitor reads. Do not wait to be asked.
+
+  SKIP — code comments, commit messages, admin UI labels, internal docs, and
+  any copy the user has explicitly marked as approved.
 ---
 
 # Copy Style
 
 Grill any prose draft against the project's canonical style rules. Rules are read live from [REFERENCE.md](./REFERENCE.md) — do not rely on memory.
 
-## Step 1 — Load the rules
+## Quick Start
 
-Read [REFERENCE.md](./REFERENCE.md) before doing anything else. This is the authoritative source for all style rules. Do not rely on memory or hard-code rules.
+Paste a draft or describe what needs to be written. The skill identifies the content type, loads the right rules, grills the draft category by category, and outputs the clean version.
 
-## Step 2 — Identify content type
+- **Service pages, short copy, CTAs** → [REFERENCE.md](./REFERENCE.md) only
+- **Articles** → [REFERENCE.md](./REFERENCE.md) + [references/article.md](./references/article.md)
 
-Inspect the draft and infer:
+## Workflow
+
+### Step 1 — Load the rules
+
+Read [REFERENCE.md](./REFERENCE.md). For article content types, also read [references/article.md](./references/article.md). Do not rely on memory.
+
+### Step 2 — Identify content type
 
 | Type | Signal |
 |---|---|
-| **Short copy** | 1–3 sentences: description, tagline, or summary |
+| **Short copy** | 1–3 sentences: tagline, description, summary |
 | **Technical article** | How-to, setup guide, implementation walkthrough |
-| **Financial article** | Investing, retirement, financial planning topics |
+| **Financial article** | Investing, retirement, financial planning |
 | **Personal/opinion article** | Experience piece, reflection, opinion |
-| **Other copy** | Email template, page hero, CTA blurb |
+| **Other copy** | Service page, email template, page hero, CTA |
 
-Confirm with the user before proceeding: "This looks like a [type] — is that right?"
+Confirm with the user: "This looks like [type] — is that right?"
 
-For **from-scratch** requests (no draft pasted): write a clean first draft, self-grill it against all four categories, then present the result with any remaining judgment calls flagged.
+For **from-scratch** requests: write a clean first draft, self-grill against all categories, present with judgment calls flagged.
 
-## Step 3 — Grill one category at a time
+### Step 3 — Grill one category at a time
 
-Work through these in order. For each category:
-- Quote the specific offending passage from the draft
-- Name the rule it breaks
-- Suggest the fix
-- Wait for the user to confirm or adjust before moving to the next category
-- If no violations: say "No issues in [category]" and move on
+Quote the offending passage, name the rule it breaks, suggest the fix. Wait for confirmation before moving on. If no violations: say "No issues in [category]."
 
-**Order** (categories are defined in [REFERENCE.md](./REFERENCE.md)):
+**Order:**
 1. **Mechanics**
 2. **Voice**
-3. **Article Structure**
+3. **Article Structure** _(articles only — skip for all other content types)_
 4. **AI Tells**
 
-Short copy skips Article Structure entirely.
-
-## Step 4 — Output the clean version
+### Step 4 — Output the clean version
 
 Once all categories pass, output the complete rewritten prose in a fenced block.
-
-## Article Type Overlays
-
-After confirming the content type, apply the relevant overlay below in addition to the universal rules. Overlays are stubs for now — fill them in as the style guide matures.
-
-### Technical Articles
-
-_To be defined. Expected: opener conventions (direct context-setter), how much prior knowledge to assume, code block and command formatting rules, "Common Mistakes" section guidance._
-
-### Financial Articles
-
-_To be defined. Expected: tone adjustments for non-specialist audience, how to handle jargon (define inline vs link out), disclaimer conventions, how to frame projections and estimates without sounding prescriptive._
-
-### Personal / Opinion Articles
-
-_To be defined. Expected: opener conventions (personal anecdote or moment of confusion), how to signal opinion vs fact, when first-person narrative is appropriate throughout vs just for framing._

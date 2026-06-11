@@ -37,6 +37,19 @@ async function onFormSubmit(event: FormSubmitEvent) {
   }
 }
 
+const route = useRoute()
+
+onMounted(() => {
+  const errorMessage = route.query.error as string | undefined
+  if (errorMessage) {
+    toast.add({
+      severity: 'error',
+      summary: 'Sign-in failed',
+      detail: errorMessage,
+    })
+  }
+})
+
 
 </script>
 <template>

@@ -6,22 +6,24 @@ defineProps<{
 </script>
 
 <template>
-  <footer class="flex justify-between pt-6 border-t border-surface-200">
+  <nav class="flex items-start justify-between gap-4 pt-8 border-t border-surface-200 dark:border-surface-700">
     <nuxt-link
       v-if="previousArticle"
       :to="`/articles/${previousArticle.slug}`"
-      class="flex items-center gap-2 hover:underline"
+      class="flex flex-col gap-1 group max-w-xs"
     >
-      <span>← {{ previousArticle.title }}</span>
+      <span class="text-xs uppercase tracking-widest text-muted-color">← Previous</span>
+      <span class="text-sm font-medium group-hover:text-primary transition-colors">{{ previousArticle.title }}</span>
     </nuxt-link>
-    <span v-else />
+    <div v-else />
     <nuxt-link
       v-if="nextArticle"
       :to="`/articles/${nextArticle.slug}`"
-      class="flex items-center gap-2 hover:underline"
+      class="flex flex-col gap-1 group max-w-xs text-right"
     >
-      <span>{{ nextArticle.title }} →</span>
+      <span class="text-xs uppercase tracking-widest text-muted-color">Next →</span>
+      <span class="text-sm font-medium group-hover:text-primary transition-colors">{{ nextArticle.title }}</span>
     </nuxt-link>
-    <span v-else />
-  </footer>
+    <div v-else />
+  </nav>
 </template>

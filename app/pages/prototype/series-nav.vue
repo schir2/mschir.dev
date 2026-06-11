@@ -10,6 +10,7 @@ const variants = [
   { key: 'A', label: 'Dropdown → Title' },
   { key: 'B', label: 'Title → Dropdown' },
   { key: 'C', label: 'Series eyebrow → Title → Dropdown' },
+  { key: 'D', label: 'Title → Series subtitle → Dropdown' },
 ]
 
 const CURRENT_PART = 7
@@ -76,6 +77,19 @@ const selectedPart = ref(CURRENT_PART)
       <div class="flex flex-col gap-2">
         <span class="text-xs uppercase tracking-widest font-medium text-muted-color">Series · Building Field Service Software</span>
         <h1 class="text-4xl font-bold">{{ currentArticle.title }}</h1>
+      </div>
+      <p-select v-model="selectedPart" :options="selectOptions" option-label="label" option-value="value" class="w-full" />
+      <article-body-placeholder />
+      <series-prev-next :previous-article="previousArticle" :next-article="nextArticle" />
+    </div>
+
+    <!-- ====== D: Title → Series subtitle → Dropdown ====== -->
+    <div v-else-if="variant === 'D'" class="flex flex-col gap-8 max-w-2xl">
+      <div class="flex flex-col gap-1">
+        <h1 class="text-4xl font-bold">{{ currentArticle.title }}</h1>
+        <span class="text-xs uppercase tracking-widest font-medium text-muted-color">
+          Part {{ CURRENT_PART }} of {{ TOTAL }} · <a href="#" class="hover:text-color transition-colors">Building Field Service Software</a>
+        </span>
       </div>
       <p-select v-model="selectedPart" :options="selectOptions" option-label="label" option-value="value" class="w-full" />
       <article-body-placeholder />

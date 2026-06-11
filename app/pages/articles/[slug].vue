@@ -143,9 +143,18 @@ const {previousArticle, nextArticle, allArticles} = useSeriesNavigation(
       />
 
       <header class="flex flex-col gap-4">
-        <div class="flex justify-between items-start">
-          <h1 class="text-3xl font-bold">{{ article.title }}</h1>
-          <article-admin-edit-button :article-id="article.id"/>
+        <div class="flex flex-col gap-1">
+          <div class="flex justify-between items-start">
+            <h1 class="text-3xl font-bold">{{ article.title }}</h1>
+            <article-admin-edit-button :article-id="article.id"/>
+          </div>
+          <span v-if="article.article_series && allArticles.length > 1" class="text-xs uppercase tracking-widest font-medium text-muted-color">
+            Part {{ article.series_sequence_number }} of {{ allArticles.length }} ·
+            <nuxt-link
+              :to="`/articles/series/${article.article_series.slug}`"
+              class="hover:text-color transition-colors"
+            >{{ article.article_series.title }}</nuxt-link>
+          </span>
         </div>
         <div class="flex flex-wrap gap-4 text-sm text-color-secondary items-center">
           <span v-if="article.article_categories">
@@ -168,10 +177,9 @@ const {previousArticle, nextArticle, allArticles} = useSeriesNavigation(
         </div>
       </header>
 
-      <article-series-panel
+      <article-series-nav
           v-if="article.article_series && allArticles.length > 1"
-          :series="article.article_series"
-          :all-articles="allArticles"
+          :articles="allArticles"
           :current-article-id="article.id"
       />
 

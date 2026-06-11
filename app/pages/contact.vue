@@ -68,17 +68,23 @@ async function onFormSubmit(event: FormSubmitEvent) {
           </p>
         </div>
         <ul class="flex flex-col gap-4">
-          <li class="flex items-center gap-3">
-            <icon name="material-symbols:hub" class="pillar-icon text-2xl flex-shrink-0"/>
-            <span class="text-surface-700 dark:text-surface-300">Integrations &amp; APIs</span>
+          <li>
+            <nuxt-link to="/services/integrations-apis" class="pillar-link group flex items-center gap-3 p-4 rounded-xl border border-surface-200 dark:border-surface-700 transition-all">
+              <icon name="material-symbols:hub" class="pillar-icon text-2xl flex-shrink-0"/>
+              <span class="text-muted-color group-hover:text-color transition-colors">Integrations &amp; APIs</span>
+            </nuxt-link>
           </li>
-          <li class="flex items-center gap-3">
-            <icon name="material-symbols:code-blocks" class="pillar-icon text-2xl flex-shrink-0"/>
-            <span class="text-surface-700 dark:text-surface-300">Application Development</span>
+          <li>
+            <nuxt-link to="/services/application-development" class="pillar-link group flex items-center gap-3 p-4 rounded-xl border border-surface-200 dark:border-surface-700 transition-all">
+              <icon name="material-symbols:code-blocks" class="pillar-icon text-2xl flex-shrink-0"/>
+              <span class="text-muted-color group-hover:text-color transition-colors">Application Development</span>
+            </nuxt-link>
           </li>
-          <li class="flex items-center gap-3">
-            <icon name="material-symbols:smart-toy" class="pillar-icon text-2xl flex-shrink-0"/>
-            <span class="text-surface-700 dark:text-surface-300">AI &amp; Automation</span>
+          <li>
+            <nuxt-link to="/services/ai-automation" class="pillar-link group flex items-center gap-3 p-4 rounded-xl border border-surface-200 dark:border-surface-700 transition-all">
+              <icon name="material-symbols:smart-toy" class="pillar-icon text-2xl flex-shrink-0"/>
+              <span class="text-muted-color group-hover:text-color transition-colors">AI &amp; Automation</span>
+            </nuxt-link>
           </li>
         </ul>
       </div>
@@ -145,5 +151,14 @@ async function onFormSubmit(event: FormSubmitEvent) {
 <style scoped>
 .pillar-icon {
   color: var(--p-accent-400);
+  transition: transform 0.2s;
+}
+
+.pillar-link:hover {
+  border-color: color-mix(in srgb, var(--p-accent-500) 50%, transparent);
+}
+
+.pillar-link:hover .pillar-icon {
+  transform: scale(1.1);
 }
 </style>
