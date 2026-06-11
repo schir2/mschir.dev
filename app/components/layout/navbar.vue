@@ -98,11 +98,13 @@ onUnmounted(() => window.removeEventListener('scroll', handleScroll))
                 </template>
               </p-button>
             </a>
-            <p-button text rounded :aria-label="isDark ? 'Switch to light mode' : 'Switch to dark mode'" @click="toggleColorMode">
-              <template #icon>
-                <icon :name="isDark ? 'material-symbols:light-mode' : 'material-symbols:dark-mode'"/>
-              </template>
-            </p-button>
+            <client-only>
+              <p-button text rounded :aria-label="isDark ? 'Switch to light mode' : 'Switch to dark mode'" @click="toggleColorMode">
+                <template #icon>
+                  <icon :name="isDark ? 'material-symbols:light-mode' : 'material-symbols:dark-mode'"/>
+                </template>
+              </p-button>
+            </client-only>
           </div>
           <client-only>
             <template v-if="user">

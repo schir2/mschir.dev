@@ -11,8 +11,4 @@ config({
   },
 })
 
-export default defineNuxtPlugin((nuxt) => {
-  nuxt.vueApp.component('MdEditor', MdEditor)
-  nuxt.vueApp.component('MdPreview', MdPreview)
-  nuxt.vueApp.component('MdCatalog', MdCatalog)
-})
+export { MdEditor, MdPreview, MdCatalog }

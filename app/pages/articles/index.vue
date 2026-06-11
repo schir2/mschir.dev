@@ -20,7 +20,8 @@ const {
 } = useAsyncData<ArticleCardItem[]>('featured-articles', async () => {
   const {data, error} = await supabase
       .from('featured_articles')
-      .select(`article_id, articles(${articleCardSelect})`)
+      .select(`article_id, articles!inner(${articleCardSelect})`)
+      .not('articles.published_at', 'is', null)
       .order('created_at', {ascending: false})
       .limit(3)
   if (error) throw error

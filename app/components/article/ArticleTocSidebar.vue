@@ -1,4 +1,6 @@
 <script lang="ts" setup>
+import {MdCatalog} from '~/utils/mdEditor'
+
 defineProps<{
   editorId: string
 }>()

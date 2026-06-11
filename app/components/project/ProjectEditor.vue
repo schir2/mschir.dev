@@ -1,4 +1,6 @@
 <script lang="ts" setup>
+import {MdEditor} from '~/utils/mdEditor'
+
 const props = defineProps<{
   projectId?: string
 }>()

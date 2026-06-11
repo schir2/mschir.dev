@@ -152,7 +152,17 @@ If the entity has a public-facing page, define `getPublicUrl` on its registry en
 getPublicUrl: (row) => `/articles/${(row as { slug: string }).slug}`
 ```
 
-List pages where `getPublicUrl` is defined must render an eye icon button in the DataTable actions column that opens the URL in a new tab. Entities with no public page (companies, skills, contact messages) omit `getPublicUrl` entirely.
+List pages where `getPublicUrl` is defined must render an eye icon button in the DataTable actions column that opens the URL in a new tab. Use `<nuxt-link target="_blank" rel="noopener noreferrer">` wrapping the `<p-button>` — never `window.open()` in a template expression (Vue 3 sandboxes `window` and the call silently does nothing). Entities with no public page (companies, skills, contact messages) omit `getPublicUrl` entirely.
+
+```vue
+<nuxt-link :to="`/articles/${row.slug}`" target="_blank" rel="noopener noreferrer">
+  <p-button text severity="secondary" aria-label="View article">
+    <template #icon>
+      <icon name="material-symbols:visibility-outline" class="text-lg" />
+    </template>
+  </p-button>
+</nuxt-link>
+```
 
 ## Inline editing vs. separate editor pages
 
@@ -270,7 +280,7 @@ All DataTables set an `empty-message` prop: `"No <entities> found."` (e.g. `"No 
 
 The actions column is always the last column. Buttons are icon-only, `text` variant, `size="small"`. Use `<icon name="material-symbols:...">` via the `#icon` slot — never the `icon` prop (which only works with PrimeIcons).
 
-- **Preview** (eye): `severity="secondary"` — opens the public page in a new tab. Only rendered when `getPublicUrl` is defined for this entity in the Admin Section Registry.
+- **Preview** (eye): `severity="secondary"` — opens the public page in a new tab via `<nuxt-link target="_blank">` wrapping the button. Only rendered when `getPublicUrl` is defined for this entity in the Admin Section Registry.
 - **Delete** (trash): `severity="danger"` — opens a `<p-confirm-dialog>`.
 
 There is no edit button in the actions column. Clicking the entity name navigates to the edit page.

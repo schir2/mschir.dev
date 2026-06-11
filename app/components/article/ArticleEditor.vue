@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import type { ExposeParam } from 'md-editor-v3'
+import {MdEditor} from '~/utils/mdEditor'
 import type { ArticleTag, WritingStage } from '#shared/types/Article'
 import type { ArticleCategory } from '#shared/types/ArticleCategory'
 import type { ArticleSeries } from '#shared/types/ArticleSeries'

@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import type {ProjectDetail} from '#shared/types/Project'
 import type {Crumb} from '~/types/Article'
+import {MdPreview} from '~/utils/mdEditor'
 
 definePageMeta({layout: 'page'})
 
@@ -11,7 +12,6 @@ const slug = route.params.slug as string
 
 const {
   data: project,
-  pending: projectLoading,
 } = await useAsyncData<ProjectDetail | null>(`project-${slug}`, async () => {
   const {data, error} = await supabase
       .from('projects')
@@ -23,13 +23,8 @@ const {
       .eq('slug', slug)
       .maybeSingle()
   if (error) throw error
+  if (!data) throw createError({statusCode: 404, message: 'Project not found'})
   return data as ProjectDetail | null
-})
-
-watchEffect(() => {
-  if (!projectLoading.value && project.value === null) {
-    throw createError({statusCode: 404, message: 'Project not found'})
-  }
 })
 
 const heroImageUrl = computed<string | null>(() => {

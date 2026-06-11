@@ -409,7 +409,7 @@ Always use kebab-case for component names in templates, not PascalCase. This app
 - Custom components: `<turnstile-placeholder>`, not `<TurnstilePlaceholder>`
 - `@nuxt/icon`: `<icon name="...">`, not `<Icon name="...">`
 
-**Internal links: always `<nuxt-link>`, never `<router-link>`.** This is a Nuxt project — `<nuxt-link>` is the correct component and adds Nuxt-specific prefetch behaviour. `<router-link>` works but is a Vue Router primitive that bypasses Nuxt's layer. For external links use a plain `<a>` with `target="_blank" rel="noopener noreferrer"`.
+**Internal links: always `<nuxt-link>`, never `<router-link>`.** This is a Nuxt project — `<nuxt-link>` is the correct component and adds Nuxt-specific prefetch behaviour. `<router-link>` works but is a Vue Router primitive that bypasses Nuxt's layer. For external links use a plain `<a>` with `target="_blank" rel="noopener noreferrer"`. For internal links that must open in a new tab (e.g. admin preview buttons), use `<nuxt-link target="_blank" rel="noopener noreferrer">` — never `window.open()` in a template expression, as Vue 3 sandboxes `window` and the call silently does nothing.
 
 ### Variable naming
 

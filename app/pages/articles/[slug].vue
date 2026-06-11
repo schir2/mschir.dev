@@ -2,6 +2,7 @@
 import type {ArticleDetail} from '#shared/types/Article'
 import type {Crumb, SeriesArticle} from '~/types/Article'
 import {formatArticleDate} from '~/utils/formatArticleDate'
+import {MdPreview} from '~/utils/mdEditor'
 
 definePageMeta({layout: 'page'})
 
@@ -12,7 +13,6 @@ const slug = route.params.slug as string
 
 const {
   data: article,
-  pending: articleLoading,
 } = await useAsyncData<ArticleDetail | null>(`article-${slug}`, async () => {
   const {data, error} = await supabase
       .from('articles')
@@ -28,13 +28,8 @@ const {
       .maybeSingle()
 
   if (error) throw error
+  if (!data) throw createError({statusCode: 404, message: 'Article not found'})
   return data
-})
-
-watchEffect(() => {
-  if (!articleLoading.value && article.value === null) {
-    throw createError({statusCode: 404, message: 'Article not found'})
-  }
 })
 
 const heroImageUrl = computed(() => {
@@ -130,7 +125,7 @@ const {previousArticle, nextArticle, allArticles} = useSeriesNavigation(
   <div>
 
     <article v-if="article" class="flex flex-col gap-8">
-      <breadcrumb :model="breadcrumbs"/>
+      <breadcrumb :breadcrumbs="breadcrumbs"/>
       <p-message v-if="article.archived_at" role="alert" severity="secondary">
         This article has been archived and may be outdated.
       </p-message>
