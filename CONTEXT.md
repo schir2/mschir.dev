@@ -234,15 +234,18 @@ The `/services` route subtree. A set of public-facing sales pages — one index 
 The `/services` route. Lists all three Service Pillars with a brief description and a link to each Service Detail Page. Entry point for visitors exploring what's on offer. Calls `usePageSeo()`.
 
 ### Service Detail Page
-One of three routes: `/services/integrations-apis`, `/services/application-development`, `/services/ai-automation`. Each elaborates on one Service Pillar — what it involves, who it's for, relevant past projects, and a CTA to `/contact`.
+One of three routes: `/services/integrations-apis`, `/services/application-development`, `/services/ai-automation`. Each elaborates on one Service Pillar — what it covers, how the work happens, and a CTA to `/contact`.
 
 **Page structure (top to bottom):**
 1. `"Services"` eyebrow — `text-xs uppercase tracking-widest text-muted-color`, links to `/services`
-2. `<h1>` — service name
+2. `<h1>` — service name (Title Case)
 3. **Service Sibling Nav** — immediately below the h1
-4. Body copy — sections vary per service (authored in `temp/`)
-5. Project references — lightweight link list (name + one-line descriptor → `/projects/[slug]`), not full ProjectCard
-6. CTA — "Get in touch" → `/contact`
+4. Intro paragraph — 1–2 sentences, leads with what the service does (no setup-problem opener)
+5. `<p-panel>` sections — "What This Covers" panel contains `<p-chip>` tags summarising the service areas; additional panels for approach, platforms, or thematic topics as relevant
+6. Projects panel — `application-development` only; lightweight link list (name + one-line descriptor → `/projects/[slug]`) inside a `<p-panel>`
+7. CTA — "Get in Touch" → `/contact`, `flex justify-center`
+
+No "Who this is for" sections — these were removed as they self-filter the audience.
 
 ### Service Sibling Nav
 An icon card strip placed immediately below the `<h1>` on every Service Detail Page, preceded by a `"Services"` eyebrow label above the h1. Three cards in a `grid-cols-3` grid, one per service. Each card shows the service icon (left) and label (right). Active card: amber border (`border-amber-500/60`), amber background tint (`bg-amber-500/10`), amber icon (`text-amber-400`). Inactive cards: `border-surface-700 bg-surface-900 text-muted-color`, lighten on hover.

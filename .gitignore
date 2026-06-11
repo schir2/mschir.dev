@@ -1,3 +1,6 @@
+# Windows Zone.Identifier alternate data stream metadata (WSL2 artifact)
+*:Zone.Identifier
+
 # Nuxt dev/build outputs
 .output
 .data
