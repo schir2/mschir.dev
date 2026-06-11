@@ -16,11 +16,11 @@ const props = defineProps<{
       </nuxt-link>
     </template>
     <template #subtitle>
-      <div v-if="loading" class="h-[22px] w-[80px] rounded-full bg-surface-200 dark:bg-surface-700 animate-pulse mt-1" />
+      <div v-if="loading" class="h-[22px] w-[80px] rounded-full bg-surface-200 dark:bg-surface-700 animate-pulse" />
       <p-tag v-else-if="series" severity="secondary" :value="`${series.article_count} articles`" />
     </template>
     <template #content>
-      <div v-if="loading" class="flex flex-col gap-2 mt-1">
+      <div v-if="loading" class="flex flex-col gap-2">
         <div class="h-[13px] w-full rounded bg-surface-200 dark:bg-surface-700 animate-pulse" />
         <div class="h-[13px] w-[75%] rounded bg-surface-200 dark:bg-surface-700 animate-pulse" />
       </div>

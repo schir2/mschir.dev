@@ -12,7 +12,7 @@ const navLinks = [
 </script>
 
 <template>
-  <footer class="dark-mode bg-surface-900 text-color border-t border-surface-700 mt-16">
+  <footer class="dark-mode bg-surface-900 text-color border-t border-surface-700">
     <div class="max-w-6xl mx-auto px-6 py-12 flex flex-col gap-10">
 
       <div class="grid grid-cols-1 md:grid-cols-3 gap-10">

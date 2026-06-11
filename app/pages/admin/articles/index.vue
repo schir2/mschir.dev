@@ -128,18 +128,18 @@ async function deleteArticle(articleId: string) {
         <p-column header="" style="width: 5rem">
           <template #body="{ data: row }">
             <div class="flex gap-1 justify-end">
-              <p-button
+              <nuxt-link
                 v-if="row.published_at"
-                text
-
-                severity="secondary"
-                aria-label="View article"
-                @click="() => window.open(`/articles/${row.slug}`, '_blank', 'noopener,noreferrer')"
+                :to="`/articles/${row.slug}`"
+                target="_blank"
+                rel="noopener noreferrer"
               >
-                <template #icon>
-                  <icon name="material-symbols:visibility-outline" class="text-lg" />
-                </template>
-              </p-button>
+                <p-button text severity="secondary" aria-label="View article">
+                  <template #icon>
+                    <icon name="material-symbols:visibility-outline" class="text-lg" />
+                  </template>
+                </p-button>
+              </nuxt-link>
               <p-button
                 text
 

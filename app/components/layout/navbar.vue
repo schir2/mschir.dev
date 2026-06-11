@@ -64,18 +64,18 @@ onUnmounted(() => window.removeEventListener('scroll', handleScroll))
   <nav :class="['sticky top-0 z-50 transition-shadow duration-200', scrolled ? 'shadow-lg' : '']">
     <p-menubar :model="navItems">
       <template #start>
-        <router-link to="/">
+        <nuxt-link to="/">
           <div class="flex gap-2 items-center">
             <img src="/img/logos/logo.gif" alt="Logo" class="h-8"/>
           </div>
-        </router-link>
+        </nuxt-link>
       </template>
       <template #item="{ item, props }">
-        <router-link v-if="item.to" v-slot="{ href, navigate }" :to="item.to" custom>
+        <nuxt-link v-if="item.to" v-slot="{ href, navigate }" :to="item.to" custom>
           <a v-ripple :href="href" v-bind="props.action" @click="navigate">
             <span>{{ item.label }}</span>
           </a>
-        </router-link>
+        </nuxt-link>
         <a v-else v-ripple :href="item.url" :target="item.target" v-bind="props.action">
           <icon v-if="item.icon" :name="item.icon"/>
           <span>{{ item.label }}</span>
@@ -108,12 +108,12 @@ onUnmounted(() => window.removeEventListener('scroll', handleScroll))
             <template v-if="user">
               <p-tiered-menu ref="userMenuRef" :model="userMenuItems" popup>
                 <template #item="{ item, props: menuProps }">
-                  <router-link v-if="item.to" v-slot="{ href, navigate }" :to="item.to" custom>
+                  <nuxt-link v-if="item.to" v-slot="{ href, navigate }" :to="item.to" custom>
                     <a v-ripple :href="href" v-bind="menuProps.action" @click="navigate">
                       <icon v-if="item.icon" :name="item.icon" class="mr-2"/>
                       <span>{{ item.label }}</span>
                     </a>
-                  </router-link>
+                  </nuxt-link>
                   <a v-else v-ripple v-bind="menuProps.action">
                     <icon v-if="item.icon" :name="item.icon" class="mr-2"/>
                     <span>{{ item.label }}</span>

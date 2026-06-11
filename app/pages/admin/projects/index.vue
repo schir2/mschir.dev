@@ -114,17 +114,17 @@ async function deleteProject(projectId: string) {
         <p-column header="" style="width: 5rem">
           <template #body="{ data: row }">
             <div class="flex gap-1 justify-end">
-              <p-button
-                text
-
-                severity="secondary"
-                aria-label="View project"
-                @click="() => window.open(`/projects/${row.slug}`, '_blank', 'noopener,noreferrer')"
+              <nuxt-link
+                :to="`/projects/${row.slug}`"
+                target="_blank"
+                rel="noopener noreferrer"
               >
-                <template #icon>
-                  <icon name="material-symbols:visibility-outline" class="text-lg" />
-                </template>
-              </p-button>
+                <p-button text severity="secondary" aria-label="View project">
+                  <template #icon>
+                    <icon name="material-symbols:visibility-outline" class="text-lg" />
+                  </template>
+                </p-button>
+              </nuxt-link>
               <p-button
                 text
 

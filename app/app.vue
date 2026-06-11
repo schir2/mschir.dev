@@ -16,8 +16,10 @@ useAnalyticsConsent()
   <p-confirm-dialog />
   <dynamic-dialog />
   <cookie-control />
-  <NuxtLayout>
-    <NuxtPage />
-  </NuxtLayout>
-  <layout-footer />
+  <div class="flex flex-col gap-16">
+    <NuxtLayout>
+      <NuxtPage />
+    </NuxtLayout>
+    <layout-footer />
+  </div>
 </template>

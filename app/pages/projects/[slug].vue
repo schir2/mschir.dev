@@ -70,7 +70,7 @@ const breadcrumbs = computed<Crumb[]>(() => {
            With image on mobile: tall block, title overlaid at bottom with scrim
            With image on desktop (md+): shorter banner, no overlay, title lives below
            No image: skip entirely, title renders in header below -->
-      <div v-if="heroImageUrl" class="relative w-full rounded-xl overflow-hidden" style="min-height: 16rem;">
+      <div v-if="heroImageUrl" class="relative w-full rounded-xl overflow-hidden min-h-64">
         <img
             :src="heroImageUrl"
             :alt="project.name"
