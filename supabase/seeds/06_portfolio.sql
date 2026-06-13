@@ -18,7 +18,7 @@ where name in (
 insert into public.featured_projects (project_id, tagline, display_order)
 values
     (
-        (select id from public.projects where name = 'Customer Quoting Application'),
+        (select id from public.projects where name = 'Recurring Service Quoting Portal'),
         'End-to-end quoting workflow that cut sales turnaround time in half.',
         1
     ),
