@@ -7,6 +7,7 @@ definePageMeta({layout: 'page'})
 
 const route = useRoute()
 const supabase = useSupabaseClient()
+const { resolveImageUrl } = useStorageUrl()
 
 const slug = route.params.slug as string
 
@@ -16,23 +17,18 @@ const {
   const {data, error} = await supabase
       .from('projects')
       .select(`
-        id, name, slug, description, summary, image_url, year,
+        id, name, slug, description, summary, image_url, year, repo_url, project_url, is_public,
         companies(name),
         project_skills(skills(id, name, icon))
       `)
       .eq('slug', slug)
       .maybeSingle()
   if (error) throw error
-  if (!data) throw createError({statusCode: 404, message: 'Project not found'})
+  if (!data || !data.description) throw createError({statusCode: 404, message: 'Project not found'})
   return data as ProjectDetail | null
 })
 
-const heroImageUrl = computed<string | null>(() => {
-  const path = project.value?.image_url
-  if (!path) return null
-  if (path.startsWith('http://') || path.startsWith('https://')) return path
-  return supabase.storage.from('images').getPublicUrl(path).data.publicUrl
-})
+const heroImageUrl = computed<string | null>(() => resolveImageUrl(project.value?.image_url ?? null))
 
 usePageSeo({
   title: () => project.value?.name,
@@ -109,6 +105,34 @@ const breadcrumbs = computed<Crumb[]>(() => {
             <icon v-if="skillLink.skills.icon" :name="skillLink.skills.icon" class="w-4 h-4 shrink-0"/>
             {{ skillLink.skills.name }}
           </span>
+        </div>
+
+        <!-- External links (public only) -->
+        <div v-if="project.is_public && (project.repo_url || project.project_url)" class="flex gap-2">
+          <a
+              v-if="project.repo_url"
+              :href="project.repo_url"
+              target="_blank"
+              rel="noopener noreferrer"
+          >
+            <p-button severity="secondary" outlined size="small" label="View Repo">
+              <template #icon>
+                <icon name="mdi:github" class="text-lg"/>
+              </template>
+            </p-button>
+          </a>
+          <a
+              v-if="project.project_url"
+              :href="project.project_url"
+              target="_blank"
+              rel="noopener noreferrer"
+          >
+            <p-button severity="secondary" outlined size="small" label="Visit Site">
+              <template #icon>
+                <icon name="material-symbols:open-in-new" class="text-lg"/>
+              </template>
+            </p-button>
+          </a>
         </div>
 
       </header>

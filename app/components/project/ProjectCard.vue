@@ -6,14 +6,9 @@ const props = defineProps<{
   loading?: boolean
 }>()
 
-const supabase = useSupabaseClient()
+const { resolveImageUrl } = useStorageUrl()
 
-const resolvedImageUrl = computed<string | null>(() => {
-  const path = props.project?.image_url
-  if (!path) return null
-  if (path.startsWith('http://') || path.startsWith('https://')) return path
-  return supabase.storage.from('images').getPublicUrl(path).data.publicUrl
-})
+const resolvedImageUrl = computed<string | null>(() => resolveImageUrl(props.project?.image_url ?? null))
 
 const visibleSkills = computed(() => props.project?.project_skills.slice(0, 5) ?? [])
 const hiddenSkillCount = computed(() => Math.max(0, (props.project?.project_skills.length ?? 0) - 5))

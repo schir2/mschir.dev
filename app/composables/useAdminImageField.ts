@@ -3,15 +3,11 @@ export function useAdminImageField(
   prefix: string,
   initialPath?: string | null,
 ) {
-  const supabase = useSupabaseClient()
+  const { resolveStorageUrl } = useStorageUrl()
   const toast = useToast()
 
   const stagedFile = ref<File | null>(null)
-  const previewUrl = ref<string | null>(
-    initialPath
-      ? supabase.storage.from(bucket).getPublicUrl(initialPath).data.publicUrl
-      : null,
-  )
+  const previewUrl = ref<string | null>(resolveStorageUrl(initialPath ?? null, bucket))
 
   function onFilePicked(event: Event) {
     const input = event.target as HTMLInputElement

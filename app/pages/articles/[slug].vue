@@ -8,6 +8,7 @@ definePageMeta({layout: 'page'})
 
 const route = useRoute()
 const supabase = useSupabaseClient()
+const { resolveImageUrl } = useStorageUrl()
 
 const slug = route.params.slug as string
 
@@ -32,11 +33,7 @@ const {
   return data
 })
 
-const heroImageUrl = computed(() => {
-  if (!article.value?.image_url) return null
-  const {data} = supabase.storage.from('images').getPublicUrl(article.value.image_url)
-  return data.publicUrl
-})
+const heroImageUrl = computed(() => resolveImageUrl(article.value?.image_url ?? null))
 
 const formattedPublishedAt = computed(() => formatArticleDate(article.value?.published_at ?? null) || null)
 

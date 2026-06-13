@@ -5,8 +5,6 @@ import { FilterMatchMode } from '@primevue/core/api'
 import type { Company } from '#shared/types/Company'
 
 const supabase = useSupabaseClient()
-const confirm = useConfirm()
-const toast = useToast()
 
 const filters = ref({ global: { value: null as string | null, matchMode: FilterMatchMode.CONTAINS } })
 
@@ -29,33 +27,7 @@ function getLogoPublicUrl(logoPath: string | null): string | null {
   return supabase.storage.from('icons').getPublicUrl(logoPath).data.publicUrl
 }
 
-function confirmDelete(companyId: string) {
-  confirm.require({
-    header: 'Delete Company',
-    message: 'This cannot be undone.',
-    icon: 'material-symbols:warning-outline',
-    rejectLabel: 'Cancel',
-    acceptLabel: 'Delete',
-    acceptProps: { severity: 'danger' },
-    rejectProps: { severity: 'secondary', outlined: true },
-    accept: () => deleteCompany(companyId),
-  })
-}
-
-async function deleteCompany(companyId: string) {
-  const { error } = await supabase
-    .from('companies')
-    .delete()
-    .eq('id', companyId)
-
-  if (error) {
-    toast.add({ severity: 'error', summary: 'Delete failed', detail: error.message, life: 4000 })
-    return
-  }
-
-  toast.add({ severity: 'success', summary: 'Company deleted', life: 3000 })
-  await refreshCompanies()
-}
+const { confirmDelete } = useAdminDelete('companies', 'Company', refreshCompanies)
 </script>
 
 <template>

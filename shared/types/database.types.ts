@@ -491,30 +491,39 @@ export type Database = {
       projects: {
         Row: {
           company_id: string | null
-          description: string
+          description: string | null
           id: string
           image_url: string | null
+          is_public: boolean
           name: string
+          project_url: string | null
+          repo_url: string | null
           slug: string
           summary: string | null
           year: number
         }
         Insert: {
           company_id?: string | null
-          description: string
+          description?: string | null
           id?: string
           image_url?: string | null
+          is_public?: boolean
           name: string
+          project_url?: string | null
+          repo_url?: string | null
           slug: string
           summary?: string | null
           year?: number
         }
         Update: {
           company_id?: string | null
-          description?: string
+          description?: string | null
           id?: string
           image_url?: string | null
+          is_public?: boolean
           name?: string
+          project_url?: string | null
+          repo_url?: string | null
           slug?: string
           summary?: string | null
           year?: number

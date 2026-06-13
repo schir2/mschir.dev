@@ -9,8 +9,6 @@ type ContactMessageWithReason = ContactMessage & {
 }
 
 const supabase = useSupabaseClient()
-const confirm = useConfirm()
-const toast = useToast()
 
 const viewingMessage = ref<ContactMessageWithReason | null>(null)
 const viewDialogVisible = computed({
@@ -37,33 +35,7 @@ function formatDate(dateString: string): string {
   return new Date(dateString).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })
 }
 
-function confirmDelete(messageId: string) {
-  confirm.require({
-    header: 'Delete Message',
-    message: 'This cannot be undone.',
-    icon: 'material-symbols:warning-outline',
-    rejectLabel: 'Cancel',
-    acceptLabel: 'Delete',
-    acceptProps: { severity: 'danger' },
-    rejectProps: { severity: 'secondary', outlined: true },
-    accept: () => deleteMessage(messageId),
-  })
-}
-
-async function deleteMessage(messageId: string) {
-  const { error } = await supabase
-    .from('contact_messages')
-    .delete()
-    .eq('id', messageId)
-
-  if (error) {
-    toast.add({ severity: 'error', summary: 'Delete failed', detail: error.message, life: 4000 })
-    return
-  }
-
-  toast.add({ severity: 'success', summary: 'Message deleted', life: 3000 })
-  await refreshMessages()
-}
+const { confirmDelete } = useAdminDelete('contact_messages', 'Message', refreshMessages)
 </script>
 
 <template>

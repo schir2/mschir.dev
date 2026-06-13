@@ -9,6 +9,8 @@ export type ArticleSeriesSummary = Pick<ArticleSeries, 'id' | 'title' | 'slug' |
     article_count: number
 }
 
+export const ARTICLE_CARD_SELECT = 'id, title, slug, summary, published_at, image_url, series_id, series_sequence_number, article_categories(name, slug, color, image_url), article_tags_links(article_tags(name, slug, icon)), article_series(title, slug, image_url), featured_articles(id, featured_reason)' as const
+
 export type ArticleCardItem =
     Pick<Article, 'id' | 'title' | 'slug' | 'summary' | 'published_at' | 'image_url' | 'series_id' | 'series_sequence_number'>
     & {

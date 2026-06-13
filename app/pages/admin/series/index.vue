@@ -5,8 +5,6 @@ import { FilterMatchMode } from '@primevue/core/api'
 import type { ArticleSeries } from '#shared/types/ArticleSeries'
 
 const supabase = useSupabaseClient()
-const confirm = useConfirm()
-const toast = useToast()
 
 const filters = ref({ global: { value: null as string | null, matchMode: FilterMatchMode.CONTAINS } })
 
@@ -29,33 +27,7 @@ function getSeriesImageUrl(imagePath: string | null): string | null {
   return supabase.storage.from('images').getPublicUrl(imagePath).data.publicUrl
 }
 
-function confirmDelete(seriesId: string) {
-  confirm.require({
-    header: 'Delete Series',
-    message: 'This cannot be undone.',
-    icon: 'material-symbols:warning-outline',
-    rejectLabel: 'Cancel',
-    acceptLabel: 'Delete',
-    acceptProps: { severity: 'danger' },
-    rejectProps: { severity: 'secondary', outlined: true },
-    accept: () => deleteSeries(seriesId),
-  })
-}
-
-async function deleteSeries(seriesId: string) {
-  const { error } = await supabase
-    .from('article_series')
-    .delete()
-    .eq('id', seriesId)
-
-  if (error) {
-    toast.add({ severity: 'error', summary: 'Delete failed', detail: error.message, life: 4000 })
-    return
-  }
-
-  toast.add({ severity: 'success', summary: 'Series deleted', life: 3000 })
-  await refreshSeries()
-}
+const { confirmDelete } = useAdminDelete('article_series', 'Series', refreshSeries)
 </script>
 
 <template>

@@ -24,13 +24,12 @@ const thumbnail = computed(() =>
   props.article ? useArticleThumbnail(props.article) : { type: 'color' as const, color: 'var(--p-surface-800)' }
 )
 
+const { resolveImageUrl } = useStorageUrl()
+
 const resolvedThumbnailUrl = computed(() => {
   const thumbResult = thumbnail.value
   if (thumbResult.type !== 'image') return null
-  const imageUrl = thumbResult.url
-  if (imageUrl.startsWith('http://') || imageUrl.startsWith('https://')) return imageUrl
-  const supabaseClient = useSupabaseClient()
-  return supabaseClient.storage.from('images').getPublicUrl(imageUrl).data.publicUrl
+  return resolveImageUrl(thumbResult.url)
 })
 
 interface Ripple { id: number; x: number; y: number; size: number }

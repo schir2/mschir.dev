@@ -10,6 +10,7 @@ const toast = useToast()
 const router = useRouter()
 const confirm = useConfirm()
 const mdTheme = useMdEditorTheme()
+const { resolveImageUrl } = useStorageUrl()
 
 // --- Form state ---
 const projectName = ref('')
@@ -22,6 +23,9 @@ const year = ref<number>(new Date().getFullYear())
 const selectedSkillIds = ref<string[]>([])
 const imageUrl = ref<string | null>(null)
 const stagedImageFile = ref<File | null>(null)
+const repoUrl = ref<string | null>(null)
+const projectUrl = ref<string | null>(null)
+const isPublic = ref(false)
 
 // --- Featured state ---
 const isFeatured = ref(false)
@@ -30,12 +34,7 @@ const featuredDisplayOrder = ref(1)
 const featuredProjectId = ref<string | null>(null)
 
 // --- Reference data ---
-type Company = { id: string; name: string }
-type SkillWithCategory = { id: string; name: string; skill_categories: { name: string } | null }
-type SkillGroupOption = { label: string; items: { label: string; value: string }[] }
-
-const companies = ref<Company[]>([])
-const skillGroups = ref<SkillGroupOption[]>([])
+const { companies, skillGroups, load: loadReferenceData } = useProjectEditorData()
 
 // --- UI state ---
 const saving = ref(false)
@@ -54,10 +53,7 @@ const imagePreviewUrl = computed<string | null>(() => {
   if (stagedImageFile.value) {
     return URL.createObjectURL(stagedImageFile.value)
   }
-  if (imageUrl.value) {
-    return supabase.storage.from('images').getPublicUrl(imageUrl.value).data.publicUrl
-  }
-  return null
+  return resolveImageUrl(imageUrl.value)
 })
 
 watch(projectName, (newName) => {
@@ -70,35 +66,10 @@ function onSlugInput() {
   slugAutoMode.value = false
 }
 
-async function loadReferenceData() {
-  const [companiesResult, skillsResult] = await Promise.all([
-    supabase.from('companies').select('id, name').order('name'),
-    supabase.from('skills').select('id, name, skill_categories(name)').order('name'),
-  ])
-
-  if (companiesResult.data) {
-    companies.value = companiesResult.data
-  }
-
-  if (skillsResult.data) {
-    const groupMap = new Map<string, { label: string; value: string }[]>()
-    for (const skill of skillsResult.data as SkillWithCategory[]) {
-      const categoryName = skill.skill_categories?.name ?? 'Uncategorized'
-      if (!groupMap.has(categoryName)) {
-        groupMap.set(categoryName, [])
-      }
-      groupMap.get(categoryName)!.push({ label: skill.name, value: skill.id })
-    }
-    skillGroups.value = Array.from(groupMap.entries())
-      .sort(([nameA], [nameB]) => nameA.localeCompare(nameB))
-      .map(([label, items]) => ({ label, items }))
-  }
-}
-
 async function loadProject(projectId: string) {
   const { data, error } = await supabase
     .from('projects')
-    .select('id, name, slug, description, summary, company_id, year, image_url, project_skills(skill_id)')
+    .select('id, name, slug, description, summary, company_id, year, image_url, repo_url, project_url, is_public, project_skills(skill_id)')
     .eq('id', projectId)
     .single()
 
@@ -109,11 +80,14 @@ async function loadProject(projectId: string) {
 
   projectName.value = data.name
   slug.value = data.slug
-  description.value = data.description
+  description.value = data.description ?? ''
   summary.value = data.summary
   companyId.value = data.company_id
   year.value = data.year
   imageUrl.value = data.image_url
+  repoUrl.value = data.repo_url
+  projectUrl.value = data.project_url
+  isPublic.value = data.is_public
   selectedSkillIds.value = data.project_skills.map((link: { skill_id: string }) => link.skill_id)
   slugAutoMode.value = false
 
@@ -207,11 +181,14 @@ async function save() {
     const projectData = {
       name: projectName.value,
       slug: slug.value,
-      description: description.value,
+      description: description.value.trim() || null,
       summary: summary.value?.trim() || null,
       company_id: companyId.value,
       year: year.value,
       image_url: newImagePath,
+      repo_url: repoUrl.value?.trim() || null,
+      project_url: projectUrl.value?.trim() || null,
+      is_public: isPublic.value,
     }
 
     let savedId: string
@@ -385,7 +362,23 @@ async function deleteProject() {
           <p-textarea v-model="summary" :rows="2" class="w-full" auto-resize />
         </div>
 
-        <!-- Row 3: Company + Year + Skills + Featured -->
+        <!-- Row 3: Repo URL + Project URL + Public -->
+        <div class="flex gap-3 items-end flex-wrap">
+          <div class="flex flex-col gap-1 flex-1">
+            <label class="text-xs text-color-secondary">Repo URL</label>
+            <p-input-text v-model="repoUrl" class="w-full font-mono text-sm" placeholder="https://github.com/..." />
+          </div>
+          <div class="flex flex-col gap-1 flex-1">
+            <label class="text-xs text-color-secondary">Project URL</label>
+            <p-input-text v-model="projectUrl" class="w-full font-mono text-sm" placeholder="https://..." />
+          </div>
+          <div class="flex flex-col gap-1 shrink-0">
+            <label class="text-xs text-color-secondary">Public</label>
+            <p-toggle-switch v-model="isPublic" />
+          </div>
+        </div>
+
+        <!-- Row 5: Company + Year + Skills + Featured -->
         <div class="flex gap-3 items-center flex-wrap">
           <div class="flex flex-col gap-1 w-44">
             <label class="text-xs text-color-secondary">Company</label>
@@ -405,7 +398,7 @@ async function deleteProject() {
           </div>
         </div>
 
-        <!-- Row 4: Featured fields (when toggled on) -->
+        <!-- Row 6: Featured fields (when toggled on) -->
         <template v-if="isFeatured">
           <div class="flex gap-3 items-end">
             <div class="flex flex-col gap-1 flex-1">

@@ -38,6 +38,7 @@ values
 ('Postgres', 'logos:postgresql', 'intermediate', (select id from public.skill_categories where name = 'Databases')),
 ('REST', 'mdi:api', 'intermediate', (select id from public.skill_categories where name = 'Other')),
 ('Supabase', 'logos:supabase-icon', 'intermediate', (select id from public.skill_categories where name = 'Other')),
+('Web Scraping', 'mdi:spider-web', 'intermediate', (select id from public.skill_categories where name = 'Other')),
 ('Tailwind', 'logos:tailwindcss-icon', 'intermediate', (select id from public.skill_categories where name = 'Front-End Technologies')),
 ('Vuetify', 'simple-icons:vuetify', 'intermediate', (select id from public.skill_categories where name = 'Front-End Technologies')),
 

@@ -5,8 +5,6 @@ import { FilterMatchMode } from '@primevue/core/api'
 import type { ArticleCategory } from '#shared/types/ArticleCategory'
 
 const supabase = useSupabaseClient()
-const confirm = useConfirm()
-const toast = useToast()
 
 const filters = ref({ global: { value: null as string | null, matchMode: FilterMatchMode.CONTAINS } })
 
@@ -29,33 +27,7 @@ function getCategoryImageUrl(imagePath: string | null): string | null {
   return supabase.storage.from('images').getPublicUrl(imagePath).data.publicUrl
 }
 
-function confirmDelete(categoryId: string) {
-  confirm.require({
-    header: 'Delete Category',
-    message: 'This cannot be undone.',
-    icon: 'material-symbols:warning-outline',
-    rejectLabel: 'Cancel',
-    acceptLabel: 'Delete',
-    acceptProps: { severity: 'danger' },
-    rejectProps: { severity: 'secondary', outlined: true },
-    accept: () => deleteCategory(categoryId),
-  })
-}
-
-async function deleteCategory(categoryId: string) {
-  const { error } = await supabase
-    .from('article_categories')
-    .delete()
-    .eq('id', categoryId)
-
-  if (error) {
-    toast.add({ severity: 'error', summary: 'Delete failed', detail: error.message, life: 4000 })
-    return
-  }
-
-  toast.add({ severity: 'success', summary: 'Category deleted', life: 3000 })
-  await refreshCategories()
-}
+const { confirmDelete } = useAdminDelete('article_categories', 'Category', refreshCategories)
 </script>
 
 <template>

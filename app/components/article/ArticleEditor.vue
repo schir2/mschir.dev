@@ -14,6 +14,7 @@ const toast = useToast()
 const router = useRouter()
 const confirm = useConfirm()
 const mdTheme = useMdEditorTheme()
+const { resolveImageUrl } = useStorageUrl()
 
 // --- Form state ---
 const title = ref('')
@@ -73,11 +74,7 @@ const imageUrl = ref<string | null>(null)
 const slugLocked = computed(() => publishedAt.value !== null)
 const slugAutoMode = ref(true)
 
-const heroImagePublicUrl = computed(() =>
-  imageUrl.value
-    ? supabase.storage.from('images').getPublicUrl(imageUrl.value).data.publicUrl
-    : null
-)
+const heroImagePublicUrl = computed(() => resolveImageUrl(imageUrl.value))
 
 const heroImageInput = ref<HTMLInputElement | null>(null)
 
@@ -324,8 +321,7 @@ async function handleEditorImageUpload(files: File[], callback: (urls: string[])
   for (const file of files) {
     try {
       const uploadedPath = await useImageUpload('images', 'article-content', file)
-      const { data: { publicUrl } } = supabase.storage.from('images').getPublicUrl(uploadedPath)
-      urls.push(publicUrl)
+      urls.push(resolveImageUrl(uploadedPath) ?? uploadedPath)
     } catch (error: unknown) {
       const message = error instanceof Error ? error.message : 'Unknown error'
       toast.add({ severity: 'error', summary: 'Image upload failed', detail: message, life: 4000 })

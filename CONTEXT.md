@@ -28,13 +28,19 @@ A reusable component (`ProjectCard`) that renders a single project preview from 
   - *Skills footer*: `border-t border-surface-800` divider, then flat icon+name chip pills. Max 5 chips, `+N` badge for overflow. No category grouping.
 - Thumbnail (96×96 square, right): real image resolved from Supabase storage (`images` bucket) when `image_url` is set; otherwise a deterministic diagonal gradient from `--p-primary-*` / `--p-surface-*` tokens, derived by hashing the project name (six variants, always the same gradient for the same project name).
 
-**Hover/click**: same pattern as Article Card — `opacity-85` default → `opacity-100` on hover with shadow and border lighten. No translate-y. See ADR 0016.
+**Hover/click**: same pattern as Article Card — `opacity-85` default → `opacity-100` on hover with shadow and border lighten. No translate-y. See ADR 0016. Cards for projects without a description are not rendered as links — they appear in the Other Work compact list instead, not as `ProjectCard` rows.
 
 ### Projects Page
-The `/projects` route. A single-column vertical list of all projects, ordered by year descending. Uses `ProjectCard` for each row. Queries `projects` joined with `companies(name)` and `project_skills(skills(id, name, icon))`. Each card links to the Project Detail Page.
+The `/projects` route. Two-tier layout ordered by year descending.
+
+**Tier 1 — Detailed projects** (`description IS NOT NULL`): full `ProjectCard` rows, clickable, link to the Project Detail Page. These are projects the owner is presenting as portfolio pieces.
+
+**Tier 2 — Other Work** (`description IS NULL`): compact list rows showing name, company · year, and skill chips only. No card chrome, no link. Serves as a career breadth signal ("I was doing work") without implying a project is a portfolio showcase. Section heading: "Other Work".
+
+Both tiers query `projects` joined with `companies(name)` and `project_skills(skills(id, name, icon))`. The split is purely a rendering decision — no separate query.
 
 ### Project Detail Page
-The `/projects/[slug]` route. Public read-only view of a single project. Layout is responsive:
+The `/projects/[slug]` route. Public read-only view of a single project. Returns 404 when `description IS NULL` — only projects the owner has written up are reachable at this route. Layout is responsive:
 - **Mobile**: hero image fills a tall block with the project title overlaid at the bottom behind a dark gradient scrim. Company · year and skills appear below.
 - **Desktop (md+)**: hero image renders as a shorter banner; title, company · year, and skills render below it as a structured header.
 - **No image**: title always renders in the header (no hero block).
@@ -100,7 +106,9 @@ A short optional plain-text blurb (1–3 sentences) for a project. Stored as the
 The `/admin/projects` page. A PrimeVue DataTable showing all projects with columns: name, company, year, featured (boolean), and edit/delete actions. Entry point to the Project Editor. Includes a "Manage Companies" shortcut link to `/admin/companies`.
 
 ### Project Editor
-The admin UI for creating and editing projects. `/admin/projects/new` creates a new project; `/admin/projects/[id]` edits an existing one. Full-height split layout matching the Article Editor: a compact metadata bar across the top (name, slug, summary, hero image, company, year, skills) and a full-width split Markdown editor + live preview below. Also includes a **Featured** section: a toggle to mark the project as featured, with tagline and display_order fields shown when toggled on. Managing the featured state writes to/from the `featured_projects` table inline. The description field is rendered via `<md-editor>` (md-editor-v3).
+The admin UI for creating and editing projects. `/admin/projects/new` creates a new project; `/admin/projects/[id]` edits an existing one. Full-height split layout matching the Article Editor: a compact metadata bar across the top (name, slug, summary, hero image, company, year, skills, repo_url, project_url, is_public) and a full-width split Markdown editor + live preview below. Also includes a **Featured** section: a toggle to mark the project as featured, with tagline and display_order fields shown when toggled on. Managing the featured state writes to/from the `featured_projects` table inline. The description field is rendered via `<md-editor>` (md-editor-v3).
+
+`repo_url` and `project_url` are nullable. Both are admin-only reference fields when `is_public = false`; when `is_public = true`, they render as icon-link buttons on the Project Detail Page. `is_public` defaults to `false` — nothing leaks until explicitly enabled.
 
 ### Company List (Admin)
 The `/admin/companies` page. A PrimeVue DataTable listing all companies. Columns: logo (uploaded to the `icons` bucket), name, URL, and actions (edit, delete). Clicking a company name navigates to the Company Editor. No inline row editing — all editing happens on a dedicated editor page, consistent with all other admin list pages.

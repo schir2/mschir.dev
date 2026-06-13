@@ -2,7 +2,7 @@
 
 insert into public.articles (id, title, slug, content, summary, category_id, author, writing_stage, published_at, created_at, updated_at)
 values (
-    'b1000000-0000-0000-0000-000000000015',
+    'b1000000-0000-0000-0000-000000000019',
     'nuxt-link vs router-link: What Nuxt Adds to Internal Navigation',
     'nuxt-link-vs-router-link',
     $article$# nuxt-link vs router-link: What Nuxt Adds to Internal Navigation
@@ -84,6 +84,6 @@ $article$,
 );
 
 insert into public.article_tags_links (article_id, tag_id)
-select 'b1000000-0000-0000-0000-000000000015', id
+select 'b1000000-0000-0000-0000-000000000019', id
 from public.article_tags
 where slug in ('nuxt', 'vue.js');

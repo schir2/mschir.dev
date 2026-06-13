@@ -4,8 +4,8 @@ select
     s.id
 from public.projects p
          join public.skills s on s.name in (
-    -- Customer Quoting Application
-                                            'Django', 'HTML', 'Python', 'CSS', 'Figma', 'SQLite', 'VUE', 'Nuxt', 'REST', 'Vuetify', 'JS'
+    -- Customer Quoting Application (Vue/Nuxt present — JS dropped)
+                                            'Django', 'Python', 'Figma', 'SQLite', 'VUE', 'Nuxt', 'REST', 'Vuetify'
     )
 where p.name = 'Customer Quoting Application'
 
@@ -15,8 +15,8 @@ select
     s.id
 from public.projects p
          join public.skills s on s.name in (
-    -- Lead Analyzer Reporting Platform
-                                            'Django', 'HTML', 'Python', 'CSS', 'Figma', 'HTMX', 'Digital Ocean', 'Postgres', 'JS'
+    -- Lead Analyzer Reporting Platform (HTMX present — JS dropped)
+                                            'Django', 'Python', 'Figma', 'HTMX', 'Digital Ocean', 'Postgres'
     )
 where p.name = 'Lead Analyzer Reporting Platform'
 
@@ -26,8 +26,8 @@ select
     s.id
 from public.projects p
          join public.skills s on s.name in (
-    -- Vehicle GPS Alerting System
-                                            'HTML', 'CSS', 'MSSQL', 'MySQL', 'Linux', 'PHP', 'JS'
+    -- Vehicle GPS Alerting System (PHP/vanilla JS — no framework, JS kept)
+                                            'MSSQL', 'MySQL', 'Linux', 'PHP', 'JS'
     )
 where p.name = 'Vehicle GPS Alerting System for Field Service Workers'
 
@@ -48,8 +48,8 @@ select
     s.id
 from public.projects p
          join public.skills s on s.name in (
-    -- Visual Lead Inspection Job Tracking System
-                                            'Django', 'HTML', 'Python', 'CSS', 'Digital Ocean', 'Linux', 'Postgres', 'JS'
+    -- Visual Lead Inspection Job Tracking System (Django present — JS dropped)
+                                            'Django', 'Python', 'Digital Ocean', 'Linux', 'Postgres'
     )
 where p.name = 'Visual Lead Inspection Job Tracking System'
 
@@ -59,9 +59,9 @@ select
     s.id
 from public.projects p
          join public.skills s on s.name in (
-    -- Field Service Management System Extension
-                                            'Django', 'HTML', 'Python', 'Windows', 'Bootstrap', 'CSS', 'Figma', 'HTMX',
-                                            'MSSQL', 'MySQL', 'SQLite', 'Linux', 'JS'
+    -- Field Service Management System Extension (Django/HTMX present — JS dropped)
+                                            'Django', 'Python', 'Windows', 'Bootstrap', 'Figma', 'HTMX',
+                                            'MSSQL', 'MySQL', 'SQLite', 'Linux'
     )
 where p.name = 'Field Service Management System Extension'
 
@@ -72,7 +72,7 @@ select
 from public.projects p
          join public.skills s on s.name in (
     -- Automated User Lookup and Reporting System
-                                            'HTML', 'Python', 'CSS', 'MSSQL', 'MySQL'
+                                            'Python', 'MSSQL', 'MySQL'
     )
 where p.name = 'Automated User Lookup and Reporting System'
 
@@ -97,5 +97,16 @@ from public.projects p
                                             'Nuxt', 'VUE', 'TypeScript', 'Tailwind', 'Django', 'Python', 'REST', 'Postgres'
     )
 where p.name = 'Calcura'
+
+union all
+select
+    p.id,
+    s.id
+from public.projects p
+         join public.skills s on s.name in (
+    -- EPA Pesticide Registry Scraper
+                                            'Python', 'Web Scraping'
+    )
+where p.name = 'EPA Pesticide Registry Scraper'
 
 on conflict do nothing;

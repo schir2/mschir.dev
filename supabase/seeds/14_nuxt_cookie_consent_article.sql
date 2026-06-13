@@ -2,7 +2,7 @@
 
 insert into public.articles (id, title, slug, content, summary, category_id, author, writing_stage, published_at, created_at, updated_at)
 values (
-    'b1000000-0000-0000-0000-000000000014',
+    'b1000000-0000-0000-0000-000000000018',
     'Cookie Consent in Nuxt with nuxt-cookie-control',
     'cookie-consent-in-nuxt-with-nuxt-cookie-control',
     $article$# Cookie Consent in Nuxt with nuxt-cookie-control
@@ -136,6 +136,6 @@ $article$,
 );
 
 insert into public.article_tags_links (article_id, tag_id)
-select 'b1000000-0000-0000-0000-000000000014', id
+select 'b1000000-0000-0000-0000-000000000018', id
 from public.article_tags
 where slug in ('privacy', 'gdpr', 'nuxt');

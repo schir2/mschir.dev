@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+import { ARTICLE_CARD_SELECT } from '#shared/types/Article'
 import type { ArticleCardItem, ArticleSeriesSummary } from '#shared/types/Article'
 import type { ArticleCategory } from '#shared/types/ArticleCategory'
 
@@ -11,8 +12,6 @@ usePageSeo({
 
 const supabase = useSupabaseClient()
 
-const articleCardSelect = 'id, title, slug, summary, published_at, image_url, series_id, series_sequence_number, article_categories(name, slug, color, image_url), article_tags_links(article_tags(name, slug, icon)), article_series(title, slug, image_url), featured_articles(id, featured_reason)'
-
 const {
   data: featuredArticles,
   error: featuredError,
@@ -20,7 +19,7 @@ const {
 } = useAsyncData<ArticleCardItem[]>('featured-articles', async () => {
   const {data, error} = await supabase
       .from('featured_articles')
-      .select(`article_id, articles!inner(${articleCardSelect})`)
+      .select(`article_id, articles!inner(${ARTICLE_CARD_SELECT})`)
       .not('articles.published_at', 'is', null)
       .order('created_at', {ascending: false})
       .limit(3)
@@ -37,7 +36,7 @@ const {
 } = useAsyncData<ArticleCardItem[]>('recent-articles', async () => {
   const {data, error} = await supabase
       .from('articles')
-      .select(articleCardSelect)
+      .select(ARTICLE_CARD_SELECT)
       .not('published_at', 'is', null)
       .is('archived_at', null)
       .order('published_at', {ascending: false})

@@ -65,6 +65,21 @@ values
     )
 on conflict (name) do nothing;
 
+insert into public.projects (name, slug, description, summary, company_id, year, repo_url, is_public, image_url)
+values
+    (
+        'EPA Pesticide Registry Scraper',
+        'epa-pesticide-registry-scraper',
+        'I built this to replace a slow manual process at MMPC: searching the EPA''s Pesticide Product Label System, downloading labels, and compiling specs across hundreds of registered products. Given an EPA registration number, it navigates the portal with Selenium and returns structured data including active ingredients with concentrations, application sites, and target pests. Built with Python and Selenium to support compliance documentation and procurement analysis for sourcing generic alternatives, it reached proof of concept but never shipped.',
+        'Python and Selenium proof of concept for extracting structured pesticide registration data from the EPA''s PPLS portal.',
+        (select id from public.companies where name = 'MMPC'),
+        2023,
+        'https://github.com/mmpc-nyc/epa-scraper',
+        false,
+        null
+    )
+on conflict (name) do nothing;
+
 insert into public.projects (name, slug, description, summary, company_id, year, image_url)
 values
     (

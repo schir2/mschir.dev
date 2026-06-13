@@ -5,8 +5,6 @@ import { FilterMatchMode } from '@primevue/core/api'
 import type { ArticleAdminListItem } from '#shared/types/Article'
 
 const supabase = useSupabaseClient()
-const confirm = useConfirm()
-const toast = useToast()
 
 const filters = ref({ global: { value: null as string | null, matchMode: FilterMatchMode.CONTAINS } })
 
@@ -24,33 +22,7 @@ const {
   return data as ArticleAdminListItem[]
 }, { lazy: true })
 
-function confirmDelete(articleId: string) {
-  confirm.require({
-    header: 'Delete Article',
-    message: 'This cannot be undone.',
-    icon: 'material-symbols:warning-outline',
-    rejectLabel: 'Cancel',
-    acceptLabel: 'Delete',
-    acceptProps: { severity: 'danger' },
-    rejectProps: { severity: 'secondary', outlined: true },
-    accept: () => deleteArticle(articleId),
-  })
-}
-
-async function deleteArticle(articleId: string) {
-  const { error } = await supabase
-    .from('articles')
-    .delete()
-    .eq('id', articleId)
-
-  if (error) {
-    toast.add({ severity: 'error', summary: 'Delete failed', detail: error.message, life: 4000 })
-    return
-  }
-
-  toast.add({ severity: 'success', summary: 'Article deleted', life: 3000 })
-  await refreshArticles()
-}
+const { confirmDelete } = useAdminDelete('articles', 'Article', refreshArticles)
 </script>
 
 <template>

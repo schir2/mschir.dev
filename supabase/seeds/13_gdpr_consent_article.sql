@@ -8,7 +8,7 @@ on conflict (slug) do nothing;
 
 insert into public.articles (id, title, slug, content, summary, category_id, author, writing_stage, published_at, created_at, updated_at)
 values (
-    'b1000000-0000-0000-0000-000000000013',
+    'b1000000-0000-0000-0000-000000000017',
     'What Developers Actually Need to Know About Cookie Consent',
     'what-developers-need-to-know-about-cookie-consent',
     $article$# What Developers Actually Need to Know About Cookie Consent
@@ -104,6 +104,6 @@ $article$,
 );
 
 insert into public.article_tags_links (article_id, tag_id)
-select 'b1000000-0000-0000-0000-000000000013', id
+select 'b1000000-0000-0000-0000-000000000017', id
 from public.article_tags
 where slug in ('privacy', 'gdpr', 'security');

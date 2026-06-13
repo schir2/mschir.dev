@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+import { ARTICLE_CARD_SELECT } from '#shared/types/Article'
 import type {ArticleCardItem} from '#shared/types/Article'
 
 definePageMeta({})
@@ -27,13 +28,7 @@ const {data: recentArticles} = await useAsyncData<ArticleCardItem[]>(
     async () => {
       const {data} = await supabase
           .from('articles')
-          .select(`
-            id, title, slug, summary, published_at, image_url, series_id, series_sequence_number,
-            article_categories(name, slug, color, image_url),
-            article_tags_links(article_tags(name, slug, icon)),
-            article_series(title, slug, image_url),
-            featured_articles(id, featured_reason)
-          `)
+          .select(ARTICLE_CARD_SELECT)
           .not('published_at', 'is', null)
           .is('archived_at', null)
           .order('published_at', {ascending: false})

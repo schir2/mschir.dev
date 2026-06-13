@@ -33,7 +33,7 @@ export type ProjectCardItem = {
   featured: boolean
 }
 
-export type ProjectDetail = Pick<Project, 'id' | 'name' | 'slug' | 'description' | 'summary' | 'image_url' | 'year'> & {
+export type ProjectDetail = Pick<Project, 'id' | 'name' | 'slug' | 'description' | 'summary' | 'image_url' | 'year' | 'repo_url' | 'project_url' | 'is_public'> & {
   companies: Pick<Company, 'name'> | null
   project_skills: { skills: Pick<Skill, 'id' | 'name' | 'icon'> }[]
 }
