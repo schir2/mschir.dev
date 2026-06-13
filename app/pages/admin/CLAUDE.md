@@ -312,19 +312,21 @@ List pages must show a `<p-progress-spinner>` overlay while `pending` is true. N
 
 All destructive actions use `<p-confirm-dialog>` (modal). This includes row-level deletes and state changes (publish, archive, unpublish). Never use `<p-confirm-popup>` for admin destructive actions.
 
+**Use `useAdminDelete()`** for all list-page row deletes. It encapsulates the confirm dialog, Supabase delete call, error/success toasts, and refresh in one composable:
+
 ```ts
-function confirmDelete(id: string) {
-  confirm.require({
-    header: 'Delete <Resource>',
-    message: 'This cannot be undone.',
-    icon: 'material-symbols:warning-outline',
-    rejectLabel: 'Cancel',
-    acceptLabel: 'Delete',
-    acceptClass: 'p-button-danger',
-    accept: () => deleteResource(id),
-  })
-}
+// in <script setup>
+const { confirmDelete } = useAdminDelete('articles', 'Article', refresh)
+
+// in the template actions column
+<p-button text severity="danger" @click="confirmDelete(row.id)" aria-label="Delete" />
 ```
+
+Parameters:
+- `table` — Supabase table name (TypeScript-autocompleted from `keyof Database['public']['Tables']`)
+- `entityLabel` — used in the dialog header ("Delete Article") and success toast ("Article deleted")
+- `refresh` — async function that re-fetches the list after deletion
+- `options.onDeleted` — optional async callback fired after the DB delete but before the toast and refresh (use for cascade cleanup not covered by DB constraints)
 
 `<p-confirm-dialog>` is provided by both admin layouts — **do not add it to individual page templates**.
 

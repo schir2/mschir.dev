@@ -82,6 +82,15 @@ This is a **Nuxt 4** personal portfolio site (mschir.dev) backed by **Supabase**
 
 **Forms** — Zod schemas validated with `@primevue/forms/resolvers/zod` inside PrimeVue `<p-form>`.
 
+**Storage URLs** — never call `supabase.storage.from(bucket).getPublicUrl(path)` directly. Use `useStorageUrl()` from `~/composables/useStorageUrl`. It handles null paths, absolute URL pass-through, and bucket selection:
+```ts
+const { resolveImageUrl, resolveIconUrl, resolveStorageUrl } = useStorageUrl()
+// resolveImageUrl(path)  → resolves from the 'images' bucket
+// resolveIconUrl(path)   → resolves from the 'icons' bucket
+// resolveStorageUrl(path, 'custom-bucket') → explicit bucket
+```
+Call `useStorageUrl()` at the top level of `<script setup>` — never inside `computed()` or other composables.
+
 **md-editor-v3** — `MdEditor`, `MdPreview`, and `MdCatalog` are registered globally in `app/plugins/md-editor-v3.client.ts`. Three props are required on every usage:
 - `language="en-US"` — the library defaults to `zh-CN`; omitting this produces Chinese UI strings
 - `:theme="mdTheme"` — use the `useMdEditorTheme()` composable; do not hardcode `"dark"`
@@ -138,6 +147,10 @@ Single-context repo — one `CONTEXT.md` + `docs/adr/` at the root. See `docs/ag
 ### Prose and copy style
 
 Voice, tone, AI-tell patterns, heading style, and article structure rules for all written copy on this site. See `.claude/skills/copy-style/REFERENCE.md`. Use `/copy-style` when writing or rewriting any user-facing prose.
+
+### Project import
+
+Use `/import-project <github-url>` to add a GitHub repository as a portfolio project entry. The skill inspects the repo, derives the tech stack and year, asks targeted questions for context the code can't answer, invokes `/copy-style` on the prose, and writes the relevant seed files (`02_content.sql`, `03_projects.sql`, `04_project_skills.sql`). Optionally creates an article idea seed. See `.claude/skills/import-project/SKILL.md`.
 
 ## UI and Visual Work
 

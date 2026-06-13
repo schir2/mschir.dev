@@ -23,8 +23,8 @@ values
         1
     ),
     (
-        (select id from public.projects where name = 'Lead Analyzer Reporting Platform'),
-        'Analytics platform that gave the sales team real-time visibility into inbound leads.',
+        (select id from public.projects where name = 'NYCHA XRF Lead Inspection and Reporting Platform'),
+        'Cut NYCHA lead inspection reporting from three hours to three minutes on a $5M contract.',
         2
     ),
     (
@@ -41,5 +41,10 @@ values
         (select id from public.projects where name = 'Calcura'),
         'Interactive retirement scenario simulator built with Nuxt, Naive UI, and Chart.js.',
         5
+    ),
+    (
+        (select id from public.projects where name = 'MM Portal'),
+        'Built on top of a 2007-era field service system, now the operations hub for 50-plus daily users at M&M Environmental, with GPS routing and an AI pipeline connecting calls and job data to HubSpot.',
+        6
     )
 on conflict (project_id) do nothing;

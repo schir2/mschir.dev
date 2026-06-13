@@ -100,24 +100,43 @@ This is a personal portfolio, not a product landing page. Write as a developer t
 
 ### Field guidance
 
-| Field | Guidance |
-|---|---|
-| `description` | 2–3 sentences. What it is, what it does, the stack. Personal voice. |
-| `summary` | One sentence for card previews. Factual, no fluff. |
-| `tagline` (featured) | One sentence. What it is and how it was built. Not a slogan. |
+| Field | Required | Guidance |
+|---|---|---|
+| `description` | No (nullable) | Markdown. Full write-up: what the problem was, what was built, key decisions, outcome. Omit for minor/legacy projects that belong in the "Other Work" tier on the Projects Page — those get no detail page. |
+| `summary` | No | One sentence for card previews. Factual, no fluff. |
+| `repo_url` | No | GitHub URL. Always stored even for private repos — admin reference only when `is_public = false`. |
+| `project_url` | No | Live site or demo URL. Only set when the project is publicly accessible. |
+| `is_public` | Yes | Default `false`. Set `true` to render repo and project URL link buttons on the public detail page. |
+| `tagline` (featured) | Yes (if featured) | One sentence. What it is and how it was built. Not a slogan. Lives on `featured_projects`, not `projects`. |
 
-### Example
+**Projects without a `description` do not get a detail page** (`/projects/[slug]` returns 404) and render as compact "Other Work" rows on the Projects Page instead of full cards.
+
+**Skills:** do not list `HTML`, `CSS`, or `JS` unless JS is the only frontend tool (no framework). These are table-stakes and add noise to the skills chips.
+
+### Adding a project: use `/import-project`
+
+For any GitHub repo, run `/import-project <repo-url>`. The skill researches the repo, asks targeted questions, and writes all seed files. Manual seed edits are only needed for projects with no public repo.
+
+### Manual seed example
 
 ```sql
--- description
-'An Asana and Linear-inspired task management app I built from scratch. Arcus organizes work into projects, sections, and tasks with support for priorities, dependencies, color-coded tags, subtasks, and deadline tracking — all updating in real time via Supabase. Built with Nuxt, Supabase, and TypeScript, deployed at getarcus.com.'
-
--- summary
-'Personal take on task management, inspired by Asana and Linear, with real-time updates and a clean interface.'
-
--- tagline
-'Asana and Linear-inspired task manager built from the ground up with Nuxt, Supabase, and TypeScript.'
+insert into public.projects (name, slug, description, summary, company_id, year, repo_url, project_url, is_public, image_url)
+values (
+    'Arcus',
+    'arcus',
+    'An Asana and Linear-inspired task management app I built from scratch...',
+    'Personal take on task management, inspired by Asana and Linear, with real-time updates and a clean interface.',
+    null,
+    2025,
+    'https://github.com/schir2/arcus',
+    'https://getarcus.com',
+    true,
+    null
+)
+on conflict (name) do nothing;
 ```
+
+`image_url` is always `null` in seeds — set via the admin UI after upload.
 
 ## After adding a seed file
 

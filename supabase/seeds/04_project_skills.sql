@@ -4,10 +4,10 @@ select
     s.id
 from public.projects p
          join public.skills s on s.name in (
-    -- Customer Quoting Application (Vue/Nuxt present — JS dropped)
-                                            'Django', 'Python', 'Figma', 'SQLite', 'VUE', 'Nuxt', 'REST', 'Vuetify'
+    -- Recurring Service Quoting Portal
+                                            'Django', 'Python', 'HTMX', 'VUE', 'HubSpot', 'Docker', 'Nuxt', 'Tailwind', 'Vuetify'
     )
-where p.name = 'Customer Quoting Application'
+where p.name = 'Recurring Service Quoting Portal'
 
 union all
 select
@@ -15,10 +15,10 @@ select
     s.id
 from public.projects p
          join public.skills s on s.name in (
-    -- Lead Analyzer Reporting Platform (HTMX present — JS dropped)
-                                            'Django', 'Python', 'Figma', 'HTMX', 'Digital Ocean', 'Postgres'
+    -- NYCHA XRF Lead Inspection and Reporting Platform
+                                            'Django', 'Python', 'HTMX', 'Bootstrap'
     )
-where p.name = 'Lead Analyzer Reporting Platform'
+where p.name = 'NYCHA XRF Lead Inspection and Reporting Platform'
 
 union all
 select
@@ -59,11 +59,11 @@ select
     s.id
 from public.projects p
          join public.skills s on s.name in (
-    -- Field Service Management System Extension (Django/HTMX present — JS dropped)
-                                            'Django', 'Python', 'Windows', 'Bootstrap', 'Figma', 'HTMX',
-                                            'MSSQL', 'MySQL', 'SQLite', 'Linux'
+    -- MM Portal
+                                            'Django', 'Python', 'Bootstrap', 'HTMX', 'MySQL', 'MSSQL',
+                                            'Linux', 'REST', 'Web Scraping', 'HubSpot', 'Pydantic AI'
     )
-where p.name = 'Field Service Management System Extension'
+where p.name = 'MM Portal'
 
 union all
 select
@@ -108,5 +108,16 @@ from public.projects p
                                             'Python', 'Web Scraping'
     )
 where p.name = 'EPA Pesticide Registry Scraper'
+
+union all
+select
+    p.id,
+    s.id
+from public.projects p
+         join public.skills s on s.name in (
+    -- SQL Server Connection Proxy
+                                            'Python', 'Docker', 'MSSQL'
+    )
+where p.name = 'SQL Server Connection Proxy'
 
 on conflict do nothing;

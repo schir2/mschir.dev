@@ -25,6 +25,7 @@ values
 ('MySQL', 'logos:mysql', 'advanced', (select id from public.skill_categories where name = 'Databases')),
 ('SQLite', 'logos:sqlite', 'advanced', (select id from public.skill_categories where name = 'Databases')),
 ('VUE', 'logos:vue', 'advanced', (select id from public.skill_categories where name = 'Frameworks and Libraries')),
+('HubSpot', 'simple-icons:hubspot', 'advanced', (select id from public.skill_categories where name = 'Other')),
 
 -- Intermediate
 ('AWS', 'logos:aws', 'intermediate', (select id from public.skill_categories where name = 'Other')),
@@ -41,6 +42,7 @@ values
 ('Web Scraping', 'mdi:spider-web', 'intermediate', (select id from public.skill_categories where name = 'Other')),
 ('Tailwind', 'logos:tailwindcss-icon', 'intermediate', (select id from public.skill_categories where name = 'Front-End Technologies')),
 ('Vuetify', 'simple-icons:vuetify', 'intermediate', (select id from public.skill_categories where name = 'Front-End Technologies')),
+('Pydantic AI', 'simple-icons:pydantic', 'intermediate', (select id from public.skill_categories where name = 'Frameworks and Libraries')),
 
 -- Beginner
 ('Flask', 'logos:flask', 'beginner', (select id from public.skill_categories where name = 'Frameworks and Libraries')),
@@ -52,5 +54,9 @@ on conflict (name) do nothing;
 -- Companies
 insert into public.companies (name, "url") values
     ('MMPC', 'https://www.mandmpestcontrol.com')
+on conflict (name) do nothing;
+
+insert into public.companies (name, "url") values
+    ('Green Orchard Group', null)
 on conflict (name) do nothing;
 

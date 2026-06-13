@@ -17,6 +17,7 @@ Each file owns:
 2. `Insert` and `Update` variants if the entity is written to from the app.
 3. **Composite/view types** whose primary entity is that table (e.g. `ArticleCardItem`, `ArticleDetail`, `ArticleListItem` all live in `Article.ts`; `ArticleSeriesSummary` lives in `ArticleSeries.ts`).
 4. **Domain enums or string unions** that are values of a column on that table (e.g. `WritingStage` lives in `Article.ts`).
+5. **Shared Supabase select strings** used by two or more pages to fetch the same shape — export as a named `as const` constant co-located with the matching type (e.g. `ARTICLE_CARD_SELECT` lives next to `ArticleCardItem` in `Article.ts`). Ad-hoc select strings used in only one place stay local to that file.
 
 Composite types that span multiple tables belong in the file of the **primary/driving table** — the one whose rows are being listed or detailed.
 
