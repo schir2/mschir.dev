@@ -94,7 +94,7 @@ select
 from public.projects p
          join public.skills s on s.name in (
     -- Calcura
-                                            'Nuxt', 'VUE', 'TypeScript', 'Tailwind', 'Django', 'Python', 'REST', 'Postgres'
+                                            'Nuxt', 'VUE', 'TypeScript', 'Tailwind', 'Django', 'Python', 'REST', 'Postgres', 'Pinia', 'Chart.js', 'Naive UI'
     )
 where p.name = 'Calcura'
 

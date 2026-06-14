@@ -49,10 +49,14 @@ values
 -- Advanced (Frameworks and Libraries)
 ('Pinia', 'logos:pinia', 'advanced', (select id from public.skill_categories where name = 'Frameworks and Libraries')),
 
+-- Intermediate (Front-End Technologies)
+('Naive UI', 'logos:naive-ui', 'intermediate', (select id from public.skill_categories where name = 'Front-End Technologies')),
+
 -- Beginner
 ('Flask', 'logos:flask', 'beginner', (select id from public.skill_categories where name = 'Frameworks and Libraries')),
 ('GraphQL', 'logos:graphql', 'beginner', (select id from public.skill_categories where name = 'Databases')),
-('JS', 'logos:javascript', 'beginner', (select id from public.skill_categories where name = 'Programming Languages'))
+('JS', 'logos:javascript', 'beginner', (select id from public.skill_categories where name = 'Programming Languages')),
+('Chart.js', 'logos:chartjs', 'beginner', (select id from public.skill_categories where name = 'Front-End Technologies'))
 on conflict (name) do nothing;
 
 
