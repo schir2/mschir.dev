@@ -1,19 +1,3 @@
--- Mark highlighted skills for the portfolio snapshot
-update public.skills
-set is_highlighted = true
-where name in (
-    'Python',
-    'Django',
-    'VUE',
-    'Nuxt',
-    'Postgres',
-    'Tailwind',
-    'HTMX',
-    'HTML',
-    'CSS',
-    'REST'
-);
-
 -- Featured projects for the portfolio showcase
 insert into public.featured_projects (project_id, tagline, display_order)
 values
