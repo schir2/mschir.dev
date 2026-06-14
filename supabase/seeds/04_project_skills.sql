@@ -83,7 +83,7 @@ select
 from public.projects p
          join public.skills s on s.name in (
     -- Arcus
-                                            'Nuxt', 'VUE', 'TypeScript', 'Tailwind', 'Supabase', 'Postgres'
+                                            'Nuxt', 'VUE', 'TypeScript', 'Tailwind', 'Supabase', 'Postgres', 'PrimeVue', 'Pinia', 'Zod'
     )
 where p.name = 'Arcus'
 

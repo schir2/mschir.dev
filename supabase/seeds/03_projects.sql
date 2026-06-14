@@ -126,18 +126,65 @@ values
     )
 on conflict (name) do nothing;
 
-insert into public.projects (name, slug, description, summary, company_id, year, image_url)
+insert into public.projects (name, slug, description, summary, company_id, year, repo_url, project_url, is_public, image_url)
 values
     (
         'Arcus',
         'arcus',
-        'An Asana and Linear-inspired task management app I built from scratch. Arcus organizes work into projects, sections, and tasks with support for priorities, dependencies, color-coded tags, subtasks, and deadline tracking — all updating in real time via Supabase. Built with Nuxt, Supabase, and TypeScript, deployed at getarcus.com.',
-        'Personal take on task management, inspired by Asana and Linear, with real-time updates and a clean interface.',
+        $desc$Arcus is a project and task management app I built after getting tired of paying for Asana. I needed something to organize my own website builds that had the same core features without the subscription. What started as a side idea grew into a full platform with real-time collaboration, a Vue Flow dependency diagram, and a layered state management architecture built for live multi-user editing.
+
+The app is live at [getarcus.com](https://getarcus.com). It is not widely advertised yet; a small group of early users has access while I finish the current architectural work. Core task management works: projects with customizable statuses and priorities, tracks that organize work by domain or responsibility (each with a default assignee so tasks inherit ownership on creation), tasks with comments, tags, due dates, and a visual dependency graph built with Vue Flow.
+
+### Architecture
+
+```mermaid
+flowchart LR
+    Components[Vue Components] -->|field patch| Stores[Entity Stores]
+    Components -->|orchestration| Actions[Action Layer]
+    Actions -->|CRUD + RPC| Supabase[(Supabase)]
+    Actions -->|hydrate| Stores
+    Realtime[Supabase Realtime] -->|DB events| Stores
+    Stores -->|reactive| Components
+```
+
+The architecture has three explicit layers. Stores hold state only; no fetching, no RPC calls. A `createObjectStore` factory generates uniform store instances for each entity. Actions own all orchestration: API calls, multi-store coordination, error handling, and notifications. Each action exposes its own `isLoading` and `error` state so buttons get accurate spinners. Components call stores directly for single-field patches and emit upward only when an operation needs service-layer logic.
+
+### Realtime Pipeline
+
+```mermaid
+flowchart TD
+    DB[(Supabase DB)] -->|DB changes| RT[Supabase Realtime]
+    RT -->|WebSocket| Factory[useRealtimeChannelFactory]
+    Factory -->|INSERT / UPDATE| upsert["store.upsert(payload.new)"]
+    Factory -->|DELETE| remove["store.removeLocal(payload.old.id)"]
+    upsert --> Store[projectDetailStore.related.*]
+    remove --> Store
+    Store -->|reactive| UI[Vue components]
+```
+
+When multiple users edit a project simultaneously, Supabase Realtime streams Postgres changes directly to the client. A channel factory applies inserts, updates, and deletes to the matching store without a round-trip to the server, so every connected user sees changes instantly.
+
+### What I Planned but Have Not Built Yet
+
+Two features I wanted to add but have not gotten to.
+
+The first is democratic task prioritization. In team settings, traditional priority levels break down when everything is urgent. The idea: give each team member a limited pool of votes to allocate across project tasks. Scarcity forces real trade-offs; tasks surface ranked by vote weight rather than whatever the person who set up the board decided.
+
+The second is an AI-executable workflow template system. Tracks already model the ownership and handoff structure of a project, and the dependency diagram renders that structure visually. I wanted to add a way to define a structured sequence of task templates that an agent could instantiate and execute, using the track graph as the workflow scaffold. Claude Workflows shipped a few weeks after I had the idea, which was both validating and mildly deflating. The visual builder angle still feels like a useful layer on top.$desc$,
+        'Asana alternative I built from scratch, with real-time multi-user editing and a layered Pinia store architecture.',
         null,
         2025,
+        'https://github.com/schir2/arcus',
+        'https://getarcus.com',
+        true,
         null
     )
-on conflict (name) do nothing;
+on conflict (name) do update set
+    description = excluded.description,
+    summary = excluded.summary,
+    repo_url = excluded.repo_url,
+    project_url = excluded.project_url,
+    is_public = excluded.is_public;
 
 insert into public.projects (name, slug, description, summary, company_id, year, image_url)
 values

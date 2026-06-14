@@ -43,6 +43,11 @@ values
 ('Tailwind', 'logos:tailwindcss-icon', 'intermediate', (select id from public.skill_categories where name = 'Front-End Technologies')),
 ('Vuetify', 'simple-icons:vuetify', 'intermediate', (select id from public.skill_categories where name = 'Front-End Technologies')),
 ('Pydantic AI', 'simple-icons:pydantic', 'intermediate', (select id from public.skill_categories where name = 'Frameworks and Libraries')),
+('PrimeVue', 'simple-icons:primevue', 'intermediate', (select id from public.skill_categories where name = 'Front-End Technologies')),
+('Zod', 'mdi:shield-check', 'intermediate', (select id from public.skill_categories where name = 'Frameworks and Libraries')),
+
+-- Advanced (Frameworks and Libraries)
+('Pinia', 'logos:pinia', 'advanced', (select id from public.skill_categories where name = 'Frameworks and Libraries')),
 
 -- Beginner
 ('Flask', 'logos:flask', 'beginner', (select id from public.skill_categories where name = 'Frameworks and Libraries')),
