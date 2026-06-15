@@ -2,11 +2,12 @@
 const currentYear = new Date().getFullYear()
 
 const navLinks = [
-  { label: 'Portfolio', route: '/portfolio' },
-  { label: 'Services', route: '/services' },
-  { label: 'Articles', route: '/articles' },
-  { label: 'About', route: '/about' },
-  { label: 'Contact', route: '/contact' },
+  {label: 'Portfolio', route: '/portfolio'},
+  {label: 'Projects', route: '/projects'},
+  {label: 'Services', route: '/services'},
+  {label: 'Articles', route: '/articles'},
+  {label: 'About', route: '/about'},
+  {label: 'Contact', route: '/contact'},
 ]
 </script>
 
@@ -48,12 +49,13 @@ const navLinks = [
                class="inline-flex p-1.5 rounded-full text-muted-color transition-colors hover:bg-surface-700 hover:text-color">
               <icon name="mdi:github" class="text-2xl"/>
             </a>
-            <a href="https://www.linkedin.com/in/marek-schir-95229684/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn"
+            <a href="https://www.linkedin.com/in/marek-schir-95229684/" target="_blank" rel="noopener noreferrer"
+               aria-label="LinkedIn"
                class="inline-flex p-1.5 rounded-full text-muted-color transition-colors hover:bg-surface-700 hover:text-color">
               <icon name="mdi:linkedin" class="text-2xl"/>
             </a>
             <nuxt-link to="/contact" aria-label="Get in Touch"
-               class="inline-flex p-1.5 rounded-full text-muted-color transition-colors hover:bg-surface-700 hover:text-color">
+                       class="inline-flex p-1.5 rounded-full text-muted-color transition-colors hover:bg-surface-700 hover:text-color">
               <icon name="material-symbols:mail" class="text-2xl"/>
             </nuxt-link>
           </div>

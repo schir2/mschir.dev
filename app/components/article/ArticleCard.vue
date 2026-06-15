@@ -66,22 +66,24 @@ function handleClick(event: MouseEvent) {
   >
     <template v-if="loading">
       <div class="w-1.5 shrink-0 bg-surface-200 dark:bg-surface-700 animate-pulse"/>
-      <div class="flex gap-4 p-4 w-full min-w-0">
-        <div class="flex flex-col gap-2 flex-1 min-w-0">
-          <div class="flex items-center gap-2">
-            <div class="h-[10px] w-[35%] rounded bg-surface-200 dark:bg-surface-700 animate-pulse"/>
-            <div class="h-[10px] w-[18%] rounded bg-surface-200 dark:bg-surface-700 animate-pulse ml-auto"/>
+      <div class="flex flex-col w-full min-w-0">
+        <div class="flex gap-2 sm:gap-4 px-4 pt-4 pb-2 min-w-0">
+          <div class="flex flex-col gap-2 flex-1 min-w-0">
+            <div class="flex items-center gap-2">
+              <div class="h-[10px] w-[35%] rounded bg-surface-200 dark:bg-surface-700 animate-pulse"/>
+              <div class="h-[10px] w-[18%] rounded bg-surface-200 dark:bg-surface-700 animate-pulse ml-auto"/>
+            </div>
+            <div class="h-[18px] w-[80%] rounded bg-surface-200 dark:bg-surface-700 animate-pulse"/>
+            <div class="h-[18px] w-[52%] rounded bg-surface-200 dark:bg-surface-700 animate-pulse"/>
+            <div class="h-[13px] w-[65%] rounded bg-surface-200 dark:bg-surface-700 animate-pulse"/>
           </div>
-          <div class="h-[18px] w-[80%] rounded bg-surface-200 dark:bg-surface-700 animate-pulse"/>
-          <div class="h-[18px] w-[52%] rounded bg-surface-200 dark:bg-surface-700 animate-pulse"/>
-          <div class="h-[13px] w-[65%] rounded bg-surface-200 dark:bg-surface-700 animate-pulse"/>
-          <div class="mt-auto pt-2 border-t border-surface-200 dark:border-surface-800 flex gap-2">
-            <div class="h-[22px] w-[70px] rounded-full bg-surface-200 dark:bg-surface-700 animate-pulse"/>
-            <div class="h-[22px] w-[80px] rounded-full bg-surface-200 dark:bg-surface-700 animate-pulse"/>
-            <div class="h-[22px] w-[55px] rounded-full bg-surface-200 dark:bg-surface-700 animate-pulse"/>
-          </div>
+          <div class="w-16 h-16 sm:w-24 sm:h-24 rounded-lg bg-surface-200 dark:bg-surface-700 animate-pulse shrink-0 self-center"/>
         </div>
-        <div class="w-24 h-24 rounded-lg bg-surface-200 dark:bg-surface-700 animate-pulse shrink-0 self-center"/>
+        <div class="px-4 pb-4 pt-2 border-t border-surface-200 dark:border-surface-800 flex gap-2">
+          <div class="h-[22px] w-[70px] rounded-full bg-surface-200 dark:bg-surface-700 animate-pulse"/>
+          <div class="h-[22px] w-[80px] rounded-full bg-surface-200 dark:bg-surface-700 animate-pulse"/>
+          <div class="h-[22px] w-[55px] rounded-full bg-surface-200 dark:bg-surface-700 animate-pulse"/>
+        </div>
       </div>
     </template>
 
@@ -99,94 +101,97 @@ function handleClick(event: MouseEvent) {
           class="w-1.5 shrink-0 bg-amber-500 opacity-80 transition-opacity duration-200 group-hover:opacity-100"
       />
 
-      <div class="flex gap-4 p-4 w-full min-w-0">
-        <div class="flex flex-col gap-1.5 flex-1 min-w-0">
+      <div class="flex flex-col w-full min-w-0">
+        <div class="flex gap-2 sm:gap-4 px-4 pt-4 pb-2 min-w-0">
+          <div class="flex flex-col gap-1.5 flex-1 min-w-0">
 
-          <div class="flex items-center gap-2 min-w-0">
+            <div class="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2 min-w-0">
+              <nuxt-link
+                  v-if="article.article_categories"
+                  :to="`/articles/browse?category=${article.article_categories.slug}`"
+                  class="flex items-center gap-1.5 min-w-0 overflow-hidden"
+              >
+                <span
+                    data-testid="category-dot"
+                    class="w-2.5 h-2.5 rounded-full shrink-0 ring-2 ring-white/10"
+                    :style="{ backgroundColor: article.article_categories.color ?? 'var(--p-surface-500)' }"
+                />
+                <span class="text-xs text-surface-700 dark:text-surface-300 truncate">{{
+                    article.article_categories.name
+                  }}</span>
+              </nuxt-link>
+              <span class="sm:ml-auto shrink-0 text-xs text-surface-600 dark:text-surface-400">{{ formattedDate }}</span>
+            </div>
+
             <nuxt-link
-                v-if="article.article_categories"
-                :to="`/articles/browse?category=${article.article_categories.slug}`"
-                class="flex items-center gap-1.5 min-w-0 overflow-hidden"
+                :to="`/articles/${article.slug}`"
+                class="font-display text-lg font-semibold leading-snug line-clamp-2 group-hover:text-primary-400 transition-colors duration-200"
             >
-              <span
-                  data-testid="category-dot"
-                  class="w-2.5 h-2.5 rounded-full shrink-0 ring-2 ring-white/10"
-                  :style="{ backgroundColor: article.article_categories.color ?? 'var(--p-surface-500)' }"
-              />
-              <span class="text-xs text-surface-700 dark:text-surface-300 truncate">{{
-                  article.article_categories.name
-                }}</span>
+              {{ article.title }}
             </nuxt-link>
-            <span class="ml-auto shrink-0 text-xs text-surface-600 dark:text-surface-400">{{ formattedDate }}</span>
+
+            <span
+                v-if="article.featured_articles?.featured_reason"
+                data-testid="featured-reason"
+                class="self-start max-w-full text-xs px-2 py-0.5 rounded-full border border-amber-500/50 text-amber-400 leading-none truncate"
+            >
+              {{ article.featured_articles.featured_reason }}
+            </span>
+
+            <p
+                v-if="article.summary"
+                data-testid="article-summary"
+                class="text-sm text-surface-600 dark:text-surface-400 line-clamp-2"
+            >
+              {{ article.summary }}
+            </p>
+
           </div>
 
-          <nuxt-link
-              :to="`/articles/${article.slug}`"
-              class="font-display text-lg font-semibold leading-snug line-clamp-2 group-hover:text-primary-400 transition-colors duration-200"
+          <div
+              data-testid="article-thumbnail"
+              class="w-16 h-16 sm:w-24 sm:h-24 shrink-0 rounded-lg overflow-hidden self-start"
+              :style="thumbnail.type === 'color' ? { backgroundColor: thumbnail.color } : {}"
           >
-            {{ article.title }}
-          </nuxt-link>
-
-          <span
-              v-if="article.featured_articles?.featured_reason"
-              data-testid="featured-reason"
-              class="self-start text-xs px-2 py-0.5 rounded-full border border-amber-500/50 text-amber-400 leading-none"
-          >
-            {{ article.featured_articles.featured_reason }}
-          </span>
-
-          <p
-              v-if="article.summary"
-              data-testid="article-summary"
-              class="text-sm text-surface-600 dark:text-surface-400 line-clamp-2"
-          >
-            {{ article.summary }}
-          </p>
-
-          <div class="mt-auto min-w-0">
-            <div v-if="article.article_series" class="flex items-center gap-1.5 pb-2 min-w-0">
-              <span class="text-xs text-surface-600 dark:text-surface-500 shrink-0">Part {{
-                  article.series_sequence_number
-                }} of</span>
-              <nuxt-link
-                  :to="`/articles/series/${article.article_series.slug}`"
-                  class="text-xs text-primary-400 truncate hover:underline"
-              >
-                {{ article.article_series.title }}
-              </nuxt-link>
-            </div>
-            <div class="flex flex-wrap items-center gap-2 pt-2 border-t border-surface-200 dark:border-surface-800">
-              <nuxt-link
-                  v-for="tagLink in visibleTags"
-                  :key="tagLink.article_tags.slug"
-                  :to="`/articles/browse?tag=${tagLink.article_tags.slug}`"
-                  class="flex items-center gap-1 text-xs px-2.5 py-1 rounded-full bg-surface-100 text-surface-700 dark:bg-surface-800 dark:text-surface-300 leading-none hover:bg-surface-200 dark:hover:bg-surface-700 transition-colors"
-              >
-                <icon v-if="tagLink.article_tags.icon" :name="tagLink.article_tags.icon" class="w-3.5 h-3.5 shrink-0"/>
-                {{ tagLink.article_tags.name }}
-              </nuxt-link>
-              <span
-                  v-if="hiddenTagCount > 0"
-                  data-testid="hidden-tag-count"
-                  class="text-xs px-2.5 py-1 rounded-full bg-surface-100 text-surface-600 dark:bg-surface-800 dark:text-surface-500 leading-none"
-              >
-                +{{ hiddenTagCount }}
-              </span>
-            </div>
+            <img
+                v-if="thumbnail.type === 'image' && resolvedThumbnailUrl"
+                :src="resolvedThumbnailUrl"
+                :alt="article.title"
+                class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
+            />
           </div>
         </div>
 
-        <div
-            data-testid="article-thumbnail"
-            class="w-24 h-24 shrink-0 rounded-lg overflow-hidden self-center"
-            :style="thumbnail.type === 'color' ? { backgroundColor: thumbnail.color } : {}"
-        >
-          <img
-              v-if="thumbnail.type === 'image' && resolvedThumbnailUrl"
-              :src="resolvedThumbnailUrl"
-              :alt="article.title"
-              class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
-          />
+        <div class="px-4 pb-4 min-w-0">
+          <div v-if="article.article_series" class="flex items-center gap-1.5 pb-2 min-w-0">
+            <span class="text-xs text-surface-600 dark:text-surface-500 shrink-0">Part {{
+                article.series_sequence_number
+              }} of</span>
+            <nuxt-link
+                :to="`/articles/series/${article.article_series.slug}`"
+                class="text-xs text-primary-400 truncate hover:underline"
+            >
+              {{ article.article_series.title }}
+            </nuxt-link>
+          </div>
+          <div class="flex flex-wrap items-center gap-2 pt-2 border-t border-surface-200 dark:border-surface-800">
+            <nuxt-link
+                v-for="tagLink in visibleTags"
+                :key="tagLink.article_tags.slug"
+                :to="`/articles/browse?tag=${tagLink.article_tags.slug}`"
+                class="flex items-center gap-1 text-xs px-2.5 py-1 rounded-full bg-surface-100 text-surface-700 dark:bg-surface-800 dark:text-surface-300 leading-none hover:bg-surface-200 dark:hover:bg-surface-700 transition-colors"
+            >
+              <icon v-if="tagLink.article_tags.icon" :name="tagLink.article_tags.icon" class="w-3.5 h-3.5 shrink-0"/>
+              {{ tagLink.article_tags.name }}
+            </nuxt-link>
+            <span
+                v-if="hiddenTagCount > 0"
+                data-testid="hidden-tag-count"
+                class="text-xs px-2.5 py-1 rounded-full bg-surface-100 text-surface-600 dark:bg-surface-800 dark:text-surface-500 leading-none"
+            >
+              +{{ hiddenTagCount }}
+            </span>
+          </div>
         </div>
       </div>
     </template>

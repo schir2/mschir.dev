@@ -50,19 +50,21 @@ const thumbnailStyle = computed(() => ({
   >
     <template v-if="loading">
       <div class="w-1.5 shrink-0 bg-surface-200 dark:bg-surface-700 animate-pulse" />
-      <div class="flex gap-4 p-4 w-full min-w-0">
-        <div class="flex flex-col gap-2 flex-1 min-w-0">
-          <div class="h-[10px] w-[30%] rounded bg-surface-200 dark:bg-surface-700 animate-pulse" />
-          <div class="h-[18px] w-[75%] rounded bg-surface-200 dark:bg-surface-700 animate-pulse" />
-          <div class="h-[18px] w-[48%] rounded bg-surface-200 dark:bg-surface-700 animate-pulse" />
-          <div class="h-[13px] w-[60%] rounded bg-surface-200 dark:bg-surface-700 animate-pulse" />
-          <div class="mt-auto pt-2 border-t border-surface-200 dark:border-surface-800 flex gap-2">
-            <div class="h-[22px] w-[65px] rounded-full bg-surface-200 dark:bg-surface-700 animate-pulse" />
-            <div class="h-[22px] w-[75px] rounded-full bg-surface-200 dark:bg-surface-700 animate-pulse" />
-            <div class="h-[22px] w-[60px] rounded-full bg-surface-200 dark:bg-surface-700 animate-pulse" />
+      <div class="flex flex-col w-full min-w-0">
+        <div class="flex gap-2 sm:gap-4 px-4 pt-4 pb-2 min-w-0">
+          <div class="flex flex-col gap-2 flex-1 min-w-0">
+            <div class="h-[10px] w-[30%] rounded bg-surface-200 dark:bg-surface-700 animate-pulse" />
+            <div class="h-[18px] w-[75%] rounded bg-surface-200 dark:bg-surface-700 animate-pulse" />
+            <div class="h-[18px] w-[48%] rounded bg-surface-200 dark:bg-surface-700 animate-pulse" />
+            <div class="h-[13px] w-[60%] rounded bg-surface-200 dark:bg-surface-700 animate-pulse" />
           </div>
+          <div class="w-16 h-16 sm:w-24 sm:h-24 rounded-lg bg-surface-200 dark:bg-surface-700 animate-pulse shrink-0 self-center" />
         </div>
-        <div class="w-24 h-24 rounded-lg bg-surface-200 dark:bg-surface-700 animate-pulse shrink-0 self-center" />
+        <div class="px-4 pb-4 pt-2 border-t border-surface-200 dark:border-surface-800 flex gap-2">
+          <div class="h-[22px] w-[65px] rounded-full bg-surface-200 dark:bg-surface-700 animate-pulse" />
+          <div class="h-[22px] w-[75px] rounded-full bg-surface-200 dark:bg-surface-700 animate-pulse" />
+          <div class="h-[22px] w-[60px] rounded-full bg-surface-200 dark:bg-surface-700 animate-pulse" />
+        </div>
       </div>
     </template>
 
@@ -72,22 +74,39 @@ const thumbnailStyle = computed(() => ({
         class="w-1.5 shrink-0 bg-amber-500 opacity-80 transition-opacity duration-200 group-hover:opacity-100"
       />
 
-      <div class="flex gap-4 p-4 w-full min-w-0">
-        <div class="flex flex-col gap-1.5 flex-1 min-w-0">
+      <div class="flex flex-col w-full min-w-0">
+        <div class="flex gap-2 sm:gap-4 px-4 pt-4 pb-2 min-w-0">
+          <div class="flex flex-col gap-1.5 flex-1 min-w-0">
 
-          <span class="text-xs text-surface-700 dark:text-surface-300">
-            {{ project.companies ? `${project.companies.name} · ` : '' }}{{ project.year }}
-          </span>
+            <span class="text-xs text-surface-700 dark:text-surface-300">
+              {{ project.companies ? `${project.companies.name} · ` : '' }}{{ project.year }}
+            </span>
 
-          <span class="font-display text-lg font-semibold leading-snug line-clamp-2 group-hover:text-primary-400 transition-colors duration-200">
-            {{ project.name }}
-          </span>
+            <span class="font-display text-lg font-semibold leading-snug line-clamp-2 group-hover:text-primary-400 transition-colors duration-200">
+              {{ project.name }}
+            </span>
 
-          <p v-if="displayText" class="text-sm text-surface-600 dark:text-surface-400 line-clamp-3">
-            {{ displayText }}
-          </p>
+            <p v-if="displayText" class="text-sm text-surface-600 dark:text-surface-400 line-clamp-3">
+              {{ displayText }}
+            </p>
 
-          <div class="mt-auto pt-2 border-t border-surface-200 dark:border-surface-800 flex flex-wrap items-center gap-2">
+          </div>
+
+          <div
+            class="w-16 h-16 sm:w-24 sm:h-24 shrink-0 rounded-lg overflow-hidden self-start"
+            :style="thumbnailStyle"
+          >
+            <img
+              v-if="resolvedImageUrl"
+              :src="resolvedImageUrl"
+              :alt="project.name"
+              class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
+            />
+          </div>
+        </div>
+
+        <div class="px-4 pb-4 min-w-0">
+          <div class="flex flex-wrap items-center gap-2 pt-2 border-t border-surface-200 dark:border-surface-800">
             <span
               v-for="skillLink in visibleSkills"
               :key="skillLink.skills.id"
@@ -103,18 +122,6 @@ const thumbnailStyle = computed(() => ({
               +{{ hiddenSkillCount }}
             </span>
           </div>
-        </div>
-
-        <div
-          class="w-24 h-24 shrink-0 rounded-lg overflow-hidden self-center"
-          :style="thumbnailStyle"
-        >
-          <img
-            v-if="resolvedImageUrl"
-            :src="resolvedImageUrl"
-            :alt="project.name"
-            class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
-          />
         </div>
       </div>
     </template>

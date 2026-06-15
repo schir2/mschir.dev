@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { MenuItem } from "primevue/menuitem"
+import type {MenuItem} from "primevue/menuitem"
 
 const user = useSupabaseUser()
 const router = useRouter()
@@ -15,11 +15,12 @@ function toggleColorMode() {
 const isAdmin = computed(() => user.value?.app_metadata?.role === 'admin')
 
 const navItems = ref<MenuItem[]>([
-  { label: 'Portfolio', to: '/portfolio' },
-  { label: 'Services', to: '/services' },
-  { label: 'Articles', to: '/articles' },
-  { label: 'About', to: '/about' },
-  { label: 'Contact', to: '/contact' },
+  {label: 'Portfolio', to: '/portfolio'},
+  {label: 'Projects', to: '/projects'},
+  {label: 'Services', to: '/services'},
+  {label: 'Articles', to: '/articles'},
+  {label: 'About', to: '/about'},
+  {label: 'Contact', to: '/contact'},
 ])
 
 const userMenuRef = ref()
@@ -35,7 +36,7 @@ const userMenuItems = computed<MenuItem[]>(() => {
     })
   }
 
-  items.push({ label: 'Logout', icon: 'material-symbols:logout', command: onLogout })
+  items.push({label: 'Logout', icon: 'material-symbols:logout', command: onLogout})
 
   return items
 })
@@ -56,7 +57,7 @@ function handleScroll() {
   scrolled.value = window.scrollY > 10
 }
 
-onMounted(() => window.addEventListener('scroll', handleScroll, { passive: true }))
+onMounted(() => window.addEventListener('scroll', handleScroll, {passive: true}))
 onUnmounted(() => window.removeEventListener('scroll', handleScroll))
 </script>
 
@@ -99,7 +100,8 @@ onUnmounted(() => window.removeEventListener('scroll', handleScroll))
               </p-button>
             </a>
             <client-only>
-              <p-button text rounded :aria-label="isDark ? 'Switch to light mode' : 'Switch to dark mode'" @click="toggleColorMode">
+              <p-button text rounded :aria-label="isDark ? 'Switch to light mode' : 'Switch to dark mode'"
+                        @click="toggleColorMode">
                 <template #icon>
                   <icon :name="isDark ? 'material-symbols:light-mode' : 'material-symbols:dark-mode'"/>
                 </template>
@@ -123,10 +125,10 @@ onUnmounted(() => window.removeEventListener('scroll', handleScroll))
                 </template>
               </p-tiered-menu>
               <p-avatar
-                :label="userInitial"
-                shape="circle"
-                class="cursor-pointer"
-                @click="toggleUserMenu"
+                  :label="userInitial"
+                  shape="circle"
+                  class="cursor-pointer"
+                  @click="toggleUserMenu"
               />
             </template>
             <p-button v-else text rounded aria-label="Login" @click="router.push('/login')">
