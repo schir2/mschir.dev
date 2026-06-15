@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import type {ProjectDetail} from '#shared/types/Project'
 import type {Crumb} from '~/types/Article'
-import {MdPreview} from '~/utils/mdEditor'
+import {MdPreview} from '~/utils/mdPreview'
 
 definePageMeta({layout: 'page'})
 

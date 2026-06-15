@@ -2,7 +2,7 @@
 import type {ArticleDetail} from '#shared/types/Article'
 import type {Crumb, SeriesArticle} from '~/types/Article'
 import {formatArticleDate} from '~/utils/formatArticleDate'
-import {MdPreview} from '~/utils/mdEditor'
+import {MdPreview} from '~/utils/mdPreview'
 
 definePageMeta({layout: 'page'})
 
@@ -136,8 +136,8 @@ const {previousArticle, nextArticle, allArticles} = useSeriesNavigation(
 
       <header class="flex flex-col gap-4">
         <div class="flex flex-col gap-1">
-          <div class="flex justify-between items-start">
-            <h1 class="text-3xl font-bold">{{ article.title }}</h1>
+          <div class="flex justify-between items-start gap-4">
+            <h1 class="text-3xl font-bold flex-1 min-w-0">{{ article.title }}</h1>
             <article-admin-edit-button :article-id="article.id"/>
           </div>
           <span v-if="article.article_series && allArticles.length > 1" class="text-xs uppercase tracking-widest font-medium text-muted-color">
@@ -175,19 +175,16 @@ const {previousArticle, nextArticle, allArticles} = useSeriesNavigation(
           :current-article-id="article.id"
       />
 
-      <div class="max-w-4xl mx-auto">
-        <client-only>
-          <!-- editorId "article-detail" is referenced by ArticleTocSidebar (MdCatalog) -->
-          <div class="md-content-preview">
-            <md-preview
-                editor-id="article-detail"
-                language="en-US"
-                :theme="mdTheme"
-                :model-value="article.content"
-            />
-          </div>
-        </client-only>
-      </div>
+      <client-only>
+        <div class="md-content-preview">
+          <md-preview
+              editor-id="article-detail"
+              language="en-US"
+              :theme="mdTheme"
+              :model-value="article.content"
+          />
+        </div>
+      </client-only>
 
       <article-series-prev-next
           v-if="article.series_id"

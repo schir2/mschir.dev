@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import {MdCatalog} from '~/utils/mdEditor'
+import {MdCatalog} from '~/utils/mdPreview'
 
 defineProps<{
   editorId: string

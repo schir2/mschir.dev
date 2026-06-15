@@ -6,6 +6,10 @@
 /* Content preview: remove editor chrome.
  * Wrap any <md-preview> in <div class="md-content-preview"> to apply these overrides.
  */
+.md-content-preview {
+  min-width: 0;
+}
+
 .md-content-preview > .md-editor {
   background: transparent;
   border: none;
@@ -39,4 +43,13 @@
 .md-content-preview > .md-editor .md-editor-preview h1,
 .md-content-preview > .md-editor .md-editor-preview h2 {
   font-family: 'Fraunces', serif;
+}
+
+.md-content-preview > .md-editor .md-editor-preview pre {
+  overflow-x: auto;
+}
+
+.md-content-preview > .md-editor .md-editor-preview table {
+  display: block;
+  overflow-x: auto;
 }

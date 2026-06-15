@@ -15,10 +15,8 @@ export default defineNuxtConfig({
       '@primevue/nuxt-module',
       '@nuxtjs/turnstile',
       '@nuxt/test-utils/module',
-      'nuxt-gtag',
       '@nuxtjs/seo',
       '@nuxt/fonts',
-      '@dargmuesli/nuxt-cookie-control',
     ],
 
     fonts: {
@@ -87,35 +85,6 @@ export default defineNuxtConfig({
             defaultTitle: 'Marek Schir Developer Portfolio Site',
             siteUrl: process.env.SITE_URL || 'http://localhost:3000',
         }
-    },
-
-    cookieControl: {
-        barPosition: 'bottom-full',
-        cookies: {
-            necessary: [],
-            optional: [
-                {
-                    id: 'ga',
-                    name: 'Google Analytics',
-                    description: 'Tracks page views to help understand which content is most useful. No advertising data is collected.',
-                    targetCookieIds: ['_ga', '_ga_TBFLGWRP7Y'],
-                },
-            ],
-        },
-    },
-
-    gtag: {
-        id: 'G-TBFLGWRP7Y',
-        enabled: process.env.NODE_ENV === 'production',
-        initCommands: [
-            ['consent', 'default', {
-                ad_storage: 'denied',
-                ad_user_data: 'denied',
-                ad_personalization: 'denied',
-                analytics_storage: 'denied',
-                wait_for_update: 500,
-            }]
-        ]
     },
 
     primevue: {

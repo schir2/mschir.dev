@@ -1,6 +1,5 @@
 <script lang="ts" setup>
 const currentYear = new Date().getFullYear()
-const { isModalActive } = useCookieControl()
 
 const navLinks = [
   { label: 'Portfolio', route: '/portfolio' },
@@ -66,7 +65,6 @@ const navLinks = [
         <span class="text-sm text-muted-color">
           &copy; {{ currentYear }} Marek Schir
         </span>
-        <p-button label="Cookie Preferences" text severity="secondary" size="small" @click="isModalActive = true" />
       </div>
 
     </div>

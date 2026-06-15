@@ -7,7 +7,6 @@ useHead(() => ({
   title: route.meta.title as string ?? null,
 }))
 
-useAnalyticsConsent()
 </script>
 
 <template>
@@ -15,7 +14,6 @@ useAnalyticsConsent()
   <p-toast position="top-center" />
   <p-confirm-dialog />
   <dynamic-dialog />
-  <cookie-control />
   <div class="flex flex-col gap-16">
     <NuxtLayout>
       <NuxtPage />

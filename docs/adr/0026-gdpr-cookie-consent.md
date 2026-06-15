@@ -2,9 +2,15 @@
 
 ## Status
 
-Accepted
+Superseded — 2026-06-14
 
-## Context
+Google Analytics and the cookie consent module were removed together. The consent banner was intrusive for a personal portfolio site and GA4 provided little value that justified it. Both `nuxt-gtag` and `@dargmuesli/nuxt-cookie-control` were uninstalled; `useAnalyticsConsent()` and the `<cookie-control />` component were deleted. No analytics is collected and no GDPR consent UI is needed.
+
+The self-hosted fonts decision (section 1 below) remains in effect via `@nuxt/fonts`.
+
+---
+
+## Original Context (archived)
 
 mschir.dev loads Google Analytics (GA4) and previously loaded fonts from the Google Fonts CDN. Both create GDPR obligations: sending visitor IP addresses to Google servers without explicit consent. The site targets EU visitors and must comply with GDPR as a baseline (which also satisfies CCPA, PIPEDA, and LGPD by extension).
 

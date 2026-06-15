@@ -2,7 +2,9 @@
 
 ## Status
 
-Accepted
+Superseded — 2026-06-14
+
+`nuxt-gtag` and `@dargmuesli/nuxt-cookie-control` were removed entirely. See ADR 0026 for the removal rationale. No analytics is collected.
 
 ## Context
 
