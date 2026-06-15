@@ -62,16 +62,17 @@ const pillars = [
 
 <template>
   <div>
-    <!-- Hero: violet + amber animated gradient, entrance animation -->
-    <section :class="['hero-gradient flex flex-col items-center justify-center text-center gap-6 px-6 min-h-nav-offset', { 'hero-mounted': heroMounted }]">
-      <div class="flex flex-col items-center gap-2">
-        <h1 class="text-6xl font-bold text-white hero-item hero-item-1">Marek Schir</h1>
-        <p class="text-2xl hero-subtitle hero-item hero-item-2">Software Developer & Systems Architect</p>
+    <!-- Hero: image background with dark overlay, entrance animation -->
+    <section :class="['hero-bg flex flex-col items-center justify-center text-center gap-6 px-6 min-h-nav-offset relative', { 'hero-mounted': heroMounted }]">
+      <div class="absolute inset-0 bg-black/40"/>
+      <div class="relative z-10 flex flex-col items-center gap-2">
+        <h1 class="text-4xl sm:text-5xl lg:text-6xl font-bold text-white hero-item hero-item-1">Marek Schir</h1>
+        <p class="text-xl sm:text-2xl text-white hero-subtitle hero-item hero-item-2">Software Developer & Systems Architect</p>
       </div>
-      <p class="text-xl max-w-2xl hero-headline hero-item hero-item-3">
+      <p class="relative z-10 text-base sm:text-xl text-white max-w-2xl hero-headline hero-item hero-item-3">
         Building the software and systems that make businesses run better.
       </p>
-      <div class="flex gap-4 flex-wrap justify-center hero-item hero-item-4">
+      <div class="relative z-10 flex gap-4 flex-wrap justify-center hero-item hero-item-4">
         <nuxt-link to="/portfolio">
           <p-button label="See My Work" class="hero-outlined-btn" outlined/>
         </nuxt-link>
@@ -132,22 +133,10 @@ const pillars = [
 </template>
 
 <style scoped>
-.hero-gradient {
-  background: linear-gradient(135deg, var(--p-primary-950) 0%, var(--p-primary-800) 60%, var(--p-accent-800) 100%);
-  background-size: 200% 200%;
-  animation: gradientShift 10s ease infinite;
-}
-
-@keyframes gradientShift {
-  0% {
-    background-position: 0% 50%;
-  }
-  50% {
-    background-position: 100% 50%;
-  }
-  100% {
-    background-position: 0% 50%;
-  }
+.hero-bg {
+  background-image: url('/img/heroes/landing.jpg');
+  background-size: cover;
+  background-position: center;
 }
 
 /* Before mount: elements are fully visible (SSR-safe, no animation applied) */
