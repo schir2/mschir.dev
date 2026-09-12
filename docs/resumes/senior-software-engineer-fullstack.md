@@ -1,66 +1,55 @@
 # Marek Schir
 
-New York City Metropolitan Area | [fill: email] | [fill: phone] | linkedin.com/in/marek-schir-95229684 | github.com/schir2 | mschir.dev
+New York City Metropolitan Area | (718) 909-3737 | schir2@gmail.com | linkedin.com/in/marek-schir-95229684 | github.com/schir2 | mschir.dev
 
-**Senior Software Engineer | Python, Django, TypeScript, Vue/Nuxt, PostgreSQL**
+**Full-Stack Software Engineer | Python, Django, TypeScript, Vue/Nuxt, PostgreSQL**
 
-Full-stack engineer with 13 years designing, building, and operating the internal platforms, customer portals, and integrations a 100-person company runs on. Progressed from Software Developer to Director of IT while remaining the only hands-on engineer; recent work includes a production LLM pipeline that turns phone calls into CRM records and a transparent SQL Server proxy that decodes the TDS wire protocol.
+Primary engineer and hands-on Director of IT at a 100-person company for 14 years. Recent work: an LLM pipeline that turns calls, technician notes, and chat into HubSpot records; a Google Chat app for updating tickets in place; and an integration layer for FSM, HubSpot, Stripe, and VoIP.
 
 ## Skills
 
-**Languages:** Python, TypeScript, JavaScript, SQL, PHP, C#
+**Languages:** Python, TypeScript, JavaScript, SQL, C#, PHP
 
-**Backend and data:** Django, Django REST Framework (DRF), Flask, PostgreSQL, MySQL, Microsoft SQL Server (MSSQL), SQLite, Django Q, asyncio, REST APIs, webhooks, Selenium
+**Backend:** Django, Django REST Framework (DRF), Flask, FastAPI, Django Q, asyncio, REST APIs, webhooks
 
-**Frontend:** Vue, Nuxt, Pinia, HTMX, Tailwind CSS, PrimeVue, Vuetify, Bootstrap, Zod, Chart.js, Vitest
+**Data:** PostgreSQL, MySQL, Microsoft SQL Server (MSSQL), SQLite, schema design and migrations
 
-**LLM integration:** Anthropic Claude API, OpenAI API, Pydantic AI, tool calling, structured outputs, faster-whisper, Claude Code
+**Frontend:** Vue, Nuxt, Pinia, HTMX, Tailwind CSS, Bootstrap, Zod, Chart.js
+
+**LLM integration:** Anthropic Claude API, OpenAI API, Pydantic AI, tool calling, structured outputs, faster-whisper
 
 **Infrastructure and tooling:** Docker, Linux, Nginx, Gunicorn, Supabase, Amazon Web Services (AWS), DigitalOcean, GitHub
 
 ## Experience
 
-**M&M Environmental**, Queens, NY | May 2012 – Present
+**M&M Environmental (M&M Pest Control / MMPC)**, Queens, NY | May 2012 – Present
 
-Pest control and environmental services company that grew from 30 to 100+ employees. Progressed from part-time Software Developer to Director of IT while remaining the only engineer for all internal software.
+Director of IT (Lead Software Engineer), 2021 – present · IT Manager, 2019 – 2021 · Programming Analyst, 2015 – 2019 · Software Developer (part-time), 2012 – 2015
 
-**Director of IT (Lead Software Engineer)** | May 2021 – Present
+Pest control and environmental services company that grew from 30 to 100+ employees. Primary engineer for all internal software throughout; hired and led a team of up to three engineers since 2021.
 
-- Extended MM Portal, the Django/HTMX/MySQL platform used daily by 50+ staff in scheduling, sales, accounting, and customer service, with a live MSSQL link to the legacy field-service system, HubSpot webhook sync, and GPS alerting for field vehicles
-- Shipped a production LLM pipeline (Django Q, faster-whisper, Pydantic AI, Claude) that transcribes every inbound 3CX call, classifies it with a five-tool agent, and writes 45 structured properties plus contacts, deals, and tickets to HubSpot; results under a confidence threshold route to human review
-- Instrumented every enrichment run with token counts, model, and prompt version; versioned prompts in YAML frontmatter and built a re-enrichment command so review and escalation rates can be compared across prompt versions
-- Reverse-engineered SQL Server's TDS wire protocol to build a transparent TCP/UDP proxy (Python asyncio, Docker, ipvlan) that rewrites queries in flight, keeping a vendor-abandoned system in production since 2024 with no client changes
-- Built the Django backend and API for a customer-facing quoting portal (Nuxt frontend built by two teammates): strategy-pattern pricing, magic-link draft resume, pdfkit proposals signed with pyHanko, HubSpot ticket creation, Docker/Nginx/Gunicorn deployment; property managers now get a signed proposal with no sales-rep involvement
-- Built a Django platform for Green Orchard Group's $5M NYCHA lead-inspection contract that parses XRF instrument CSVs with per-firmware parsers, validates readings against NYCHA rules, and generates 20-30 page PDF and Excel compliance packages, cutting report generation from about 3 hours to under 3 minutes per inspection
-- Ran network, Active Directory, Windows and Linux servers, backups, and vendor contracts; trained staff and wrote SOPs for every rollout
-
-**IT Manager** | 2019 – 2021
-
-- Added a TomTom and Google Maps routing tool to MM Portal that maps technician locations, scores route efficiency, and shows coverage gaps for the scheduling team
-- Wrote a Selenium scraper that logs into ServiceBridge, a vendor field app with no API, to pull work orders and service-agreement PDFs into MM Portal
-- Built Flask REST APIs over MSSQL for field service operations and a Django/PostgreSQL job tracker for visual lead inspections on DigitalOcean
-
-**Programming Analyst (Full-Stack Developer)** | 2015 – 2019
-
-- Designed and built MM Portal from scratch (Django, Bootstrap, MySQL) with a live MSSQL connection to ServiceCEO, a 2007-era desktop system with 3-5 minute page loads that no longer issued user licenses; role-gated job, customer, invoice, and service dashboards gave every department fast web access to the same data
-- Worked directly with owners and department heads to turn workflow pain points into features; trained staff and wrote SOPs for each rollout
-
-**Software Developer (part-time)** | May 2012 – 2015
-
-- Built internal reporting and user-lookup tools on SQL Server while completing a degree in Computer Engineering
-
+- Reverse-engineered SQL Server's TDS wire protocol into a transparent proxy that keeps a vendor-abandoned system in production since 2024 (Python asyncio, Docker)
+- Created MM Portal, the internal Django platform 50+ staff use daily; analyzed the legacy field-service database, rebuilt its stored procedures into views, and added a caching layer, cutting routine tasks from 10-15 minutes to under 1 minute
+- Designed the Django REST Framework API behind the internal tooling: custom endpoints over the field-service system, HubSpot (CRM), 3CX (VoIP), Google Maps, and TomTom, with caching, scraping scripts, and the Django Q enrichment pipeline behind them
+- Shipped an LLM pipeline (Claude, Pydantic AI, faster-whisper) that reads inbound calls, technician job notes, emails, meeting notes, and Google Chat rooms and acts on what it finds: escalates issues, routes jobs and complaints, flags equipment needs and sales opportunities, and writes the HubSpot records behind them; the same data gives the owners call analytics on where sales are won and lost
+- Ran the pipeline on a Django Q task queue with requeue on failure; versioned prompts and tracked cost per run so prompt changes could be measured against review rates and re-run on old calls
+- Extended the API with a Google Chat app: chat commands and interactive dialogs let staff update HubSpot tickets without leaving chat
+- Delivered the backend and visual design for a customer quoting portal (Django API, Nuxt frontend by my team): real-time pricing, signed PDF proposals, HubSpot handoff; customers get a proposal without a sales rep
+- Developed the reporting platform for an affiliated contractor's $5M NYCHA lead-inspection contract: parses instrument exports, validates against NYCHA rules, generates the PDF and Excel compliance package; report generation went from about 3 hours to under 3 minutes
+- Added an interactive Google Maps tool that shows technician routes and coverage gaps, with a cached route-calculation layer that keeps API costs down, and a scraper that pulls work orders and PDFs out of a vendor app with no API
+- Wrote automated tests for the API endpoints, scraping and utility code, and the Google Chat command handlers and dialog builder (pytest for framework-free code, Django's test runner with fixtures for the rest); CI pipelines deploy the NYCHA platform and Arcus
+- Partnered with the owners and department directors: interviewed staff to find their pain points, documented and diagrammed processes, then replaced them with workflows and software
+- Hired and led a team of up to three engineers since 2021 while staying the primary backend engineer; owned code review and merges; the team shipped the Nuxt quoting-portal frontend
+- Ran network, Active Directory, Windows and Linux servers, and backups; rolled out Claude Projects loaded with company SOPs and context, and trained staff on every platform rollout
+- Wrote a real-time vehicle-tracking dashboard (PHP, jQuery, Bootstrap) that plotted the GPS fleet against scheduled jobs and alerted schedulers when a technician was out of range at job time
 ## Projects
 
-**Arcus** | Nuxt, Vue, TypeScript, Pinia, Supabase | 2025 | getarcus.com | github.com/schir2/arcus
+**Arcus** | Nuxt, TypeScript, Supabase, Vitest | 2025 | getarcus.com | github.com/schir2/arcus
+Project management app with real-time multi-user editing: streams Supabase Realtime changes into a layered store/action architecture; Vue Flow renders task dependency graphs
 
-- Project and task management app with real-time multi-user editing: Supabase Realtime streams Postgres changes into a layered store/action architecture; Vue Flow renders task dependency graphs
-
-**Calcura** | Nuxt, TypeScript, Chart.js, Django REST Framework | 2024 | calcura.org | github.com/schir2/calcura
-
-- Retirement simulator that projects 401(k), IRA, Roth, brokerage, debt, and income year by year through a user-reorderable command sequence; Vitest coverage across every account manager
+**Calcura** | Nuxt, TypeScript, Django REST Framework, Vitest | 2024 | calcura.org | github.com/schir2/calcura
+Retirement simulator that projects 401(k), IRA, Roth, brokerage, debt, and income year by year through user-reorderable command sequences
 
 ## Education
 
-**Bachelor's, Computer Engineering** [fill: confirm exact degree name], New York City College of Technology (City Tech), CUNY
-
-Cisco CCNA and Cisco Certified Specialist, Enterprise Advanced Infrastructure Implementation (both expired)
+**Bachelor of Technology (B.Tech), Computer Engineering Technology**, New York City College of Technology (CUNY)

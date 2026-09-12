@@ -16,7 +16,9 @@ Apply for these, in this order:
 
 Run a fourth, volume-based track in parallel: **Senior Software Engineer (backend, Python)** at mid-market and vertical SaaS companies. Never label yourself "Django developer"; that title carries a $100K discount for the same work.
 
-Avoid or deprioritize: Platform Engineer (Kubernetes/Terraform gate), Implementation Engineer (low ceiling), "Automation Engineer" and "AI Integration Engineer" as titles (pay like IT, conflated with QA/PLC/contract work), Engineering Manager at tech startups (they want evidence of managing engineers, which the profile does not have).
+Avoid or deprioritize: Platform Engineer (Kubernetes/Terraform gate), Implementation Engineer (low ceiling), "Automation Engineer" and "AI Integration Engineer" as titles (pay like IT, conflated with QA/PLC/contract work), Engineering Manager at scaled tech startups (they assume 4-8 reports; the team here was three at peak, so "Lead Engineer" and "Head of Software" at small companies fit better).
+
+Preferences recorded 2026-09-08: all three tracks run in parallel; hybrid NYC with some travel, so FDE stays in play; applications start as soon as the resumes are final.
 
 ## Shortlist
 
@@ -29,7 +31,7 @@ Avoid or deprioritize: Platform Engineer (Kubernetes/Terraform gate), Implementa
 | 5 | Senior Backend Engineer (Python) | Partial to strong | Glassdoor NYC avg $214K; Wellfound NYC startups avg $167K | Largest volume; hardest screens without pedigree |
 | 6 | Software Engineer, Internal Tools / Business Systems / GTM Systems | Strong | Glassdoor US avg $157K; Block NYC Staff GTM Systems & AI $264K-$395K | Moderate, scattered titles |
 | 7 | Founding Engineer | Strong on profile, risk-dependent | Base $160K-$230K plus 0.8%-2% equity | Moderate |
-| 8 | Engineering Manager (player-coach) | Partial | Wellfound NYC avg $204K | Moderate |
+| 8 | Engineering Manager / Lead Engineer (player-coach) | Partial to strong at small companies | Wellfound NYC avg $204K | Moderate |
 | 9 | Implementation Engineer | Overqualified | Glassdoor US avg $122K | High volume, low ceiling |
 | 10 | Automation Engineer | Skills match, title is a trap | Glassdoor NYC $126K; n8n/Zapier work $40-$65/hr contract | Conflated with QA and industrial |
 | 11 | Platform Engineer | Stretch | NYC median base $189K | Kubernetes/Terraform gate |
@@ -101,7 +103,7 @@ Builds connectors between business systems: CRM/ERP/field-service/finance sync, 
 
 ### 8. Engineering Manager (player-coach)
 
-37% of engineering leaders are now "deeply hands-on" [D] ([source](https://leaddev.com/management/engineering-managers-have-a-new-job-description)), but startup EM postings want 1-2 years managing engineers plus IC credibility. The profile has IT management, executive communication, SOPs, and training, but no evidence of managing software engineers. Do not claim it. Revisit after two or three years in an IC role.
+37% of engineering leaders are now "deeply hands-on" [D] ([source](https://leaddev.com/management/engineering-managers-have-a-new-job-description)), and startup EM postings want 1-2 years managing engineers plus IC credibility. The profile has that: a team of up to three engineers led since 2021 (software/Android engineer, front-end engineer, UI/UX designer) while staying the primary backend engineer, which is the player-coach shape these postings describe. The team is small for scaled-startup EM postings, which typically assume 4-8 reports, so target "Lead Engineer," "Engineering Lead," and "Head of Software" at companies under ~50 engineers rather than EM at Series B+ startups. The management line also strengthens every IC track: it is direct evidence against "not a real engineer" and shows scope beyond a single pair of hands.
 
 ### 9-12. Deprioritized
 
@@ -112,7 +114,7 @@ Builds connectors between business systems: CRM/ERP/field-service/finance sync, 
 
 ## Seniority
 
-**Where the profile lands.** By years (13, hands-on throughout) and scope (architecture for an entire company, multi-year horizons, cross-functional influence) the profile meets Staff criteria on paper. What Staff loops actually test is influencing other engineers and teams, and with no peer engineers that evidence does not exist. Companies with formal ladders will place the candidate at Senior.
+**Where the profile lands.** By years (13, hands-on throughout) and scope (architecture for an entire company, multi-year horizons, cross-functional influence) the profile meets Staff criteria on paper. What Staff loops actually test is influencing other engineers and teams. Leading a team of three since 2021 is real but thin evidence at Staff scale, so companies with formal ladders will place the candidate at Senior, with the management history as a tiebreaker upward.
 
 **Practical mapping.**
 

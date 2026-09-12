@@ -22,14 +22,13 @@ Three base resumes built from `../research/resume-skills.md`, the LinkedIn profi
 
 ## Before Sending Any of These
 
-1. **Fill or delete every `[fill: ...]` placeholder.** Nothing in brackets is verified. The strongest additions would be: calls processed per month by the AI pipeline, cost per call before and after prompt tuning, the human-review rate, quotes per month through the portal, and hours per week saved by the n8n/Zapier/cron automations.
-2. **Reconcile dates with LinkedIn.** LinkedIn lists IT Manager as 2019-2022, overlapping Director of IT from May 2021. The resumes use 2019-2021. Pick one and make LinkedIn match; background checks verify dates.
-3. **Confirm the exact degree name.** LinkedIn says "Bachelor's degree, Computer Engineering." City Tech's program may be a B.Tech in Computer Engineering Technology; use whatever the diploma says.
-4. **Confirm the NYCHA platform attribution.** The seed data credits Green Orchard Group's contract with the repo under the MMPC GitHub org. State the relationship the way you would in an interview.
-5. **Confirm you are comfortable with the title clarifiers.** The test: would your employer confirm the scope without hesitating?
-6. **Dograh.** The bullet is a stub; describe what the voice agent handles and any volume.
-7. **Contact line.** Add email and phone. Claim a LinkedIn vanity URL first (see `../research/linkedin-profile-audit.md`) and update the header.
-8. **Plain-text test.** Paste the rendered resume into a text file. If the sections scramble, fix the layout before applying anywhere.
+All content questions were resolved on 2026-09-08 (see `open-questions.md`). What is left is on the LinkedIn side and the export side:
+
+1. **Update LinkedIn to match.** IT Manager end date to May 2021; add CCNP under Licenses & Certifications; consider the headline and title clarifiers from `../research/linkedin-draft-content.md`. Resumes and LinkedIn must agree; background checks verify dates and official titles.
+2. **Claim a LinkedIn vanity URL** and update the header line in all three files.
+3. **Plain-text test.** Paste the rendered resume into a text file. If the sections scramble, fix the layout before applying anywhere.
+
+**Decision on numbers:** no volumes, costs, rates, or hours saved will be added. The concrete figures that come from the project write-ups stay (50+ daily users, 45 HubSpot properties, five agent tools, 3 hours to 3 minutes, $5M contract, 30 to 100+ employees, in production since 2024). The format research ranks quantified results as the biggest bullet-quality lever, so this is a known trade-off.
 
 ## Rendering
 
@@ -47,9 +46,9 @@ Keep it single column after export. Calibri or Arial at 10.5-11pt, 0.5in margins
 
 Keep these three as bases. For a posting you care about: mirror its exact nouns in the summary, the skills lines, and two or three bullets; reorder bullets so the most relevant come first; add the full form of any abbreviation the posting uses. Do not keyword-stuff, and do not list anything you cannot discuss for five minutes.
 
-## Gaps Worth Closing Before AI-Role Applications
+## Gaps Worth Closing (Optional)
 
-The role research flagged these as the visible gaps against Applied AI and FDE postings. None are on the resumes because none exist yet; do not add them until they do.
+Applications start as soon as the resumes are final, so these are not blockers. The role research flagged them as the visible gaps against Applied AI and FDE postings. None are on the resumes because none exist yet; do not add them until they do.
 
 - A retrieval (RAG) project with recall or precision numbers.
 - An eval harness with a golden set over the existing call-classification data, so bullets can cite accuracy and regression numbers instead of only the review rate.

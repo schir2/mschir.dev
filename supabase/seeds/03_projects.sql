@@ -3,10 +3,10 @@ values
     (
         'Vehicle GPS Alerting System for Field Service Workers',
         'vehicle-gps-alerting-system-for-field-service-workers',
-        'GPS-based alerting system for tracking and monitoring field technicians.',
+        'Real-time PHP, jQuery, and Bootstrap map dashboard that plotted the GPS vehicle fleet against scheduled jobs and alerted schedulers when a technician was out of range at job time.',
         null,
         (select id from public.companies where name = 'MMPC'),
-        2022,
+        2016,
         null
     ),
     (
@@ -394,9 +394,11 @@ insert into public.projects (name, slug, description, summary, company_id, year,
 values (
     'MM Portal',
     'mm-portal',
-    $desc$MM Portal is the internal web platform I built for M&M Environmental alongside ServiceCEO, a 2007-era field service management desktop application running on SQL Server 2005 that took three to five minutes to load a single page and no longer accepted new user licenses. Rather than replace it, MM Portal extends it: scheduling, sales, accounting, and customer service teams get fast, role-gated web access to the same underlying data without touching ServiceCEO's slow interface. The company has since grown from 30 to over 100 employees.
+    $desc$MM Portal is the internal web platform I built for M&M Environmental alongside ServiceCEO, a 2007-era field service management desktop application running on SQL Server 2005 that took three to five minutes to load a single page and no longer accepted new user licenses. Rather than replace it, MM Portal extends it: scheduling, sales, accounting, and customer service teams get fast, role-gated web access to the same underlying data without touching ServiceCEO's slow interface. To make that fast, I analyzed ServiceCEO's database, rebuilt its stored procedures into views and leaner procedures, and put a caching layer in front; tasks that took 10 to 15 minutes in ServiceCEO take under a minute in MM Portal. The company has since grown from 30 to over 100 employees.
 
 Core features include job, customer, invoice, and service dashboards backed by a live MSSQL connection to ServiceCEO. The scheduling team uses a TomTom-powered routing tool that maps technician locations, scores route efficiency, and visualizes coverage gaps. A web scraper logs into ServiceBridge, a third-party mobile field app also connected to ServiceCEO, to download work orders, service agreements, and other generated PDFs that are otherwise inaccessible via API.
+
+Underneath the dashboards is a Django REST Framework API that every other integration goes through. I designed its endpoints around the field-service data, and the same backend runs the ServiceBridge scraping scripts, the Django Q enrichment pipeline, the routing tool, and the caching layer. A Google Chat app I built on that API connects chat to HubSpot and the field-service system: staff run chat commands and fill in interactive dialogs to update HubSpot tickets without leaving chat.
 
 The AI layer connects 3CX phone calls and ServiceCEO job data to HubSpot: faster-whisper transcribes calls, then a Pydantic AI agent backed by Claude identifies service requests, sales opportunities, and scheduling conflicts and creates deals, tickets, and enriched contact records in HubSpot. A parallel pipeline runs the same extraction over ServiceCEO job and invoice notes. The goal is to catch overlooked signals (unactioned call follow-ups, missed upsell moments, late-caught scheduling conflicts) and put them in front of the right team before the window closes. Built with Django, Python, HTMX, Bootstrap, MySQL, and MSSQL; used daily by over 50 people.
 
@@ -406,10 +408,11 @@ MM Portal started as one thing and became another. The timeline below shows how 
 
 ```mermaid
 timeline
-    title MM Portal · Eight Years of Growth
+    title MM Portal · Nine Years of Growth
     2017 : Core dashboards
          : Job, customer, invoice, and service visibility
          : Role-gated web access replacing ServiceCEO UI
+         : Analyzed database, rebuilt procedures into views, caching layer
     2020 : GPS routing tool with TomTom and Google Maps
          : ServiceBridge PDF scraper
     2022 : HubSpot webhook integration
@@ -417,19 +420,23 @@ timeline
     2025 : faster-whisper call transcription
          : Pydantic AI enrichment agent backed by Claude
          : EnrichmentTask token tracking and prompt versioning
+    2026 : Google Chat app
+         : Chat commands and dialogs that update HubSpot tickets
 ```
 
 ## Architecture
 
-MM Portal connects five external systems through a single Django application. ServiceCEO (legacy MSSQL) is read directly for dashboards and feeds the AI pipeline via job and invoice notes. 3CX phone events arrive via webhook; ServiceBridge PDFs are pulled by a web scraper. All enriched data flows out to HubSpot.
+MM Portal connects six external systems through a single Django application. ServiceCEO (legacy MSSQL) is read directly for dashboards and feeds the AI pipeline via job and invoice notes. 3CX phone events arrive via webhook; ServiceBridge PDFs are pulled by a web scraper. Google Chat talks to the REST API for commands and dialogs. All enriched data and ticket updates flow out to HubSpot.
 
 ```mermaid
 flowchart TD
     SCEO[("ServiceCEO\nMSSQL")]
     CX[("3CX\nPhone System")]
     SB[("ServiceBridge")]
+    GC[("Google Chat")]
 
     subgraph portal["MM Portal · Django + MySQL"]
+        API["REST API\nDjango REST Framework"]
         DASH["Dashboards\nJobs · Customers · Invoices"]
         ROUTE["Routing Tool\nTomTom · Google Maps"]
         SCRAPER["PDF Scraper"]
@@ -446,6 +453,8 @@ flowchart TD
     CX -->|call recordings| WHISPER
     WHISPER -->|transcript| AGENT
     SB -->|web scraping| SCRAPER
+    GC -->|"commands · dialogs"| API
+    API -->|ticket updates| HS
     AGENT -->|"deals · tickets · contacts"| HS
 ```
 
