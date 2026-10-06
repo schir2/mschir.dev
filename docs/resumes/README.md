@@ -8,6 +8,33 @@ Three base resumes built from `../research/resume-skills.md`, the LinkedIn profi
 | `senior-software-engineer-backend.md` | Senior Backend Engineer (Python), Senior Software Engineer at vertical SaaS | Hybrid: three flagship systems first, compressed chronology after. Useful when the posting cares about depth over breadth. |
 | `ai-integration-engineer.md` | Forward Deployed Engineer, Applied AI Engineer, Integrations Engineer, Solutions Engineer (Applied AI) | Reverse-chronological with the current role split into "AI and integration" and "platform, delivery, infrastructure" sub-sections. Two pages. This is the strongest fit per the role research. |
 
+## Where the Resumes Live
+
+**The Google Doc is the source of truth for what gets sent.** The markdown files here are the drafting bases and what the `enrich-jobs` skill scores against; they were not restructured to match the doc's tabs and lag behind it.
+
+- **Resumes:** [Software Engineer - Full Stack](https://docs.google.com/document/d/1hxFDu4-XZDpp8JvhJL6b_zK8-gPvCedx0NVzWgr-BCY/edit) (Drive ID `1hxFDu4-XZDpp8JvhJL6b_zK8-gPvCedx0NVzWgr-BCY`), one tab per variant
+- **Cover letters:** [Cover Leetters folder](https://drive.google.com/drive/folders/1GIgxi-kHL67Qggm923ek46PNOG0CEYru) (Drive ID `1GIgxi-kHL67Qggm923ek46PNOG0CEYru`; the folder name's typo is the user's). One Google Doc per application, titled `Marek Schir - Cover Letter - <Company> <Role>`.
+
+| Doc tab | Tab ID | Headline | Closest markdown base |
+|---|---|---|---|
+| Enterprise Engineer | `t.qhvg6mj8jof0` | Enterprise Software Engineer | `senior-software-engineer-fullstack.md` |
+| LLM Integration Engineer | `t.izwww9icuont` | Applied AI Engineer (retuned 2026-10-05) | `ai-integration-engineer.md` |
+| Full Stack | `t.0` | Full-Stack Software Engineer | `senior-software-engineer-fullstack.md` |
+
+There is no backend tab; `senior-software-engineer-backend.md` exists only here.
+
+### Working With the Doc
+
+- **Reading:** Google Drive `read_file_content` on the doc ID returns all three tabs as one markdown stream, each tab starting with its name as an `#` heading. A bold lead-in inside a bullet shows up as escaped `\*\*...\*\*`; that is an export artifact, not literal asterisks in the doc.
+- **Editing:** the Google Docs editor connector has not been available, so edits go through Chrome on the doc itself:
+  - **Text changes:** Find and replace (`ctrl+h`). The Search dropdown defaults to **All tabs**, so a phrase shared by several tabs changes in all of them; check the match count before Replace all. The dialog moves around between opens, so take a screenshot before clicking.
+  - **Link targets:** click the link, then the pencil icon in the popup, replace the URL, and click Apply. Find and replace changes link text, not the URL behind it.
+  - **New bullets:** click the end of the bullet above, `End`, `Return`, then `ctrl+b` around the bold lead-in.
+  - **Verify:** read the doc again with `read_file_content`; links render as `[text](url)`.
+- **Contact line:** it fits on one line at the current length. A longer LinkedIn or site link pushes `mschir.dev` onto a second line.
+- **LinkedIn:** `linkedin.com/in/marek-schir` is current. `linkedin.com/in/marek-schir-95229684` is dated; don't use it.
+- **Cover letters:** create them with Drive `create_file` from HTML into the folder above. For an application that takes a file, export the doc with `download_file_content` (`exportMimeType: application/pdf`), decode the base64 into the scratchpad, and attach it with the Chrome `file_upload` tool. This only works when the export is large enough that the tool saves it to a file; a small export comes back inline, and retyping the base64 isn't viable. In that case the user downloads it from Docs (File > Download > PDF) and attaches it themselves. Never submit an application form; leave that to the user.
+
 ## Why They Look the Way They Do
 
 - **Single column, standard section names, plain-text header.** Two-column layouts lose sections in ATS parsers; headers and footers get skipped.
@@ -25,7 +52,7 @@ Three base resumes built from `../research/resume-skills.md`, the LinkedIn profi
 All content questions were resolved on 2026-09-08 (see `open-questions.md`). What is left is on the LinkedIn side and the export side:
 
 1. **Update LinkedIn to match.** IT Manager end date to May 2021; add CCNP under Licenses & Certifications; consider the headline and title clarifiers from `../research/linkedin-draft-content.md`. Resumes and LinkedIn must agree; background checks verify dates and official titles.
-2. **Claim a LinkedIn vanity URL** and update the header line in all three files.
+2. ~~Claim a LinkedIn vanity URL~~ Done: `linkedin.com/in/marek-schir`, now in all three files and all three doc tabs.
 3. **Plain-text test.** Paste the rendered resume into a text file. If the sections scramble, fix the layout before applying anywhere.
 
 **Decision on numbers:** no volumes, costs, rates, or hours saved will be added. The concrete figures that come from the project write-ups stay (50+ daily users, 45 HubSpot properties, five agent tools, 3 hours to 3 minutes, $5M contract, 30 to 100+ employees, in production since 2024). The format research ranks quantified results as the biggest bullet-quality lever, so this is a known trade-off.

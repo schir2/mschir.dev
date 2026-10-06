@@ -37,6 +37,10 @@ Read these before dispatching anything. Do not score from memory.
 - `docs/resumes/senior-software-engineer-fullstack.md`
 - `docs/research/target-roles.md` — background only, when a judgment call needs context
 
+The markdown resumes are scoring bases. The versions actually sent live in a Google Doc with
+different tabs; see "Where the Resumes Live" in `docs/resumes/README.md` before naming a
+resume to send.
+
 The tracker: `https://docs.google.com/spreadsheets/d/1kbQiXTGOMdU4KPHBnPSjXSC8KXOh_kzKM6PtSG28G70/edit`
 
 ## Processing Steps

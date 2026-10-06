@@ -1,6 +1,6 @@
 # Marek Schir
 
-New York City Metropolitan Area | (718) 909-3737 | schir2@gmail.com | linkedin.com/in/marek-schir-95229684 | github.com/schir2 | mschir.dev
+New York City Metropolitan Area | (718) 909-3737 | schir2@gmail.com | linkedin.com/in/marek-schir | github.com/schir2 | mschir.dev
 
 **Software Engineer, AI Integration | LLM pipelines (Claude, Pydantic AI), systems integration (HubSpot, 3CX, Stripe, legacy MSSQL), Python/Django**
 
